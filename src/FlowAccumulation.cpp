@@ -64,7 +64,8 @@ void FlowAccumulation::runoff()
                     //Indica que a célula foi analizada
                     m_checkedNodeList[posCheckedNodeList] = true;
                     // Move na direção do flow direction
-                    HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)), posY, posX);
+                    size_t posYTemp = static_cast<size_t>(posY), posXTemp = static_cast<size_t>(posX);
+                    HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)), posYTemp, posXTemp);
 
                     //Se extrapolar os limites da matriz, sai do loop
                     if (posX < 0 || posY < 0 || posX > static_cast<int>(m_flowDirection->getCols() - 1) || posY > static_cast<int>(m_flowDirection->getRows() - 1))
