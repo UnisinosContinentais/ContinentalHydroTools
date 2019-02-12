@@ -1,14 +1,14 @@
 ﻿#include "continental/hydrotools/FlowDirection.h"
 #include "continental/hydrotools/HeuristicSinkRemovalUtil.h"
 
-#include <continental/dataManagement/RasterFile.h>
+#include <continental/datamanagement/RasterFile.h>
 
 namespace continental
 {
 namespace hydrotools
 {
 using namespace std;
-using namespace continental::dataManagement;
+using namespace continental::datamanagement;
 
 Raster<short> FlowDirection::getMDEMatrix()
 {

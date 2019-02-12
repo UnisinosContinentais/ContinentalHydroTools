@@ -4,7 +4,7 @@
 #include <QString>
 #include <vector>
 #include <memory>
-#include <continental/dataManagement/Raster.h>
+#include <continental/datamanagement/Raster.h>
 
 //*******************************************************************
 //DETERMINAÇÃO DE ÁREA ACUMULADA
@@ -16,7 +16,7 @@ namespace continental
 namespace hydrotools
 {
 using namespace std;
-using namespace continental::dataManagement;
+using namespace continental::datamanagement;
 
 /// <summary>
 /// Classe que calcula o número de células acumuladas a partir de um raster com direções de fluxo

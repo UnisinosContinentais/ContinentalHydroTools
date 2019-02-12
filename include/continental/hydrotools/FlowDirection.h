@@ -6,7 +6,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <memory>
-#include <continental/dataManagement/Raster.h>
+#include <continental/datamanagement/Raster.h>
 
 //*******************************************************************
 //DIREÇÕES DE FLUXO (com base na codificação IDRISI)
@@ -18,7 +18,7 @@ namespace continental
 namespace hydrotools
 {
 using namespace std;
-using namespace continental::dataManagement;
+using namespace continental::datamanagement;
 
 /// <summary>
 /// Calcula as direções de fluxo a partir de um MDE sem depressões

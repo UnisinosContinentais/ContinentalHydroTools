@@ -6,7 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <stdexcept>
-#include <continental/dataManagement/Raster.h>
+#include <continental/datamanagement/Raster.h>
 #include "continental/hydrotools/HeuristicCell.h"
 
 //*******************************************************************
@@ -21,7 +21,7 @@ namespace continental
 namespace hydrotools
 {
 using namespace std;
-using namespace continental::dataManagement;
+using namespace continental::datamanagement;
 
 /// <summary>
 /// Classe utilizada ara remover depressões - MHS, HS e PFS
@@ -39,10 +39,10 @@ public:
         // Utiliza o modo PFS
         PFS = 2
     };
-private:
-    // Rasters
-    Raster<short> m_MDE;
+protected:
+    shared_ptr<Raster<short>> m_MDE;
     Raster<short> m_flowDirection;
+private:
     // Matriz dos 8 vizinhos
     float m_matrixD8[8];
     // Matriz de células sem Direcao de Fluxo - células com depressão
@@ -109,12 +109,14 @@ public:
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    Raster<short> getMDEMatrix();
+    virtual const Raster<short> & getMDE() const;
+
+    void setMDE(shared_ptr<Raster<short>> mde);
 
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    Raster<short> getFlowDirectionMatrix();
+    virtual const Raster<short> & getFlowDirection() const;
 
     //Lê um arquivo de MDE, especificando o local
     void readMDEdata(const QString &file);
@@ -122,7 +124,7 @@ public:
     /// <summary>
     /// Rotina para removção das depressões do MDE.
     /// </summary>
-    void removeSinks();
+    virtual void removeSinks();
 private:
     //Remove as depressões utilizando uma matriz 'n x n' para busca em torno da depressão espúria
     void removeDepressions();

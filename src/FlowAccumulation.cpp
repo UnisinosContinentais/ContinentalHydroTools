@@ -1,7 +1,7 @@
 ﻿#include "continental/hydrotools/FlowAccumulation.h"
 #include "continental/hydrotools/FlowDirection.h"
 #include "continental/hydrotools/HeuristicSinkRemovalUtil.h"
-#include <continental/dataManagement/RasterFile.h>
+#include <continental/datamanagement/RasterFile.h>
 
 namespace continental
 {
