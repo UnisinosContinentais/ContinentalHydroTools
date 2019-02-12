@@ -23,22 +23,21 @@ using namespace continental::datamanagement;
 /// </summary>
 class FlowAccumulation
 {
-
 private:
     shared_ptr<Raster<short>> m_flowDirection;
-    Raster<float> m_flowAccumulation;
     std::vector<bool> m_checkedNodeList;
-
+protected:
+    Raster<float> m_flowAccumulation;
 public:
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    Raster<float> getFlowAccumulationMatrix();
+    const Raster<float> & getFlowAccumulation() const;
 
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    Raster<short> getFlowDirectionMatrix();
+    const Raster<short> & getFlowDirection() const;
     void setFlowDirection(shared_ptr<Raster<short>> flowDirection);
 
     //Cria um novo arquivo para
@@ -50,8 +49,7 @@ public:
     /// <summary>
     /// 'Calcula o número de células acumuladas de acordo com o Flow Direction selecionado
     /// </summary>
-    void runoff();
-
+    virtual void runoff();
 private:
     //Verifica se algum vizinho de mesma cota, ou inferior já possui flow direction, atribuindo a mesma em caso verdadeiro
     bool neighbourCellsAnalyzed(int xc, int yc);

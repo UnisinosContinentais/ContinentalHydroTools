@@ -7,12 +7,12 @@ namespace continental
 {
 namespace hydrotools
 {
-Raster<float> FlowAccumulation::getFlowAccumulationMatrix()
+const Raster<float> & FlowAccumulation::getFlowAccumulation() const
 {
     return m_flowAccumulation;
 }
 
-Raster<short> FlowAccumulation::getFlowDirectionMatrix()
+const Raster<short> & FlowAccumulation::getFlowDirection() const
 {
     return *m_flowDirection;
 }
