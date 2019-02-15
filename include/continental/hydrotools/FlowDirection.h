@@ -1,5 +1,5 @@
-﻿#ifndef IPHYDRORASTERTOOLS_FLOWDIRECTION_H
-#define IPHYDRORASTERTOOLS_FLOWDIRECTION_H
+﻿#ifndef CONTINENTAL_HYDROTOOLS_FLOWDIRECTION_H
+#define CONTINENTAL_HYDROTOOLS_FLOWDIRECTION_H
 
 #include <QString>
 #include <vector>
@@ -17,9 +17,6 @@ namespace continental
 {
 namespace hydrotools
 {
-using namespace std;
-using namespace continental::datamanagement;
-
 /// <summary>
 /// Calcula as direções de fluxo a partir de um MDE sem depressões
 /// </summary>
@@ -28,8 +25,8 @@ class FlowDirection
 {
     private:
         // Rasters
-        unique_ptr<Raster<short>> m_MDE;
-        unique_ptr<Raster<short>> m_flowDirection;
+        std::unique_ptr<datamanagement::Raster<short>> m_MDE;
+        std::unique_ptr<datamanagement::Raster<short>> m_flowDirection;
         // Matriz dos 8 vizinhos
         float m_matrixD8[8];
         size_t m_countDepressions = 0;
@@ -38,12 +35,12 @@ class FlowDirection
         /// <summary>
         /// Retorna o MDE original ou modificado pelo processo
         /// </summary>
-        Raster<short> getMDEMatrix();
+        datamanagement::Raster<short> getMDEMatrix();
 
         /// <summary>
         /// Retorna o Flow Direction
         /// </summary>
-        Raster<short> getFlowDirection();
+        datamanagement::Raster<short> getFlowDirection();
 
         FlowDirection();
 
@@ -66,4 +63,4 @@ class FlowDirection
 }
 }
 
-#endif // IPHYDRORASTERTOOLS_FLOWDIRECTION_H
+#endif // CONTINENTAL_HYDROTOOLS_FLOWDIRECTION_H

@@ -29,7 +29,7 @@ find_package(Qt5Core CONFIG REQUIRED)
 # Create target and set properties
 
 add_library(ContinentalHydroTools
-#    src/Catchment.cpp
+    src/Catchment.cpp
     src/Cell.cpp
     src/CellWatershed.cpp
     src/FlowAccumulation.cpp
@@ -45,8 +45,8 @@ add_library(ContinentalHydroTools
     src/shape/ShapeFile.cpp
     src/shape/ShapeObject.cpp
 #    src/StreamAccumLength.cpp
-#    src/StreamDefinition.cpp
-#    src/StreamSegmentation.cpp
+    src/StreamDefinition.cpp
+    src/StreamSegmentation.cpp
 )
 
 #Add an alias so that library can be used inside the build tree, e.g. when testing

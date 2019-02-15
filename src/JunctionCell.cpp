@@ -4,8 +4,10 @@ namespace continental
 {
 namespace hydrotools
 {
-JunctionCell::JunctionCell(short y, short x) : Cell(y, x)
+
+JunctionCell::JunctionCell(size_t y, size_t x) : Cell(y, x)
 {
 }
+
 }
 }

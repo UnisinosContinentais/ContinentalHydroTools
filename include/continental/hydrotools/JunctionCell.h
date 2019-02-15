@@ -1,5 +1,5 @@
-#ifndef IPHYDRORASTERTOOLS_JUNCTIONCELL_H
-#define IPHYDRORASTERTOOLS_JUNCTIONCELL_H
+#ifndef CONTINENTAL_HYDROTOOLS_JUNCTIONCELL_H
+#define CONTINENTAL_HYDROTOOLS_JUNCTIONCELL_H
 
 #include "continental/hydrotools/Cell.h"
 
@@ -14,9 +14,9 @@ class JunctionCell : public Cell
         float SegmentValue = 0;
         //Public SegmentValue As Integer
 
-        JunctionCell(short y, short x);
+        JunctionCell(size_t y, size_t x);
 };
 }
 }
 
-#endif // IPHYDRORASTERTOOLS_JUNCTIONCELL_H
+#endif // CONTINENTAL_HYDROTOOLS_JUNCTIONCELL_H

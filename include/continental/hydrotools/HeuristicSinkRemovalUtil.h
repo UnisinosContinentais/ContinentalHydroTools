@@ -1,5 +1,5 @@
-#ifndef IPHYDRORASTERTOOLS_HEURISTICSINKREMOVALUTIL_H
-#define IPHYDRORASTERTOOLS_HEURISTICSINKREMOVALUTIL_H
+#ifndef CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVALUTIL_H
+#define CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVALUTIL_H
 
 namespace continental
 {
@@ -12,9 +12,9 @@ class HeuristicSinkRemovalUtil
         static short relativeIncipientFlowDirection(size_t x1, size_t x2, size_t y1, size_t y2);
 
         //Move a linha e a coluna de acordo com o número armazenado
-        static void moveToFlowDirection(short value, size_t &row, size_t &column);
+        static void moveToFlowDirection(short value, int &row, int &column);
 };
 }
 }
 
-#endif // IPHYDRORASTERTOOLS_HEURISTICSINKREMOVALUTIL_H
+#endif // CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVALUTIL_H

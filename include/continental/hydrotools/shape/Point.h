@@ -1,40 +1,48 @@
 #ifndef IPHYDRORASTERTOOLS_SHAPE_POINT_H
 #define IPHYDRORASTERTOOLS_SHAPE_POINT_H
 
-namespace IPHydroRasterTools {
-    namespace Shape {
-        template<typename T>
-        class Point
-        {
-            private:
-                T m_x;
-                T m_y;
-            public:
-                Point() : m_x(static_cast<T>(0)), m_y(static_cast<T>(0))
-                {
-                }
+namespace continental
+{
+namespace hydrotools
+{
+namespace shape
+{
 
-                Point(T x, T y) : m_x(x), m_y(y)
-                {
-                }
+template<typename T>
+class Point
+{
+private:
+T m_x;
+T m_y;
 
-                void set(T x, T y)
-                {
-                    m_x = x;
-                    m_y = y;
-                }
+public:
+Point() : m_x(static_cast<T>(0)), m_y(static_cast<T>(0))
+{
+}
 
-                T x()
-                {
-                    return m_x;
-                }
+Point(T x, T y) : m_x(x), m_y(y)
+{
+}
 
-                T y()
-                {
-                    return m_y;
-                }
-        };
-    }
+void set(T x, T y)
+{
+    m_x = x;
+    m_y = y;
+}
+
+T x()
+{
+    return m_x;
+}
+
+T y()
+{
+    return m_y;
+}
+};
+
+}
+}
 }
 
 #endif // IPHYDRORASTERTOOLS_SHAPE_POINT_H

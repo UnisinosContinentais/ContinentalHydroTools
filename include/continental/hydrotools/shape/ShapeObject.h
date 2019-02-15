@@ -11,50 +11,52 @@
 #include "continental/hydrotools/shape/Point.h"
 #include "continental/hydrotools/shape/Part.h"
 
-namespace IPHydroRasterTools
+namespace continental
 {
-    namespace Shape {
-        using namespace std;
+namespace hydrotools
+{
+namespace shape
+{
 
-        class ShapeObject
-        {
-            protected:
-                int m_index;
-                int m_type;
-                size_t m_vertexCount;
-                shared_ptr<vector<shared_ptr<Point<double>>>> m_vertices;
-                Box<double> m_bounds;
-                vector<Part> m_parts;
+class ShapeObject
+{
+protected:
+int m_index;
+int m_type;
+size_t m_vertexCount;
+std::shared_ptr<std::vector<std::shared_ptr<Point<double>>>> m_vertices;
+Box<double> m_bounds;
+std::vector<Part> m_parts;
 
-            public:
-                ShapeObject();
-                ShapeObject(const SHPObject* obj);
-                ShapeObject(const ShapeObject& other);
+public:
+ShapeObject();
+ShapeObject(const SHPObject* obj);
+ShapeObject(const ShapeObject& other);
 
-                ShapeObject& operator = (const ShapeObject& other);
+ShapeObject& operator = (const ShapeObject& other);
 
-                void assign(const SHPObject* obj);
+void assign(const SHPObject* obj);
 
-                bool isValid() const;
+bool isValid() const;
+int getIndex() const;
+int getType() const;
+QString getTypeString() const;
 
-            protected:
-                void destroy();
-                void assign(const ShapeObject& obj);
+size_t getVertexCount() const;
+const std::shared_ptr<std::vector<std::shared_ptr<Point<double>>>> getVertices() const;
+Box<double> getBounds() const;
 
-            public:
-                int getIndex() const;
-                int getType() const;
-                QString getTypeString() const;
+std::vector<Part> getParts() const;
 
-                size_t getVertexCount() const;
-                const shared_ptr<vector<shared_ptr<Point<double>>>> getVertices() const;
-                Box<double> getBounds() const;
+protected:
+void destroy();
+void assign(const ShapeObject& obj);
+};
 
-                std::vector<Part> getParts() const;
-        };
+QString shapeTypeAsString(int shapetype);
 
-        QString shapeTypeAsString(int shapetype);
-    }
+}
+}
 }
 
 #endif // IPHYDRORASTERTOOLS_SHAPE_SHAPEOBJECT_H

@@ -3,19 +3,25 @@
 
 #include <memory>
 
-namespace IPHydroRasterTools
+namespace continental
 {
-    namespace Shape {
-        class Part
-        {
-            public:
-                int type;
-                int offset;
-                size_t length;
+namespace hydrotools
+{
+namespace shape
+{
 
-                Part() : type(0), offset(0), length(0) {}
-        };
-    }
+class Part
+{
+public:
+int type;
+int offset;
+size_t length;
+
+Part() : type(0), offset(0), length(0) {}
+};
+
+}
+}
 }
 
 #endif // IPHYDRORASTERTOOLS_SHAPE_PART_H

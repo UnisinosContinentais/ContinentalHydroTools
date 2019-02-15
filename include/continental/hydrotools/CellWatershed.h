@@ -1,5 +1,5 @@
-﻿#ifndef IPHYDRORASTERTOOLS_CELLWATERSHED_H
-#define IPHYDRORASTERTOOLS_CELLWATERSHED_H
+﻿#ifndef CONTINENTAL_HYDROTOOLS_CELLWATERSHED_H
+#define CONTINENTAL_HYDROTOOLS_CELLWATERSHED_H
 
 #include "continental/hydrotools/Cell.h"
 
@@ -19,17 +19,29 @@ namespace hydrotools
 class CellWatershed : public Cell
 {
 public:
-    short m_attribute = 0;
+    size_t m_attribute = 0;
     double m_latitude = 0;
     double m_longitude = 0;
 
-    CellWatershed(double latitude, double longitude, int rows, int cols, double cellSize, double xOrigin, double yOrigin, short atrib);
+    CellWatershed(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xOrigin, double yOrigin, size_t atrib);
     /// <summary>
     /// Converte a coordenada geográfica para linha e coluna
     /// </summary>
-    void convertCoordToRowCol(double latitude, double m_longitude, int rows, int cols, double cellSize, double xOrigin, double yOrigin);
+    void convertCoordToRowCol(double latitude, double m_longitude, size_t rows, size_t cols, double cellSize, double xOrigin, double yOrigin);
+
+    size_t getAttribute()
+    {
+        return m_attribute;
+    }
+
+    void setAttribute(size_t attribute)
+    {
+        m_attribute = attribute;
+    }
+private:
+    void reset(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xOrigin, double yOrigin, size_t atrib);
 };
 }
 }
 
-#endif // IPHYDRORASTERTOOLS_CELLWATERSHED_H
+#endif // CONTINENTAL_HYDROTOOLS_CELLWATERSHED_H

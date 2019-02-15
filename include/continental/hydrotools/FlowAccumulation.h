@@ -1,5 +1,5 @@
-﻿#ifndef IPHYDRORASTERTOOLS_FLOWACCUMULATION_H
-#define IPHYDRORASTERTOOLS_FLOWACCUMULATION_H
+﻿#ifndef CONTINENTAL_HYDROTOOLS_FLOWACCUMULATION_H
+#define CONTINENTAL_HYDROTOOLS_FLOWACCUMULATION_H
 
 #include <QString>
 #include <vector>
@@ -15,30 +15,27 @@ namespace continental
 {
 namespace hydrotools
 {
-using namespace std;
-using namespace continental::datamanagement;
-
 /// <summary>
 /// Classe que calcula o número de células acumuladas a partir de um raster com direções de fluxo
 /// </summary>
 class FlowAccumulation
 {
 private:
-    shared_ptr<Raster<short>> m_flowDirection;
+    std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
     std::vector<bool> m_checkedNodeList;
 protected:
-    Raster<float> m_flowAccumulation;
+    std::shared_ptr<datamanagement::Raster<float>> m_flowAccumulation;
 public:
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    const Raster<float> & getFlowAccumulation() const;
+    std::shared_ptr<datamanagement::Raster<float>> getFlowAccumulation() const;
 
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    const Raster<short> & getFlowDirection() const;
-    void setFlowDirection(shared_ptr<Raster<short>> flowDirection);
+    std::shared_ptr<datamanagement::Raster<short>> getFlowDirection() const;
+    void setFlowDirection(std::shared_ptr<datamanagement::Raster<short>> flowDirection);
 
     //Cria um novo arquivo para
     FlowAccumulation();
@@ -50,15 +47,14 @@ public:
     /// 'Calcula o número de células acumuladas de acordo com o Flow Direction selecionado
     /// </summary>
     virtual void runoff();
+
+    //Escreve os dados de Flow Direction
+    void writeFlowAccData(const QString &filepath);
 private:
     //Verifica se algum vizinho de mesma cota, ou inferior já possui flow direction, atribuindo a mesma em caso verdadeiro
     bool neighbourCellsAnalyzed(int xc, int yc);
-
-public:
-    //Escreve os dados de Flow Direction
-    void writeFlowAccData(const QString &filepath);
 };
 }
 }
 
-#endif // IPHYDRORASTERTOOLS_FLOWACCUMULATION_H
+#endif // CONTINENTAL_HYDROTOOLS_FLOWACCUMULATION_H

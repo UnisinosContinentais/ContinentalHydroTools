@@ -3,24 +3,28 @@
 #include "continental/hydrotools/HeuristicSinkRemovalUtil.h"
 #include <continental/datamanagement/RasterFile.h>
 
+using namespace std;
+using namespace continental::datamanagement;
+
 namespace continental
 {
 namespace hydrotools
 {
-const Raster<float> & FlowAccumulation::getFlowAccumulation() const
+
+shared_ptr<Raster<float>> FlowAccumulation::getFlowAccumulation() const
 {
     return m_flowAccumulation;
 }
 
-const Raster<short> & FlowAccumulation::getFlowDirection() const
+shared_ptr<Raster<short>> FlowAccumulation::getFlowDirection() const
 {
-    return *m_flowDirection;
+    return m_flowDirection;
 }
 
 void FlowAccumulation::setFlowDirection(shared_ptr<Raster<short>> flowDirection)
 {
     m_flowDirection = flowDirection;
-    m_flowAccumulation = Raster<float>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
+    m_flowAccumulation = make_shared<Raster<float>>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
 }
 
 FlowAccumulation::FlowAccumulation()
@@ -30,8 +34,7 @@ FlowAccumulation::FlowAccumulation()
 
 void FlowAccumulation::readFlowDirection(const QString &Local)
 {
-    m_flowDirection = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(Local));
-    m_flowAccumulation = Raster<float>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
+    setFlowDirection(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(Local)));
 }
 
 void FlowAccumulation::runoff()
@@ -60,11 +63,11 @@ void FlowAccumulation::runoff()
                         break;
 
                     // Armazena o número de células acumuladas
-                    totalCells = m_flowAccumulation.getData(static_cast<size_t>(posY), static_cast<size_t>(posX));
+                    totalCells = m_flowAccumulation->getData(static_cast<size_t>(posY), static_cast<size_t>(posX));
                     //Indica que a célula foi analizada
                     m_checkedNodeList[posCheckedNodeList] = true;
                     // Move na direção do flow direction
-                    size_t posYTemp = static_cast<size_t>(posY), posXTemp = static_cast<size_t>(posX);
+                    int posYTemp = posY, posXTemp = posX;
                     HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)), posYTemp, posXTemp);
 
                     //Se extrapolar os limites da matriz, sai do loop
@@ -73,12 +76,12 @@ void FlowAccumulation::runoff()
 
                     if (m_flowDirection->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)) == m_flowDirection->getNoDataValue()) //Se chegar em um NODATA, sai do loop
                     {
-                        m_flowAccumulation.setData(static_cast<size_t>(posY), static_cast<size_t>(posX), m_flowDirection->getNoDataValue());
+                        m_flowAccumulation->setData(static_cast<size_t>(posY), static_cast<size_t>(posX), m_flowDirection->getNoDataValue());
                         break;
                     }
 
                     // Acumula as células anteriores
-                    m_flowAccumulation.setData(static_cast<size_t>(posY), static_cast<size_t>(posX), m_flowAccumulation.getData(static_cast<size_t>(posY), static_cast<size_t>(posX)) + (totalCells + 1));
+                    m_flowAccumulation->setData(static_cast<size_t>(posY), static_cast<size_t>(posX), m_flowAccumulation->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)) + (totalCells + 1));
                 }
             }
         }
@@ -129,5 +132,6 @@ bool FlowAccumulation::neighbourCellsAnalyzed(int xc, int yc)
     //Se passar por todas as células, e nenhuma contribuir ou todas já tiverem sido checadas então
     return true;
 }
+
 }
 }

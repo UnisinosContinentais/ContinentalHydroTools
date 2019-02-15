@@ -3,105 +3,109 @@
 
 #include "continental/hydrotools/shape/Point.h"
 
-namespace IPHydroRasterTools
+namespace continental
 {
-    namespace Shape
-    {
-        template<typename T>
-        class Box
-        {
-            private:
-                T m_xMin;
-                T m_yMin;
-                T m_xMax;
-                T m_yMax;
-            public:
-                Box(): m_xMin(static_cast<T>(0)), m_yMin(static_cast<T>(0)), m_xMax(static_cast<T>(0)), m_yMax(static_cast<T>(0))
-                {
-                }
+namespace hydrotools
+{
+namespace shape
+{
+template<typename T>
+class Box
+{
+private:
+T m_xMin;
+T m_yMin;
+T m_xMax;
+T m_yMax;
 
-                T Width() const
-                {
-                    return m_xMax - m_xMin;
-                }
+public:
+Box(): m_xMin(static_cast<T>(0)), m_yMin(static_cast<T>(0)), m_xMax(static_cast<T>(0)), m_yMax(static_cast<T>(0))
+{
+}
 
-                T Height() const
-                {
-                    return m_yMax - m_yMin;
-                }
+T Width() const
+{
+    return m_xMax - m_xMin;
+}
 
-                Point<T> Center() const
-                {
-                    T xoffset = ((m_xMax - m_xMin) / static_cast<T>(2));
-                    T yoffset = ((m_yMax - m_yMin) / static_cast<T>(2));
-                    return Point<T>(m_xMin + xoffset, m_yMin + yoffset);
-                }
+T Height() const
+{
+    return m_yMax - m_yMin;
+}
 
-                void Grow(T delta)
-                {
-                    m_xMin -= delta;
-                    m_xMax += delta;
-                    m_yMin -= delta;
-                    m_yMax += delta;
-                }
+Point<T> Center() const
+{
+    T xoffset = ((m_xMax - m_xMin) / static_cast<T>(2));
+    T yoffset = ((m_yMax - m_yMin) / static_cast<T>(2));
+    return Point<T>(m_xMin + xoffset, m_yMin + yoffset);
+}
 
-                void Grow(T dx, T dy)
-                {
-                    m_xMin -= dx;
-                    m_xMax += dx;
-                    m_yMin -= dy;
-                    m_yMax += dy;
-                }
+void Grow(T delta)
+{
+    m_xMin -= delta;
+    m_xMax += delta;
+    m_yMin -= delta;
+    m_yMax += delta;
+}
 
-                void Move(T x, T y)
-                {
-                    m_xMin += x;
-                    m_xMax += x;
-                    m_yMin += y;
-                    m_yMax += y;
-                }
+void Grow(T dx, T dy)
+{
+    m_xMin -= dx;
+    m_xMax += dx;
+    m_yMin -= dy;
+    m_yMax += dy;
+}
 
-                void xMin(T xMin)
-                {
-                    m_xMin = xMin;
-                }
+void Move(T x, T y)
+{
+    m_xMin += x;
+    m_xMax += x;
+    m_yMin += y;
+    m_yMax += y;
+}
 
-                T xMin()
-                {
-                    return m_xMin;
-                }
+void xMin(T xMin)
+{
+    m_xMin = xMin;
+}
 
-                void yMin(T yMin)
-                {
-                    m_yMin = yMin;
-                }
+T xMin()
+{
+    return m_xMin;
+}
 
-                T yMin()
-                {
-                    return m_yMin;
-                }
+void yMin(T yMin)
+{
+    m_yMin = yMin;
+}
 
-                void xMax(T xMax)
-                {
-                    m_xMax = xMax;
-                }
+T yMin()
+{
+    return m_yMin;
+}
 
-                T xMax()
-                {
-                    return m_xMax;
-                }
+void xMax(T xMax)
+{
+    m_xMax = xMax;
+}
 
-                void yMax(T yMax)
-                {
-                    m_yMax = yMax;
-                }
+T xMax()
+{
+    return m_xMax;
+}
 
-                T yMax()
-                {
-                    return m_yMax;
-                }
-            };
-    }
+void yMax(T yMax)
+{
+    m_yMax = yMax;
+}
+
+T yMax()
+{
+    return m_yMax;
+}
+};
+}
+}
 }
 
 #endif // IPHYDRORASTERTOOLS_SHAPE_BOX_H

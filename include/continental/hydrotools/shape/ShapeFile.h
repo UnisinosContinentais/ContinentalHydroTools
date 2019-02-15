@@ -6,50 +6,55 @@
 
 #include "continental/hydrotools/shape/ShapeObject.h"
 
-namespace IPHydroRasterTools
+namespace continental
 {
-    namespace Shape
-    {
-        class ShapeFile
-        {
-            public:
-                class Bounds
-                {
-                    public:
-                        int x;
-                        int y;
-                        int z;
-                        int m;
-                };
+namespace hydrotools
+{
+namespace shape
+{
 
-            protected:
-                SHPHandle m_handle;
-                int m_entityCount;
-                int m_shapeType;
+class ShapeFile
+{
+public:
+class Bounds
+{
+    public:
+    int x;
+    int y;
+    int z;
+    int m;
+};
 
-            public:
-                ShapeFile();
-                ~ShapeFile();
+protected:
+SHPHandle m_handle;
+int m_entityCount;
+int m_shapeType;
 
-                int Open(const QString &filepath);
-                void Close();
+public:
+ShapeFile();
+~ShapeFile();
 
-                int GetEntityCount()
-                {
-                    return m_entityCount;
-                }
-                int GetType() {
-                    return m_shapeType;
-                }
-                QString	GetTypeString();
+int Open(const QString &filepath);
+void Close();
 
-                int GetShape(size_t index, ShapeObject &object);
-        };
+int GetEntityCount()
+{
+    return m_entityCount;
+}
+int GetType() {
+    return m_shapeType;
+}
+QString	GetTypeString();
 
-        class ShapeFileError
-        {
-        };
-    }
+int GetShape(size_t index, ShapeObject &object);
+};
+
+class ShapeFileError
+{
+};
+
+}
+}
 }
 
 #endif // IPHYDRORASTERTOOLS_SHAPE_SHAPEFILE_H

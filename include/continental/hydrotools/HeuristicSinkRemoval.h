@@ -1,5 +1,5 @@
-﻿#ifndef IPHYDRORASTERTOOLS_HEURISTICSINKREMOVAL_H
-#define IPHYDRORASTERTOOLS_HEURISTICSINKREMOVAL_H
+﻿#ifndef CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVAL_H
+#define CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVAL_H
 
 #include <memory>
 #include <QString>
@@ -20,9 +20,6 @@ namespace continental
 {
 namespace hydrotools
 {
-using namespace std;
-using namespace continental::datamanagement;
-
 /// <summary>
 /// Classe utilizada ara remover depressões - MHS, HS e PFS
 /// </summary>
@@ -40,13 +37,13 @@ public:
         PFS = 2
     };
 protected:
-    shared_ptr<Raster<short>> m_MDE;
-    Raster<short> m_flowDirection;
+    std::shared_ptr<datamanagement::Raster<short>> m_MDE;
+    datamanagement::Raster<short> m_flowDirection;
 private:
     // Matriz dos 8 vizinhos
     float m_matrixD8[8];
     // Matriz de células sem Direcao de Fluxo - células com depressão
-    vector<unique_ptr<Cell>> m_array;
+    std::vector<std::unique_ptr<Cell>> m_array;
     // Tamanho da janela é a dimensão para N x N do método orinal de Hou et al (2011);
     int m_windowSize = 5;
     size_t m_maxOpenList = 0;
@@ -61,19 +58,19 @@ private:
     short m_directionsY[8] = {0, -1, 0, 1, 1, -1, -1, 1};
 
     // Conjunto das células candidatas
-    vector<unique_ptr<HeuristicCell>> m_openList;
+    std::vector<std::unique_ptr<HeuristicCell>> m_openList;
     // Conjunto das células selecionadas
-    vector<unique_ptr<HeuristicCell>> m_closedList;
-    vector<bool> m_closedListBoolean;
-    vector<bool> m_openListBoolean;
+    std::vector<std::unique_ptr<HeuristicCell>> m_closedList;
+    std::vector<bool> m_closedListBoolean;
+    std::vector<bool> m_openListBoolean;
 	size_t m_ListBooleanRows = 0;
 	size_t m_listBooleanCols = 0;
-    vector<size_t> m_closedListPosition;
-    vector<size_t> m_openListPosition;
-    vector<size_t> m_traceBackMatrix;
+    std::vector<size_t> m_closedListPosition;
+    std::vector<size_t> m_openListPosition;
+    std::vector<size_t> m_traceBackMatrix;
 	size_t m_traceBackMatrixRows = 0;
 	size_t m_traceBackMatrixCols = 0;
-    vector<bool> m_forcedOutlets;
+    std::vector<bool> m_forcedOutlets;
 	size_t m_forcedOutletsRows = 0;
 	size_t m_forcedOutletsCols = 0;
     // Método de remoção de depressões
@@ -109,14 +106,14 @@ public:
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    virtual const Raster<short> & getMDE() const;
+    virtual const datamanagement::Raster<short> & getMDE() const;
 
-    void setMDE(shared_ptr<Raster<short>> mde);
+    void setMDE(std::shared_ptr<datamanagement::Raster<short>> mde);
 
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    virtual const Raster<short> & getFlowDirection() const;
+    virtual const datamanagement::Raster<short> & getFlowDirection() const;
 
     //Lê um arquivo de MDE, especificando o local
     void readMDEdata(const QString &file);
@@ -188,4 +185,4 @@ private:
 }
 }
 
-#endif // IPHYDRORASTERTOOLS_HEURISTICSINKREMOVAL_H
+#endif // CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVAL_H

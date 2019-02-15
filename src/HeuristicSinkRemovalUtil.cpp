@@ -5,7 +5,8 @@ namespace continental
 {
 namespace hydrotools
 {
-void HeuristicSinkRemovalUtil::moveToFlowDirection(short value, size_t &row, size_t &column)
+
+void HeuristicSinkRemovalUtil::moveToFlowDirection(short value, int &row, int &column)
 {
     //32	64	    128
     //16	0	    1      'Configuração das direções de fluxo para o IDRISI Kilimanjaro
@@ -91,5 +92,6 @@ short HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(size_t x1, size_t
     //Caso encontre algum outro valor dispara um exception
     throw std::runtime_error("Problems when trying to identify the flow direction from the modified river section.");
 }
+
 }
 }

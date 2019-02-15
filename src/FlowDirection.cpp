@@ -3,12 +3,13 @@
 
 #include <continental/datamanagement/RasterFile.h>
 
+using namespace std;
+using namespace continental::datamanagement;
+
 namespace continental
 {
 namespace hydrotools
 {
-using namespace std;
-using namespace continental::datamanagement;
 
 Raster<short> FlowDirection::getMDEMatrix()
 {
@@ -50,7 +51,6 @@ void FlowDirection::calculateFlowDirection()
                 }
 
                 FDFound = false;
-
             }
         }
     }
@@ -90,7 +90,7 @@ void FlowDirection::verifyFlowDirAtBounds(size_t xc, size_t yc, bool &validated)
 
                     if (validated == true) //caso tenha sido encontrado algum vizinho com direção de fluxo atribuída, manda água pra ele
                     {
-                        m_flowDirection->setData(xc, yc, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<short>(xc), static_cast<short>(xi), static_cast<short>(yc), static_cast<short>(yi)));
+                        m_flowDirection->setData(xc, yc, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<size_t>(xc), static_cast<size_t>(xi), static_cast<size_t>(yc), static_cast<size_t>(yi)));
                         return;
                     }
 
@@ -102,18 +102,19 @@ void FlowDirection::verifyFlowDirAtBounds(size_t xc, size_t yc, bool &validated)
 
 void FlowDirection::flowDirectionAtBounds()
 {
+    size_t zero = static_cast<size_t>(0);
 
     //Define o Flow direction dos cantos
     m_flowDirection->setData(0, 0, 32);
-    m_flowDirection->setData(0, m_MDE->getCols() - 1, 128);
-    m_flowDirection->setData(m_MDE->getRows() - 1, 0, 8);
+    m_flowDirection->setData(zero, m_MDE->getCols() - 1, 128);
+    m_flowDirection->setData(m_MDE->getRows() - 1, zero, 8);
     m_flowDirection->setData(m_MDE->getRows() - 1, m_MDE->getCols() - 1, 2);
 
     //Atribui o flow direction para fora dos limites da grade
     size_t tempVar = m_MDE->getRows() - 2;
     for (size_t y = 1; y <= tempVar; y++)
     {
-        m_flowDirection->setData(y, 0, 16);
+        m_flowDirection->setData(y, zero, 16);
     }
 
     size_t tempVar2 = m_MDE->getRows() - 2;
@@ -125,7 +126,7 @@ void FlowDirection::flowDirectionAtBounds()
     size_t tempVar3 = m_MDE->getCols() - 2;
     for (size_t x = 1; x <= tempVar3; x++)
     {
-        m_flowDirection->setData(0, x, 64);
+        m_flowDirection->setData(zero, x, 64);
     }
 
     size_t tempVar4 = m_MDE->getCols() - 2;
@@ -203,7 +204,7 @@ short FlowDirection::incipientFlowDirection(size_t x, size_t y)
         default:
             return 0;
     }
-
 }
+
 }
 }
