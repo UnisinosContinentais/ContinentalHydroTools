@@ -44,9 +44,7 @@ void HeuristicSinkRemoval::setMDE(shared_ptr<Raster<short>> mde)
     m_MDE = mde;
     m_flowDirection = Raster<short>(m_MDE->getRows(), m_MDE->getCols(), m_MDE->getXOrigin(), m_MDE->getYOrigin(), m_MDE->getCellSize(), m_MDE->getNoDataValue());
     m_forcedOutlets.clear();
-    m_forcedOutletsRows = m_MDE->getRows() - 1;
-    m_forcedOutletsCols = m_MDE->getCols() - 1;
-    m_forcedOutlets.resize(m_forcedOutletsRows * m_forcedOutletsCols);
+    m_forcedOutlets.resize(m_MDE->getRows() * m_MDE->getCols());
 }
 
 const Raster<short> & HeuristicSinkRemoval::getFlowDirection() const
@@ -100,13 +98,11 @@ void HeuristicSinkRemoval::removeSinks()
     m_closedListPosition.resize(m_maxClosedList);
 
     m_closedListBoolean.clear();
-    m_closedListBoolean.resize(m_ListBooleanRows * m_listBooleanCols);
+    m_closedListBoolean.resize(m_MDE->getRows() * m_MDE->getCols());
 
     // Matriz que indica o caminho de volta, a partir do outlet
     m_traceBackMatrix.clear();
-    m_traceBackMatrixRows = m_MDE->getRows();
-    m_traceBackMatrixCols = m_MDE->getCols();
-    m_traceBackMatrix.resize(m_traceBackMatrixRows * m_traceBackMatrixCols);
+    m_traceBackMatrix.resize(m_MDE->getRows() * m_MDE->getCols());
 
     // Remove as depressões
     removeDepressions();
@@ -265,7 +261,7 @@ void HeuristicSinkRemoval::addDepressionToOpenList(size_t xc, size_t yc, size_t 
     // Coloca a célula na open list
     m_openList[numberElements] = make_unique<HeuristicCell>(yc, xc);
     //Aciona o Flag para indicar que a célula está na open list
-    m_openListBoolean[yc * m_listBooleanCols + xc] = true;
+    m_openListBoolean[yc * m_MDE->getCols() + xc] = true;
     m_openList[numberElements]->relParentX = 0;
     m_openList[numberElements]->relParentY = 0;
     // Identifica a posição da célula na matriz (na forma de vetor)
@@ -295,7 +291,7 @@ void HeuristicSinkRemoval::addNeighboursToOpenList(size_t yc, size_t xc, size_t 
 			}
 
             // Somente adiciona se não estiver nem na open list e nem na closed list
-            size_t position = static_cast<size_t>(posY) * m_listBooleanCols + static_cast<size_t>(posX);
+            size_t position = static_cast<size_t>(posY) * m_MDE->getCols() + static_cast<size_t>(posX);
 			if (m_closedListBoolean[position] || m_openListBoolean[position])
 			{
 				continue;
@@ -324,11 +320,9 @@ void HeuristicSinkRemoval::adjustDemFinalElevations()
 {
 
     std::vector<bool> checkedNodes;
-    size_t checkedNodesRows = m_MDE->getRows() - 1;
-    size_t checkedNodesCols = m_MDE->getCols() - 1;
     bool nextCell = false;
     checkedNodes.clear();
-    checkedNodes.resize(checkedNodesRows * checkedNodesCols);
+    checkedNodes.resize(m_MDE->getRows() * m_MDE->getCols());
 
     nextCell = false;
 
@@ -414,7 +408,7 @@ void HeuristicSinkRemoval::breaching(size_t closedListCount)
             foundStartNode = true;
 
         // Identifica o enumerador do nó de coordenada x,y
-        enumerator = m_traceBackMatrix[yParent * m_traceBackMatrixCols + xParent];
+        enumerator = m_traceBackMatrix[yParent * m_MDE->getCols() + xParent];
         numberCells += 1;
     }
 
@@ -442,7 +436,7 @@ void HeuristicSinkRemoval::breaching(size_t closedListCount)
         }
 
         // Identifica o enumerador do nó de coordenada x,y
-        enumerator = m_traceBackMatrix[yParent * m_traceBackMatrixCols + xParent];
+        enumerator = m_traceBackMatrix[yParent * m_MDE->getCols() + xParent];
     }
 }
 
@@ -701,7 +695,7 @@ float HeuristicSinkRemoval::PFSValue(size_t yc, size_t xc, short es)
 
 void HeuristicSinkRemoval::pushCellToClosedList(size_t enumCell, size_t &numberClosed)
 {
-    size_t position = m_openList[enumCell]->y * m_listBooleanCols + m_openList[enumCell]->x;
+    size_t position = m_openList[enumCell]->y * m_MDE->getCols() + m_openList[enumCell]->x;
 
     // Aciona o Flag para indicar que a célula está na closed list
     m_closedListBoolean[position] = true;
@@ -711,7 +705,7 @@ void HeuristicSinkRemoval::pushCellToClosedList(size_t enumCell, size_t &numberC
     m_closedList[numberClosed]->relParentY = m_openList[enumCell]->relParentY;
 
     //Identifica a posição da célula na matriz (na forma de vetor)
-    m_closedListPosition[numberClosed] = m_openList[enumCell]->y * m_MDE->getCols() + m_openList[enumCell]->x;
+    m_closedListPosition[numberClosed] = position;
     //guarda a posição da célula para conhecer o caminho de volta
     m_traceBackMatrix[position] = numberClosed;
 
@@ -746,9 +740,9 @@ void HeuristicSinkRemoval::resetAllList(size_t nClosedList, size_t nOpenList)
         // Identifica a Coluna
         x = m_closedListPosition[i] - (y * m_MDE->getCols());
         // Retira da Closed List
-        m_closedListBoolean[y * m_listBooleanCols + x] = false;
+        m_closedListBoolean[y * m_MDE->getCols() + x] = false;
         // Reinicia o value da Matriz de volta
-        m_traceBackMatrix[y * m_listBooleanCols + x] = 0;
+        m_traceBackMatrix[y * m_MDE->getCols() + x] = 0;
     }
 
     for (size_t i = 0; i < nOpenList; i++)
@@ -758,7 +752,7 @@ void HeuristicSinkRemoval::resetAllList(size_t nClosedList, size_t nOpenList)
         // Identifica a Coluna
         x = m_openListPosition[i] - (y * m_MDE->getCols());
         // Retira da Open List
-        m_openListBoolean[y * m_listBooleanCols + x] = false;
+        m_openListBoolean[y * m_MDE->getCols() + x] = false;
     }
 
 }

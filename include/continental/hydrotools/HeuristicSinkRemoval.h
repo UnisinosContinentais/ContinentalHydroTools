@@ -63,16 +63,10 @@ private:
     std::vector<std::unique_ptr<HeuristicCell>> m_closedList;
     std::vector<bool> m_closedListBoolean;
     std::vector<bool> m_openListBoolean;
-	size_t m_ListBooleanRows = 0;
-	size_t m_listBooleanCols = 0;
     std::vector<size_t> m_closedListPosition;
     std::vector<size_t> m_openListPosition;
     std::vector<size_t> m_traceBackMatrix;
-	size_t m_traceBackMatrixRows = 0;
-	size_t m_traceBackMatrixCols = 0;
     std::vector<bool> m_forcedOutlets;
-	size_t m_forcedOutletsRows = 0;
-	size_t m_forcedOutletsCols = 0;
     // Método de remoção de depressões
     ProcessingMode m_algorithmMode = ProcessingMode::MHS;
 	

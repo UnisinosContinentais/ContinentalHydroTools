@@ -1,3 +1,4 @@
 add_executable(ContinentalHydroToolsConsole src/main.cpp)
 target_compile_features(ContinentalHydroToolsConsole PRIVATE cxx_auto_type)
+
 target_link_libraries(ContinentalHydroToolsConsole ContinentalHydroTools::ContinentalHydroTools)

@@ -38,7 +38,7 @@ add_library(ContinentalHydroTools
     src/HeuristicSinkRemoval.cpp
     src/HeuristicSinkRemovalUtil.cpp
     src/JunctionCell.cpp
-#    src/LengthSegmentation.cpp
+    src/LengthSegmentation.cpp
     src/shape/Box.cpp
     src/shape/Part.cpp
     src/shape/Point.cpp
