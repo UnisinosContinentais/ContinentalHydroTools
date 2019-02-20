@@ -83,7 +83,7 @@ public:
 
 private:
     //Move célula rio acima
-    void moveToUpstreamMinArea(short yc, short xc, short &rowUpstr, short &colUpstr, bool &afterJunction, bool markOutlets);
+    void moveToUpstreamMinArea(short yc, short xc, int &rowUpstr, int &colUpstr, bool &afterJunction, bool markOutlets);
 
     /// <summary>
     /// Identifica a posição da célula que corresponde à cordenada indicada

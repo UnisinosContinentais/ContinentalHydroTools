@@ -447,21 +447,24 @@ void LengthSegmentation::doubleSegmentByLength()
         else
         {
             totalLength = m_junctionCells[nJunction]->ActualLength;
-            VariableSegmentNumber = FloatingPointToInteger::ToInt32(m_junctionCells[nJunction]->SegmentValue);
+            VariableSegmentNumber = m_junctionCells[nJunction]->SegmentValue;
         }
 
-        if (_CellAnalyzed(row, col) == true) //Se a célula já foi analisada, passa para a próxima junção
+        //Se a célula já foi analisada, passa para a próxima junção
+        if (m_cellAnalyzed[row * m_strSeg->getCols() + col] == true)
         {
-            goto nextjunction;
+            continue;
         }
 
-        do //Faça até chegar na cabeceira do rio mais longo
+        //Faça até chegar na cabeceira do rio mais longo
+        while (true)
         {
             xAnterior = col;
             yAnterior = row;
 
-            _CellAnalyzed(row, col) = true;
-            m_strSeg->getData(row, col) = VariableSegmentNumber; //enumera o trecho segmentado
+            m_cellAnalyzed[row * m_strSeg->getCols() + col] = true;
+            //enumera o trecho segmentado
+            m_strSeg->setData(row, col, VariableSegmentNumber);
 
             moveToUpstreamDoubleSegmented(yAnterior, xAnterior, row, col, false, totalLength, VariableSegmentNumber); //Move em direção à célula à montante com maior área
 
@@ -477,47 +480,52 @@ void LengthSegmentation::doubleSegmentByLength()
                         break;
                     }
 
-                    _CellAnalyzed(row, col) = true; //Marca a célula como analisada
-                    m_strSeg->getData(row, col) = m_strSeg->getData(yAnterior, xAnterior); //enumera o trecho segmentado de acordo com o trecho anterior
+                    //Marca a célula como analisada
+                    m_cellAnalyzed[row * m_strSeg->getCols() + col] = true;
+                    //enumera o trecho segmentado de acordo com o trecho anterior
+                    m_strSeg->setData(row, col, m_strSeg->getData(yAnterior, xAnterior));
 
-                    totalLength += (SpatialAnalyst::CellLength(yLat, xLon, (yAnterior - row), (xAnterior - col), m_flowDirection->Cellsize)) * 1000; //Incrementa o comprimento acumulado
+                    //Incrementa o comprimento acumulado
+                    totalLength += (SpatialAnalyst::cellLength(yLat, xLon, (yAnterior - row), (xAnterior - col), m_flowDirection->getCellSize())) * 1000;
 
                     //Atribui as novas posições
                     yAnterior = row;
                     xAnterior = col;
                 }
 
-                SegmentNumber += 1; //Indica que deve ser incrementado o número de segmentos
+                //Indica que deve ser incrementado o número de segmentos
+                SegmentNumber += 1;
                 VariableSegmentNumber = SegmentNumber;
-                break; //Sai fora do loop geral
-
+                //Sai fora do loop geral
+                break;
             }
 
-            _CellAnalyzed(row, col) = true; //Indica que a célula já foi analisada
-            m_strSeg->getData(row, col) = VariableSegmentNumber; //enumera o trecho segmentado
+            //Indica que a célula já foi analisada
+            m_cellAnalyzed[row * m_strSeg->getCols() + col] = true;
+            //enumera o trecho segmentado
+            m_strSeg->setData(row, col, VariableSegmentNumber);
 
             //Pega as coordanadas do ponto
-            yLat = (float)(m_flowDirection->YllCorner + (m_flowDirection->getRows() - 1 - row) * m_flowDirection->Cellsize + (m_flowDirection->Cellsize / 2));
-            xLon = (float)(m_flowDirection->XllCorner + (col * m_flowDirection->Cellsize) + (m_flowDirection->Cellsize / 2));
+            yLat = (float)(m_flowDirection->getYOrigin() + (m_flowDirection->getRows() - 1 - row) * m_flowDirection->getCellSize() + (m_flowDirection->getCellSize() / 2));
+            xLon = (float)(m_flowDirection->getXOrigin() + (col * m_flowDirection->getCellSize()) + (m_flowDirection->getCellSize() / 2));
 
-            totalLength += (SpatialAnalyst::CellLength(yLat, xLon, (yAnterior - row), (xAnterior - col), m_flowDirection->Cellsize)) * 1000; //Incrementa o comprimento acumulado
-            if (totalLength > m_minLength) //Se comprimento acumulado for maior do que o limiar estabelecido
+            //Incrementa o comprimento acumulado
+            totalLength += (SpatialAnalyst::cellLength(yLat, xLon, (yAnterior - row), (xAnterior - col), m_flowDirection->getCellSize())) * 1000;
+            //Se comprimento acumulado for maior do que o limiar estabelecido
+            if (totalLength > m_minLength)
             {
-                SegmentNumber += 1; //Aumenta a numeração dos segmentos
+                //Aumenta a numeração dos segmentos
+                SegmentNumber += 1;
                 VariableSegmentNumber = SegmentNumber;
-                totalLength = 0; //Reinicia o comprimento acumulado
+                //Reinicia o comprimento acumulado
+                totalLength = 0;
             }
-
-        } while (true);
-    nextJunction: ;
-
+        }
     }
-
 }
 
 void LengthSegmentation::moveToUpstreamDoubleSegmented(short Yc, short Xc, short &rowUpstr, short &colUpstr, bool ForceHeadwater, float ActualLength, int segmentValue)
 {
-
     short xi = 0;
     short yi = 0;
     short nPointCell = 0;
@@ -537,20 +545,22 @@ void LengthSegmentation::moveToUpstreamDoubleSegmented(short Yc, short Xc, short
         {
             xi = (Xc + x);
 
-            if (x != 0 || y != 0) //Evita a análise da própria célula (nó central)
+            //Evita a análise da própria célula (nó central)
+            if (x != 0 || y != 0)
             {
-                if (xi >= 0 && yi >= 0 && xi < m_flowDirection->getCols() && yi < m_flowDirection->getRows()) //Evita sair dos limites do raster
+                //Evita sair dos limites do raster
+                if (xi >= 0 && yi >= 0 && xi < m_flowDirection->getCols() && yi < m_flowDirection->getRows())
                 {
-
-                    if (m_strSeg->getData(yi, xi) > 0 || ForceHeadwater == true) //Se estiver em cima da rede de drenagem
+                    //Se estiver em cima da rede de drenagem
+                    if (m_strSeg->getData(yi, xi) > 0 || ForceHeadwater == true)
                     {
 
-                        if (FlowDirection::relativeIncipientFlowDirection(xi, Xc, yi, Yc) == m_flowDirection->getData(yi, xi))
+                        if (HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xi, Xc, yi, Yc) == m_flowDirection->getData(yi, xi))
                         {
-
                             nPointCell += 1;
 
-                            if (restartVerification == true) //Se identificou que existe uma junção, atribui os dados para as células de exutório
+                            //Se identificou que existe uma junção, atribui os dados para as células de exutório
+                            if (restartVerification == true)
                             {
                                 cellNum = findCellPosition(yi, xi);
                                 if (!(cellNum < 0))
@@ -584,41 +594,47 @@ void LengthSegmentation::moveToUpstreamDoubleSegmented(short Yc, short Xc, short
 
 void LengthSegmentation::doubleSegmentedPosProcessing()
 {
-
-//VB TO C++ CONVERTER TODO TASK: Native C++ has no direct way to resize an array:
-    ReDim _CellAnalyzed(m_strSeg->getRows(), m_strSeg->getCols()); //Reinicializa o vetor das células analizadas
+    //Reinicializa o vetor das células analizadas
+    m_cellAnalyzed.clear();
+    m_cellAnalyzed.resize(m_strSeg->getRows() * m_strSeg->getCols());
     short xAnterior = 0;
     short yAnterior = 0;
-    short row = 0;
-    short col = 0;
+    int row = 0;
+    int col = 0;
     bool MovedUpJunction = false;
     int SegmentCode = 0;
     int PreviousSegmentCode = 0;
 
-    for (auto nJunction = (m_numberOfJunctionCells - 1); nJunction >= 0; nJunction--) //Faz da maior área para a menor, ignorando o exutório final
+    //Faz da maior área para a menor, ignorando o exutório final
+    for (auto nJunction = (m_numberOfJunctionCells - 1); nJunction >= 0; nJunction--)
     {
-
         col = m_junctionCells[nJunction]->x;
         row = m_junctionCells[nJunction]->y;
 
         xAnterior = col;
         yAnterior = row;
 
-        if (m_strSeg->getData(row, col) == m_strSeg->NoDataValue) //Se a célula já foi analisada e removida da drenagem principal, passa para a próxima junção
+        //Se a célula já foi analisada e removida da drenagem principal, passa para a próxima junção
+        if (m_strSeg->getData(row, col) == m_strSeg->getNoDataValue())
         {
             goto nextjunction;
         }
-        FlowDirection::moveToFlowDirection(m_flowDirection->getData(row, col), row, col); //Anda uma célula para jusante para alcançar a célula de junção (com exceção do exutório da bacia '0')
+        //Anda uma célula para jusante para alcançar a célula de junção (com exceção do exutório da bacia '0')
+        HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection->getData(row, col), row, col);
 
-        SegmentCode = m_strSeg->getData(row, col); //Identifica o número do segmento atual
+        //Identifica o número do segmento atual
+        SegmentCode = m_strSeg->getData(row, col);
 
-        if (SegmentCode == m_strSeg->NoDataValue) //Significa que o trecho a jusante já foi deletado. Deverá ser deletado o trecho atual
+        //Significa que o trecho a jusante já foi deletado. Deverá ser deletado o trecho atual
+        if (SegmentCode == m_strSeg->getNoDataValue())
         {
-            row = yAnterior; //Volta para a posição anterior
+            //Volta para a posição anterior
+            row = yAnterior;
             col = xAnterior;
             SegmentCode = m_strSeg->getData(yAnterior, xAnterior);
             PreviousSegmentCode = SegmentCode;
-            goto EraseCells; //Vai direto para a exclusão do trecho
+            //Vai direto para a exclusão do trecho
+            goto EraseCells;
         }
         else
         {
@@ -626,42 +642,52 @@ void LengthSegmentation::doubleSegmentedPosProcessing()
             yAnterior = row;
         }
 
-        PreviousSegmentCode = SegmentCode; //Assume o número do segmento anterior igual ao atual
+        //Assume o número do segmento anterior igual ao atual
+        PreviousSegmentCode = SegmentCode;
 
-        MovedUpJunction = false; //Parte inicialmente do pressuposto que não passou da junção
-        moveToUpstreamMinArea(yAnterior, xAnterior, row, col, MovedUpJunction, false); //Sobe em direção à área mínima de flow accumulation, na junção atual
+        //Parte inicialmente do pressuposto que não passou da junção
+        MovedUpJunction = false;
+        //Sobe em direção à área mínima de flow accumulation, na junção atual
+        moveToUpstreamMinArea(yAnterior, xAnterior, row, col, MovedUpJunction, false);
 
-        if (MovedUpJunction == true) //Caso passar da junção e ir em direção à menor área, começa a exclusão do trecho
+        //Caso passar da junção e ir em direção à menor área, começa a exclusão do trecho
+        if (MovedUpJunction == true)
         {
-
-            do //Faça até chegar em uma junção ou trocar de código de segmentação
+            //Faça até chegar em uma junção ou trocar de código de segmentação
+            while (true)
             {
+                //Identifica o código do segmento após a mudança de posição
+                SegmentCode = m_strSeg->getData(row, col);
 
-                SegmentCode = m_strSeg->getData(row, col); //Identifica o código do segmento após a mudança de posição
-
-                if (yAnterior == row && xAnterior == col) //Chegou na célula de cabeceira
+                //Chegou na célula de cabeceira
+                if (yAnterior == row && xAnterior == col)
                 {
                     break;
                 }
     EraseCells:
-                if (PreviousSegmentCode != SegmentCode) //Se trocar o código do segmento, vai para a próxima junção
+                //Se trocar o código do segmento, vai para a próxima junção
+                if (PreviousSegmentCode != SegmentCode)
                 {
                     break;
                 }
-                m_strSeg->getData(row, col) = m_strSeg->NoDataValue; //Apaga a definição de rede de drenagem da célula
+                //Apaga a definição de rede de drenagem da célula
+                m_strSeg->setData(row, col, m_strSeg->getNoDataValue());
 
                 xAnterior = col;
                 yAnterior = row;
 
-                MovedUpJunction = false; //Parte inicialmente do pressuposto que não passou da junção
-                moveToUpstreamMinArea(yAnterior, xAnterior, row, col, MovedUpJunction, false); //Sobe em direção à área mínima de flow accumulation
+                //Parte inicialmente do pressuposto que não passou da junção
+                MovedUpJunction = false;
+                //Sobe em direção à área mínima de flow accumulation
+                moveToUpstreamMinArea(yAnterior, xAnterior, row, col, MovedUpJunction, false);
 
-                if (MovedUpJunction == true) //Chegou em uma nova junção, sai do loop
+                //Chegou em uma nova junção, sai do loop
+                if (MovedUpJunction == true)
                 {
                     MovedUpJunction = false;
                     break;
                 }
-            } while (true);
+            }
         }
 
     nextjunction: ;
@@ -669,13 +695,14 @@ void LengthSegmentation::doubleSegmentedPosProcessing()
 
 }
 
-void LengthSegmentation::moveToUpstreamMinArea(short Yc, short Xc, short &rowUpstr, short &colUpstr, bool &AfterJunction, bool markOutlets)
+void LengthSegmentation::moveToUpstreamMinArea(short Yc, short Xc, int &rowUpstr, int &colUpstr, bool &AfterJunction, bool markOutlets)
 {
-
     short xi = 0;
     short yi = 0;
-    float MinUpstreamArea = std::numeric_limits<float>::max(); //Em direção à menor área de drenagem
-    short CounterPointingCells = 0; //Conta quantas células apontaram para a célula atual
+    //Em direção à menor área de drenagem
+    float MinUpstreamArea = std::numeric_limits<float>::max();
+    //Conta quantas células apontaram para a célula atual
+    short CounterPointingCells = 0;
 
     AfterJunction = false;
 
@@ -689,21 +716,22 @@ void LengthSegmentation::moveToUpstreamMinArea(short Yc, short Xc, short &rowUps
         {
             xi = (Xc + x);
 
-            if (x != 0 || y != 0) //Evita a análise da própria célula (nó central)
+            //Evita a análise da própria célula (nó central)
+            if (x != 0 || y != 0)
             {
-                if (xi >= 0 && yi >= 0 && xi < m_flowDirection->getCols() && yi < m_flowDirection->getRows()) //Evita sair dos limites do raster
+                //Evita sair dos limites do raster
+                if (xi >= 0 && yi >= 0 && xi < m_flowDirection->getCols() && yi < m_flowDirection->getRows())
                 {
-
-                    if (m_strSeg->getData(yi, xi) > 0) //Se estiver em cima da rede de drenagem
+                    //Se estiver em cima da rede de drenagem
+                    if (m_strSeg->getData(yi, xi) > 0)
                     {
-
-                        if (FlowDirection::relativeIncipientFlowDirection(xi, Xc, yi, Yc) == m_flowDirection->getData(yi, xi))
+                        if (HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xi, Xc, yi, Yc) == m_flowDirection->getData(yi, xi))
                         {
-
                             CounterPointingCells += 1;
-                            if (markOutlets == true) //Marca o exutório para a respectiva drenagem ser removida posteriormente
+                            //Marca o exutório para a respectiva drenagem ser removida posteriormente
+                            if (markOutlets == true)
                             {
-                                m_cellAnalyzed(yi, xi) = true;
+                                m_cellAnalyzed[yi * m_strSeg->getCols() + xi] = true;
                             }
 
                             //Verifica qual a célula com a menor área contribuinte
@@ -720,7 +748,8 @@ void LengthSegmentation::moveToUpstreamMinArea(short Yc, short Xc, short &rowUps
         }
     }
 
-    if (CounterPointingCells > 1) //Avisa que chegou em uma junção e moveu para a célula de menor área
+    //Avisa que chegou em uma junção e moveu para a célula de menor área
+    if (CounterPointingCells > 1)
     {
         AfterJunction = true;
     }
@@ -738,14 +767,9 @@ long long LengthSegmentation::findCellPosition(short y, short x)
         }
     }
 
-    return -1; //Caso não encontrar a célula no meio das demais
+    //Caso não encontrar a célula no meio das demais
+    return -1;
     //Throw New Exception("Junction cells were not found!")
-
-}
-
-void LengthSegmentation::writeSegmentedStreams(const std::QString &arquivo)
-{
-    m_strSeg->WriteData(arquivo);
 }
 }
 }

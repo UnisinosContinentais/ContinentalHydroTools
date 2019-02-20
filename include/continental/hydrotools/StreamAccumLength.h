@@ -1,15 +1,16 @@
-﻿#ifndef IPHYDRORASTERTOOLS_STREAMACCUMLENGTH_H
-#define IPHYDRORASTERTOOLS_STREAMACCUMLENGTH_H
+﻿#ifndef CONTINENTAL_HYDRO_TOOLS_STREAMACCUMLENGTH_H
+#define CONTINENTAL_HYDRO_TOOLS_STREAMACCUMLENGTH_H
 
+#include <memory>
 #include <QString>
-#include "continental/dataManagement/Raster.h"
+#include <continental/datamanagement/Raster.h>
 
 //*******************************************************************
 //DETERMINAÇÃO DO COMPRIMENTO ACUMULADO POR SEGMENTO
 //Criado por Vinícius Alencar Siqueira - 01/04/2015
 //*******************************************************************
 
-using namespace continental::dataManagement;
+using namespace continental::datamanagement;
 
 namespace continental
 {
@@ -22,27 +23,19 @@ class StreamAccumLength
 {
 
 private:
-    Raster<short> *m_strDef;
-    Raster<short> *m_flowDirection;
-    Raster<float> *m_accumLength;
-    Raster<short> *m_strSeg;
+    std::shared_ptr<datamanagement::Raster<short>> m_strDef;
+    std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
+    std::shared_ptr<datamanagement::Raster<float>> m_accumLength;
+    std::shared_ptr<datamanagement::Raster<short>> m_strSeg;
 
-public:	
-    virtual ~StreamAccumLength()
-    {
-        delete m_strDef;
-        delete m_flowDirection;
-        delete m_accumLength;
-        delete m_strSeg;
-    }
-
+public:
     StreamAccumLength();
 
     //Lê os dados do FlowDirection
-    void readFlowDirectionData(const QString &file);
+    void setFlowDirection(std::shared_ptr<datamanagement::Raster<short>> flowDirection);
 
     //Lê os dados do FlowDirection
-    void readStreamDefinitionData(const QString &file);
+    void setStreamDefinition(std::shared_ptr<datamanagement::Raster<short>> streamDefinition);
 
     /// <summary>
     /// Separa os trechos de rio em todas as confluências
@@ -64,15 +57,8 @@ private:
 
     //Verifica se algum vizinho está apontando FD para
     bool verifyStreamOutlet(short yc, short xc, bool searchAccumLength);
-
-public:
-    //Escreve os dados da matrix dos comprimentos acumulados
-    void writeAccumLengthData(const QString &file);
-
-    //Escreve os dados da matrix dos trechos segmentados
-    void WriteSegmentedStreams(const QString &file);
 };
 }
 }
 
-#endif // IPHYDRORASTERTOOLS_STREAMACCUMLENGTH_H
+#endif // CONTINENTAL_HYDRO_TOOLS_STREAMACCUMLENGTH_H
