@@ -11,7 +11,6 @@
 
 //*******************************************************************
 //REMOÇÃO DE DEPRESSÕES
-//Criado por Vinícius Alencar Siqueira - 20/01/2014
 //CÓDIGO MHS (Modified Heuristic Search) - v1.4
 //Baseado no Artigo de Hou et al (2011) - Automatic Extraction of Drainage Networks from DEMs Base on Heuristic Search. Journal of Software, Vol. 6, nº 8
 //*******************************************************************
@@ -49,7 +48,7 @@ private:
     size_t m_maxOpenList = 0;
     size_t m_maxClosedList = 0;
     // Peso da função de custo
-    float m_weightFuncG = 0;
+    float m_weightFunctionCost = 0;
 
     //Matriz de direções para atribuir a direção de fluxo em área plana: esquerda, baixo, direita, cima, diagonais
     // Matriz de direções em X
@@ -74,16 +73,17 @@ private:
 	float percent = 0;
 	bool error = true;
 public:
+    /// <summary>
+    /// Cria uma nova instância da classe Removedora de depressões
+    /// </summary>
+    /// <param name="maxOpenList">Descrição: Número máximo de elementos na lista de células candidatas.</param>
+    /// <param name="maxClosedList">Descrição: Número máximo de elementos na lista de células selecionadas.</param>
+    /// <param name="weightFunctionCost">Descrição: Peso para a função de custo G(i)</param>
+    /// <param name="processingAlgorithm">Descrição: Modo de processamento para a remoção de depressões.</param>
+    /// <remarks></remarks>
+    HeuristicSinkRemoval(size_t maxOpenList, size_t maxClosedList, float weightFunctionCost, HeuristicSinkRemoval::ProcessingMode processingAlgorithm);
 
-	/// <summary>
-	/// Cria uma nova instância da classe Removedora de depressões
-	/// </summary>
-	/// <param name="maxOpenList">Descrição: Número máximo de elementos na lista de células candidatas.</param>
-	/// <param name="maxClosedList">Descrição: Número máximo de elementos na lista de células selecionadas.</param>
-	/// <param name="weightFunctionG">Descrição: Peso para a função de custo G(i)</param>
-	/// <param name="processingAlgorithm">Descrição: Modo de processamento para a remoção de depressões.</param>
-	/// <remarks></remarks>
-	HeuristicSinkRemoval(size_t maxOpenList, size_t maxClosedList, float weightFunctionG, HeuristicSinkRemoval::ProcessingMode processingAlgorithm);
+    virtual ~HeuristicSinkRemoval();
 
     /// <summary>
     /// Retorna ou atribui o tamanho da janela que se move em torno da célula com depressão (somente modo Heuristic Search)
@@ -108,9 +108,6 @@ public:
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
     virtual const datamanagement::Raster<short> & getFlowDirection() const;
-
-    //Lê um arquivo de MDE, especificando o local
-    void readMDEdata(const QString &file);
 
     /// <summary>
     /// Rotina para removção das depressões do MDE.
@@ -176,6 +173,7 @@ private:
     //Retorna a direção de fluxo de uma célula qualquer, posicionada em x,y; Função das declividades das células vizinhas
     short incipientFlowDirection(size_t x, size_t y);
 };
+
 }
 }
 

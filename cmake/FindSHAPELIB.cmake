@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 include(FindPackageHandleStandardArgs)
 
 find_path(SHAPELIB_INCLUDE_DIR shapelib/shapefil.h PATHS "C:/genesis/externals/win64-msvc2015/shapelib-1.4.1/include")
-message("Pruuuu")
-message(${SHAPELIB_INCLUDE_DIR})
+
 find_library(SHAPELIB_LIBRARY NAMES shapelib PATHS C:/genesis/externals/win64-msvc2015/shapelib-1.4.1/lib)
 
 #-----------------------------------------------------------------------
@@ -22,8 +21,6 @@ find_package_handle_standard_args(SHAPELIB
 
 mark_as_advanced(SHAPELIB_INCLUDE_DIR SHAPELIB_LIBRARY)
 
-#-----------------------------------------------------------------------
-# Set user variables and create imported targets if SQLite3 is found
 if(SHAPELIB_FOUND)
   set(SHAPELIB_INCLUDE_DIRS ${SHAPELIB_INCLUDE_DIR})
   set(SHAPELIB_LIBRARIES ${SHAPELIB_LIBRARY})

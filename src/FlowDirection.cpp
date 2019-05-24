@@ -33,10 +33,10 @@ void FlowDirection::calculateFlowDirection()
 
     //Calcula para toda a grade as direções de fluxo
     size_t tempVar = m_MDE->getRows() - 2;
-    for (size_t y = 1; y <= tempVar; y++)
+    for (size_t y = 1; y <= tempVar; ++y)
     {
         size_t tempVar2 = m_MDE->getCols() - 2;
-        for (size_t x = 1; x <= tempVar2; x++)
+        for (size_t x = 1; x <= tempVar2; ++x)
         {
             m_flowDirection->setData(x, y, incipientFlowDirection(x, y));
 
@@ -71,10 +71,10 @@ void FlowDirection::verifyFlowDirAtBounds(size_t xc, size_t yc, bool &validated)
     int yi = 0;
     int xi = 0;
 
-    for (int j = -1; j <= 1; j++)
+    for (int j = -1; j <= 1; ++j)
     {
         yi = static_cast<int>(yc) + j;
-        for (int i = -1; i <= 1; i++)
+        for (int i = -1; i <= 1; ++i)
         {
             xi = static_cast<int>(xc) + i;
 
@@ -112,25 +112,25 @@ void FlowDirection::flowDirectionAtBounds()
 
     //Atribui o flow direction para fora dos limites da grade
     size_t tempVar = m_MDE->getRows() - 2;
-    for (size_t y = 1; y <= tempVar; y++)
+    for (size_t y = 1; y <= tempVar; ++y)
     {
         m_flowDirection->setData(y, zero, 16);
     }
 
     size_t tempVar2 = m_MDE->getRows() - 2;
-    for (size_t y = 1; y <= tempVar2; y++)
+    for (size_t y = 1; y <= tempVar2; ++y)
     {
         m_flowDirection->setData(y, m_MDE->getCols() - 1, 1);
     }
 
     size_t tempVar3 = m_MDE->getCols() - 2;
-    for (size_t x = 1; x <= tempVar3; x++)
+    for (size_t x = 1; x <= tempVar3; ++x)
     {
         m_flowDirection->setData(zero, x, 64);
     }
 
     size_t tempVar4 = m_MDE->getCols() - 2;
-    for (size_t x = 1; x <= tempVar4; x++)
+    for (size_t x = 1; x <= tempVar4; ++x)
     {
         m_flowDirection->setData(m_MDE->getRows() - 1, x, 4);
     }
@@ -173,7 +173,7 @@ short FlowDirection::incipientFlowDirection(size_t x, size_t y)
     short enumMax = -1; //Valor inicial que indica que não há direção de fluxo
 
     //Seleciona a maior declividade dentre as calculadas
-    for (short i = 0; i <= 7; i++)
+    for (short i = 0; i <= 7; ++i)
     {
         if (m_matrixD8[i] > max)
         {

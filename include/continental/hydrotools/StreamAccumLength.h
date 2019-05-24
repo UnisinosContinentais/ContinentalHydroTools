@@ -7,7 +7,6 @@
 
 //*******************************************************************
 //DETERMINAÇÃO DO COMPRIMENTO ACUMULADO POR SEGMENTO
-//Criado por Vinícius Alencar Siqueira - 01/04/2015
 //*******************************************************************
 
 using namespace continental::datamanagement;
@@ -52,11 +51,11 @@ private:
     //Atualiza o atributo do stream definition
     void updateReaches(int row, int column, int rowLast, int columnLast, short attribute, int &segmentNumberIncrease, float nReaches, float reachLength);
 
-    bool headwaterFound(short yc, short xc, bool searchAccumLength);
+    bool headwaterFound(int yc, int xc, bool searchAccumLength);
 
 
     //Verifica se algum vizinho está apontando FD para
-    bool verifyStreamOutlet(short yc, short xc, bool searchAccumLength);
+    bool verifyStreamOutlet(int yc, int xc, bool searchAccumLength);
 };
 }
 }

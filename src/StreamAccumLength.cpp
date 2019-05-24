@@ -37,10 +37,11 @@ void StreamAccumLength::computeStreamAccumLength()
     bool JunctionFound = false;
     float yLat = 0;
     float Xlon = 0;
+    int rows = static_cast<int>(m_strDef->getRows()), cols = static_cast<int>(m_strDef->getCols());
 
-    for (auto row = 0; row < m_strDef->getRows(); row++)
+    for (int row = 0; row < rows; ++row)
     {
-        for (auto col = 0; col < m_strDef->getCols(); col++)
+        for (int col = 0; col < cols; ++col)
         {
             i = row;
             j = col;
@@ -55,10 +56,10 @@ void StreamAccumLength::computeStreamAccumLength()
             else if (m_strDef->getData(i, j) > 0)
             {
                 //Caso a célula estiver sobre um trecho que não tenha sido calculado o comprimento
-                if (m_accumLength->getData(i, j) == 0)
+                if (qFuzzyCompare(m_accumLength->getData(i, j), 0))
                 {
                     //Se for cabeceira de drenagem
-                    if (headwaterFound((short)i, (short)j, false) == true)
+                    if (headwaterFound(i, j, false) == true)
                     {
                         while (true)
                         {
@@ -135,9 +136,9 @@ void StreamAccumLength::segmentStreamsByLength(float MaxLength)
     int j = 0;
     bool JunctionFound = false;
 
-    for (auto row = 0; row < m_accumLength->getRows(); row++)
+    for (auto row = 0; row < m_accumLength->getRows(); ++row)
     {
-        for (auto col = 0; col < m_accumLength->getCols(); col++)
+        for (auto col = 0; col < m_accumLength->getCols(); ++col)
         {
             i = row;
             j = col;
@@ -255,7 +256,7 @@ void StreamAccumLength::updateReaches(int linha, int coluna, int LinhaFinal, int
     SegmentNumberIncrease = varAtributo;
 }
 
-bool StreamAccumLength::headwaterFound(short Yc, short xc, bool SearchAccumLength)
+bool StreamAccumLength::headwaterFound(int Yc, int xc, bool SearchAccumLength)
 {
     //direções de apontamento para a célula central
     //For y = -1 To 1       2  4  8
@@ -263,14 +264,14 @@ bool StreamAccumLength::headwaterFound(short Yc, short xc, bool SearchAccumLengt
     //For x = -1 To 1       128   64  32
     //posX = (xc + x)
 
-    short xi = 0;
-    short yi = 0;
+    int xi = 0;
+    int yi = 0;
     short nPointingCells = 0;
 
-    for (auto y = -1; y <= 1; y++)
+    for (int y = -1; y <= 1; ++y)
     {
         yi = (Yc + y);
-        for (auto x = -1; x <= 1; x++)
+        for (int x = -1; x <= 1; ++x)
         {
             xi = (xc + x);
 
@@ -316,7 +317,7 @@ bool StreamAccumLength::headwaterFound(short Yc, short xc, bool SearchAccumLengt
     return nPointingCells == 0;
 }
 
-bool StreamAccumLength::verifyStreamOutlet(short Yc, short xc, bool SearchAccumLength)
+bool StreamAccumLength::verifyStreamOutlet(int Yc, int xc, bool SearchAccumLength)
 {
     //direções de apontamento para a célula central
     //For y = -1 To 1       2  4  8
@@ -324,27 +325,31 @@ bool StreamAccumLength::verifyStreamOutlet(short Yc, short xc, bool SearchAccumL
     //For x = -1 To 1       128   64  32
     //posX = (xc + x)
 
-    short xi = 0;
-    short yi = 0;
+    int xi = 0;
+    int yi = 0;
     short nPointingCells = 0;
+    int rows = static_cast<int>(m_flowDirection->getRows()), cols = static_cast<int>(m_flowDirection->getCols());
 
-    for (auto y = -1; y <= 1; y++)
+    for (int y = -1; y <= 1; ++y)
     {
         yi = (Yc + y);
-        for (auto x = -1; x <= 1; x++)
+        for (int x = -1; x <= 1; ++x)
         {
             xi = (xc + x);
 
-            if (x != 0 || y != 0) //Evita a análise da própria célula (nó central)
+            //Evita a análise da própria célula (nó central)
+            if (x != 0 || y != 0)
             {
-                if (xi >= 0 && yi >= 0 && xi < m_flowDirection->getCols() && yi < m_flowDirection->getRows()) //Evita sair dos limites do raster
+                //Evita sair dos limites do raster
+                if (xi >= 0 && yi >= 0 && xi < cols && yi < rows)
                 {
-
                     if (SearchAccumLength == false)
                     {
-                        if (m_strDef->getData(yi, xi) > 0) //Somente se a célula faz parte da rede de drenagem principal
+                        //Somente se a célula faz parte da rede de drenagem principal
+                        if (m_strDef->getData(yi, xi) > 0)
                         {
-                            if (HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xi, xc, yi, Yc) == m_flowDirection->getData(yi, xi)) //Se a célula analisada apontar para a célula de origem, é contabilizada
+                            //Se a célula analisada apontar para a célula de origem, é contabilizada
+                            if (HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xi, xc, yi, Yc) == m_flowDirection->getData(yi, xi))
                             {
                                 nPointingCells += 1;
                             }
@@ -352,9 +357,11 @@ bool StreamAccumLength::verifyStreamOutlet(short Yc, short xc, bool SearchAccumL
                     }
                     else
                     {
-                        if (m_accumLength->getData(yi, xi) > 0) //Somente se a célula faz parte da rede de drenagem principal
+                        //Somente se a célula faz parte da rede de drenagem principal
+                        if (m_accumLength->getData(yi, xi) > 0)
                         {
-                            if (HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xi, xc, yi, Yc) == m_flowDirection->getData(yi, xi)) //Se a célula analisada apontar para a célula de origem, é contabilizada
+                            //Se a célula analisada apontar para a célula de origem, é contabilizada
+                            if (HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xi, xc, yi, Yc) == m_flowDirection->getData(yi, xi))
                             {
                                 nPointingCells += 1;
                             }

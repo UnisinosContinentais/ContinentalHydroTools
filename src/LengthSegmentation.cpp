@@ -53,9 +53,9 @@ void LengthSegmentation::identifyJunctionsAndOutlet()
     m_numberOfJunctionCells = -1;
 
     auto rows = static_cast<int>(m_strSeg->getRows()), cols = static_cast<int>(m_strSeg->getCols());
-    for (int row = 0; row < rows; row++)
+    for (int row = 0; row < rows; ++row)
     {
-        for (int col = 0; col < cols; col++)
+        for (int col = 0; col < cols; ++col)
         {
             i = row;
             yAnterior = row;
@@ -144,9 +144,9 @@ void LengthSegmentation::identifyOutlets()
     int yAnterior = 0, xAnterior = 0, i = 0, j = 0;
     int rows = static_cast<int>(m_strSeg->getRows()), cols = static_cast<int>(m_strSeg->getCols());
 
-    for (int row = 0; row < rows; row++)
+    for (int row = 0; row < rows; ++row)
     {
-        for (int col = 0; col < cols; col++)
+        for (int col = 0; col < cols; ++col)
         {
             i = row;
             yAnterior = row;
@@ -198,10 +198,10 @@ void LengthSegmentation::identifyAndMarkJunctions(short Yc, short xc)
     short nPointingCells = 0;
     auto rows = static_cast<int>(m_flowDirection->getRows()), cols = static_cast<int>(m_flowDirection->getCols());
 
-    for (int y = -1; y <= 1; y++)
+    for (int y = -1; y <= 1; ++y)
     {
         yi = (Yc + y);
-        for (int x = -1; x <= 1; x++)
+        for (int x = -1; x <= 1; ++x)
         {
             xi = (xc + x);
 
@@ -226,10 +226,10 @@ void LengthSegmentation::identifyAndMarkJunctions(short Yc, short xc)
 
     if (nPointingCells > 1) //Caso tenha mais que uma célula apontando para a célula central
     {
-        for (int y = -1; y <= 1; y++)
+        for (int y = -1; y <= 1; ++y)
         {
             yi = (Yc + y);
-            for (int x = -1; x <= 1; x++)
+            for (int x = -1; x <= 1; ++x)
             {
                 xi = (xc + x);
 
@@ -294,8 +294,8 @@ void LengthSegmentation::segmentBySpecificLength()
     for (auto nJunction = m_numberOfJunctionCells; nJunction >= 0; nJunction--)
     {
         totalLength = 0;
-        col = m_junctionCells[nJunction]->x;
-        row = m_junctionCells[nJunction]->y;
+        col = static_cast<short>(m_junctionCells[static_cast<size_t>(nJunction)]->x);
+        row = static_cast<short>(m_junctionCells[static_cast<size_t>(nJunction)]->y);
 
         //Se a célula já foi analisada, passa para a próxima junção
         if (m_cellAnalyzed[row * m_strSeg->getCols() + col] == true)
@@ -384,10 +384,10 @@ void LengthSegmentation::moveToUpstream(short Yc, short Xc, short &rowUpstr, sho
     rowUpstr = Yc;
     colUpstr = Xc;
 
-    for (auto y = -1; y <= 1; y++)
+    for (auto y = -1; y <= 1; ++y)
     {
         yi = (Yc + y);
-        for (auto x = -1; x <= 1; x++)
+        for (auto x = -1; x <= 1; ++x)
         {
             xi = (Xc + x);
 
@@ -538,10 +538,10 @@ void LengthSegmentation::moveToUpstreamDoubleSegmented(short Yc, short Xc, short
     restartPosition:
     nPointCell = 0;
 
-    for (auto y = -1; y <= 1; y++)
+    for (auto y = -1; y <= 1; ++y)
     {
         yi = (Yc + y);
-        for (auto x = -1; x <= 1; x++)
+        for (auto x = -1; x <= 1; ++x)
         {
             xi = (Xc + x);
 
@@ -709,10 +709,10 @@ void LengthSegmentation::moveToUpstreamMinArea(short Yc, short Xc, int &rowUpstr
     rowUpstr = Yc;
     colUpstr = Xc;
 
-    for (auto y = -1; y <= 1; y++)
+    for (auto y = -1; y <= 1; ++y)
     {
         yi = (Yc + y);
-        for (auto x = -1; x <= 1; x++)
+        for (auto x = -1; x <= 1; ++x)
         {
             xi = (Xc + x);
 
@@ -759,7 +759,7 @@ void LengthSegmentation::moveToUpstreamMinArea(short Yc, short Xc, int &rowUpstr
 long long LengthSegmentation::findCellPosition(short y, short x)
 {
 
-    for (auto i = 0; i < m_numberOfJunctionCells; i++)
+    for (auto i = 0; i < m_numberOfJunctionCells; ++i)
     {
         if (m_junctionCells[i]->x == x && m_junctionCells[i]->y == y)
         {

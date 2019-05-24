@@ -7,7 +7,6 @@
 
 //*******************************************************************
 //CLASSES ESPECÍFICAS DE CÉLULAS UTILIZADAS PELO PROGRAMA
-//Criado por Vinícius Alencar Siqueira - 20/01/2014
 //*******************************************************************
 
 namespace continental

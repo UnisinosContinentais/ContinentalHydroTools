@@ -9,7 +9,6 @@
 
 //*******************************************************************
 //SEGMENTAÇÃO DE TRECHOS POR COMPRIMENTO MÍNIMO
-//Criado por Vinícius Alencar Siqueira - 10/05/2015
 //*******************************************************************
 
 namespace continental

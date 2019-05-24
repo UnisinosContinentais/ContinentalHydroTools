@@ -7,11 +7,10 @@
 
 #include <continental/datamanagement/Raster.h>
 #include "continental/hydrotools/CellWatershed.h"
-#include "continental/hydrotools/shape/ShapeFile.h"
+// #include "continental/hydrotools/shape/ShapeFile.h"
 
 //*******************************************************************
 //DETERMINAÇÃO DE BACIAS
-//Criado por Vinícius Alencar Siqueira - 20/01/2014
 //*******************************************************************
 
 namespace continental
@@ -32,7 +31,7 @@ std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
 //Células com a posição dos exutórios
 std::shared_ptr<std::vector<std::shared_ptr<CellWatershed>>> m_CellExhilarating;
 size_t m_numberCellsBasin = 0;
-shape::ShapeFile m_shapefile;
+// shape::ShapeFile m_shapefile;
 
 public:
     std::shared_ptr<datamanagement::Raster<short>> getWaterShed() const;
@@ -66,13 +65,15 @@ public:
     /// Atribui os exutóros na matriz
     /// </summary>
     /// <param name="ShapeFileOutlets">Descrição: O arquivo em formato shapefile com os exutorios</param>
-    void setPointOutlets(const QString &shapeFileOutlets);
+    // void setPointOutlets(const QString &shapeFileOutlets);
 
     /// <summary>
     /// Atribui os exutóros na matriz para Ferramenta "Depth-Area-Volume"
     /// </summary>
     /// <param name="ShapeFileOutlets">Descrição: O arquivo em formato shapefile com os exutorios</param>
-    void setPointOutlets(const QString &shapeFileOutlets, size_t index);
+    // void setPointOutlets(const QString &shapeFileOutlets, size_t index);
+
+    void setPointOutlets(std::vector<std::pair<double, double>> vectorPairLatitudeLongitude);
 
     /// <summary>
     /// Identifica as catchments

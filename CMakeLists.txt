@@ -13,8 +13,8 @@ list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
 ##############################################
 # Declare dependencies
-find_package(SHAPELIB REQUIRED)
-include_directories(${SHAPELIB_INCLUDE_DIR})
+# find_package(SHAPELIB REQUIRED)
+# include_directories(${SHAPELIB_INCLUDE_DIR})
 
 find_package(ContinentalDataManagement REQUIRED)
 include_directories(${ContinentalDataManagement_INCLUDE_DIRS})
@@ -35,11 +35,11 @@ add_library(ContinentalHydroTools
     src/HeuristicSinkRemovalUtil.cpp
     src/JunctionCell.cpp
     src/LengthSegmentation.cpp
-    src/shape/Box.cpp
-    src/shape/Part.cpp
-    src/shape/Point.cpp
-    src/shape/ShapeFile.cpp
-    src/shape/ShapeObject.cpp
+#    src/shape/Box.cpp
+#    src/shape/Part.cpp
+#    src/shape/Point.cpp
+#    src/shape/ShapeFile.cpp
+#    src/shape/ShapeObject.cpp
     src/StreamAccumLength.cpp
     src/StreamDefinition.cpp
     src/StreamSegmentation.cpp
@@ -119,4 +119,4 @@ export(EXPORT ContinentalHydroTools-targets FILE ${CMAKE_CURRENT_BINARY_DIR}/Con
 export(PACKAGE ContinentalHydroTools)
 
 # add_subdirectory(test)
-add_subdirectory(console)
+# add_subdirectory(console)

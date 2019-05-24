@@ -1,5 +1,4 @@
 ﻿#include <memory>
-#include <continental/datamanagement/RasterFile.h>
 #include "continental/hydrotools/HeuristicSinkRemovalUtil.h"
 #include "continental/hydrotools/StreamSegmentation.h"
 #include "continental/hydrotools/FlowDirection.h"
@@ -17,25 +16,15 @@ StreamSegmentation::StreamSegmentation()
 
 }
 
-void StreamSegmentation::readFlowDirectionData(const QString &fileName)
-{
-    setFlowDirectionData(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(fileName)));
-}
-
-void StreamSegmentation::setStreamDefinition(shared_ptr<Raster<short>> streamDefinition)
-{
-    m_strDef = streamDefinition;
-}
-
-void StreamSegmentation::readStreamDefinitionData(const QString &fileName)
-{
-    setStreamDefinition(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(fileName)));
-}
-
-void StreamSegmentation::setFlowDirectionData(shared_ptr<Raster<short>> flowDirection)
+void StreamSegmentation::setFlowDirection(shared_ptr<Raster<short>> flowDirection)
 {
     m_flowDirection = flowDirection;
     m_strSeg = make_shared<Raster<short>>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
+}
+
+void StreamSegmentation::setStreamDefinition(std::shared_ptr<datamanagement::Raster<short> > streamDefinition)
+{
+    m_strDef = streamDefinition;
 }
 
 void StreamSegmentation::segmentStreams()
@@ -46,9 +35,9 @@ void StreamSegmentation::segmentStreams()
     int rows = static_cast<int>(m_strSeg->getRows());
     int cols = static_cast<int>(m_strSeg->getCols());
 
-    for (int row = 0; row < rows; row++)
+    for (int row = 0; row < rows; ++row)
     {
-        for (int col = 0; col < cols; col++)
+        for (int col = 0; col < cols; ++col)
         {
             int i = row;
             int j = col;
@@ -123,6 +112,11 @@ void StreamSegmentation::segmentStreams()
     }
 }
 
+std::shared_ptr<datamanagement::Raster<short>> StreamSegmentation::getStreamSegmentation()
+{
+    return m_strSeg;
+}
+
 bool StreamSegmentation::verifyStreamOutlet(int yc, int xc)
 {
     //direções de apontamento para a célula central
@@ -135,10 +129,10 @@ bool StreamSegmentation::verifyStreamOutlet(int yc, int xc)
     int yi = 0;
     short nPointingCells = 0;
 
-    for (int y = -1; y <= 1; y++)
+    for (int y = -1; y <= 1; ++y)
     {
         yi = static_cast<int>(yc) + y;
-        for (int x = -1; x <= 1; x++)
+        for (int x = -1; x <= 1; ++x)
         {
             xi = static_cast<int>(xc) + x;
 

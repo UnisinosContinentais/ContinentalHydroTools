@@ -8,7 +8,6 @@
 
 //*******************************************************************
 //DETERMINAÇÃO DE ÁREA ACUMULADA
-//Criado por Vinícius Alencar Siqueira - 20/01/2014
 //*******************************************************************
 
 namespace continental
@@ -40,16 +39,12 @@ public:
     //Cria um novo arquivo para
     FlowAccumulation();
 
-    //Lê um arquivo de MDE, especificando o local
-    void readFlowDirection(const QString &file);
+    virtual ~FlowAccumulation();
 
     /// <summary>
     /// 'Calcula o número de células acumuladas de acordo com o Flow Direction selecionado
     /// </summary>
     virtual void runoff();
-
-    //Escreve os dados de Flow Direction
-    void writeFlowAccData(const QString &filepath);
 private:
     //Verifica se algum vizinho de mesma cota, ou inferior já possui flow direction, atribuindo a mesma em caso verdadeiro
     bool neighbourCellsAnalyzed(int xc, int yc);

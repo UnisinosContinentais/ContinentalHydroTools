@@ -1,5 +1,4 @@
-﻿#include <continental/datamanagement/RasterFile.h>
-#include "continental/hydrotools/StreamDefinition.h"
+﻿#include "continental/hydrotools/StreamDefinition.h"
 
 using namespace continental::datamanagement;
 using namespace std;
@@ -24,10 +23,10 @@ shared_ptr<Raster<float>> StreamDefinition::getStreamGroups() const
     return m_streamGroups;
 }
 
-void StreamDefinition::setFlowAccumulation(shared_ptr<Raster<float>> flowAccumulation, float thresoldValue, ThresholdType thresType)
+void StreamDefinition::setFlowAccumulation(shared_ptr<Raster<float>> flowAccumulation, float thresoldValue, ThresholdType thresoldType)
 {
     m_flowAcc = flowAccumulation;
-    calculateThreshold(thresoldValue, thresType);
+    calculateThreshold(thresoldValue, thresoldType);
     m_streamDef = make_shared<Raster<short>>(m_flowAcc->getRows(), m_flowAcc->getCols(), m_flowAcc->getXOrigin(), m_flowAcc->getYOrigin(), m_flowAcc->getCellSize(), m_flowAcc->getNoDataValue());
 }
 
@@ -36,30 +35,25 @@ shared_ptr<Raster<float>> StreamDefinition::getFlowAccumulation() const
     return m_flowAcc;
 }
 
-void StreamDefinition::readFlowAccumulation(const QString &fileName, float thresoldValue, ThresholdType thresType)
+StreamDefinition::StreamDefinition()
 {
-    setFlowAccumulation(make_shared<Raster<float>>(RasterFile<float>::loadRasterByFile(fileName)), thresoldValue, thresType);
+
 }
 
-void StreamDefinition::readStreamGroupsData(const QString &fileName)
-{
-    setStreamGroups(make_shared<Raster<float>>(RasterFile<float>::loadRasterByFile(fileName)));
-}
-
-void StreamDefinition::calculateThreshold(float value, ThresholdType thrType)
+void StreamDefinition::calculateThreshold(float value, ThresholdType thresoldType)
 {
 
-    if (thrType == ThresholdType::PercentualOfMaximumCells)
+    if (thresoldType == ThresholdType::PercentualOfMaximumCells)
     {
         //Multiplico o máximo nº de células acumuladas por um percentual
         m_threshold = static_cast<size_t>(m_flowAcc->getMaxValue() * value);
     }
-    else if (thrType == ThresholdType::NumberOfCells)
+    else if (thresoldType == ThresholdType::NumberOfCells)
     {
         // Retorna o próprio valor
         m_threshold = static_cast<size_t>(value);
     }
-    else if (thrType == ThresholdType::Area)
+    else if (thresoldType == ThresholdType::Area)
     {
         // Considera que 1º tenha aprox. 111km
         m_threshold = static_cast<size_t>(static_cast<double>(value) / (std::pow(m_flowAcc->getCellSize() * 111, 2)));
@@ -79,9 +73,9 @@ void StreamDefinition::defineStreams()
         setUniqueTreshold();
     }
 
-    for (size_t nRow = 0; nRow < m_streamDef->getRows(); nRow++)
+    for (size_t nRow = 0; nRow < m_streamDef->getRows(); ++nRow)
     {
-        for (size_t nCol = 0; nCol < m_streamDef->getCols(); nCol++)
+        for (size_t nCol = 0; nCol < m_streamDef->getCols(); ++nCol)
         {
             //Se encontrar NODATA escreve NOData
             if (qFuzzyCompare(m_flowAcc->getData(nRow, nCol), m_flowAcc->getNoDataValue()))
@@ -110,9 +104,9 @@ void StreamDefinition::setUniqueTreshold()
     //Cria um novo Raster de Grupos, sendo que este será para um grupo de threshold único
     m_streamGroups = make_shared<Raster<float>>(m_flowAcc->getRows(), m_flowAcc->getCols(), m_flowAcc->getXOrigin(), m_flowAcc->getYOrigin(), m_flowAcc->getCellSize(), m_flowAcc->getNoDataValue());
 
-    for (size_t nRow = 0; nRow < m_streamDef->getRows(); nRow++)
+    for (size_t nRow = 0; nRow < m_streamDef->getRows(); ++nRow)
     {
-        for (size_t nCol = 0; nCol < m_streamDef->getCols(); nCol++)
+        for (size_t nCol = 0; nCol < m_streamDef->getCols(); ++nCol)
         {
             m_streamGroups->setData(nRow, nCol, m_threshold);
         }

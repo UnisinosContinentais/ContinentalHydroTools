@@ -10,7 +10,6 @@
 
 //*******************************************************************
 //DIREÇÕES DE FLUXO (com base na codificação IDRISI)
-//Criado por Vinícius Alencar Siqueira - 20/01/2014
 //*******************************************************************
 
 namespace continental

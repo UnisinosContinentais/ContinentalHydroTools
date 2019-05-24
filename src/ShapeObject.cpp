@@ -49,12 +49,12 @@ namespace IPHydroRasterTools
                 m_vertices.resize(static_cast<size_t>(m_vertexCount));
 
                 double *xptr = obj->padfX, *yptr = obj->padfY;
-                for (int i = 0; i < m_vertexCount; i++)
+                for (int i = 0; i < m_vertexCount; ++i)
                 {
                     m_vertices[i] = make_shared<Point>
                     pptr->Set(*xptr, *yptr);
-                    xptr++;
-                    yptr++;
+                    ++xptr;
+                    ++yptr;
                 }
             }
             m_bounds.ymin = obj->dfYMin;
@@ -66,7 +66,7 @@ namespace IPHydroRasterTools
             int *pt = obj->panPartType;
             Part part;
             m_parts.clear();
-            for (int n = 0; n < obj->nParts; n++)
+            for (int n = 0; n < obj->nParts; ++n)
             {
                 part.type = *pt;
                 part.offset = *ps;
@@ -79,8 +79,8 @@ namespace IPHydroRasterTools
                     part.length = *(ps+1) - *ps;
                 }
                 m_parts.push_back(part);
-                ps++;
-                pt++;
+                ++ps;
+                ++pt;
             }
         }
     }

@@ -58,11 +58,11 @@ void ShapeObject::assign(const SHPObject* obj)
             m_vertices->resize(m_vertexCount);
 
             double *xptr = obj->padfX, *yptr = obj->padfY;
-            for (size_t i = 0; i < m_vertexCount; i++)
+            for (size_t i = 0; i < m_vertexCount; ++i)
             {
                 (*m_vertices.get())[i] = std::make_shared<Point<double>>(*xptr, *yptr);
-                xptr++;
-                yptr++;
+                ++xptr;
+                ++yptr;
             }
         }
         m_bounds.xMin(obj->dfXMin);
@@ -76,7 +76,7 @@ void ShapeObject::assign(const SHPObject* obj)
 
         m_parts.clear();
         auto nParts = static_cast<size_t>(obj->nParts);
-        for (size_t n = 0; n < nParts; n++)
+        for (size_t n = 0; n < nParts; ++n)
         {
             part.type = *pt;
             part.offset = *ps;
@@ -89,8 +89,8 @@ void ShapeObject::assign(const SHPObject* obj)
                 part.length = static_cast<size_t>(*(ps + 1) - *ps);
             }
             m_parts[n] = part;
-            ps++;
-            pt++;
+            ++ps;
+            ++pt;
         }
     }
 }
@@ -114,7 +114,7 @@ void ShapeObject::assign(const ShapeObject& other)
             for (const auto &vertice : *other.getVertices().get())
             {
                 (*m_vertices.get())[i] = make_shared<Point<double>>(vertice->x(), vertice->y());
-                i++;
+                ++i;
             }
         }
         m_bounds = other.m_bounds;

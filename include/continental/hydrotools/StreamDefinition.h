@@ -7,7 +7,6 @@
 
 //*******************************************************************
 //IDENTIFICAÇÃO DE TRECHOS DE RIO
-//Criado por Vinícius Alencar Siqueira - 20/01/2014
 //*******************************************************************
 
 namespace continental
@@ -59,7 +58,7 @@ public:
     /// </summary>
     std::shared_ptr<datamanagement::Raster<float>> getStreamGroups() const;
 
-    void setFlowAccumulation(std::shared_ptr<datamanagement::Raster<float>> flowAccumulation, float thresoldValue, ThresholdType thresType);
+    void setFlowAccumulation(std::shared_ptr<datamanagement::Raster<float>> flowAccumulation, float thresoldValue, ThresholdType thresoldType);
 
     /// <summary>
     /// Retorna a matriz de Flow Acumulation
@@ -70,16 +69,6 @@ public:
     /// Cria um novo arquivo de StreamDefinition
     /// </summary>
     StreamDefinition();
-
-    /// <summary>
-    /// Lê um arquivo de Flow accumulation, especificando o local
-    /// </summary>
-    void readFlowAccumulation(const QString &fileName, float thresoldValue, ThresholdType thresType);
-
-    /// <summary>
-    /// Lê um arquivo de grupos, com thresholds diferentes para diferentes areas (opcional)
-    /// </summary>
-    void readStreamGroupsData(const QString &fileName);
 
     /// <summary>
     /// Rotina que define os trechos de rio.

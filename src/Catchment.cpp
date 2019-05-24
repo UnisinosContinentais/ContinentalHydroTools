@@ -6,12 +6,12 @@
 #include "continental/hydrotools/CellWatershed.h"
 #include "continental/hydrotools/FlowDirection.h"
 #include "continental/hydrotools/HeuristicSinkRemovalUtil.h"
-#include "continental/hydrotools/shape/ShapeFile.h"
-#include "continental/hydrotools/shape/ShapeObject.h"
+// #include "continental/hydrotools/shape/ShapeFile.h"
+// #include "continental/hydrotools/shape/ShapeObject.h"
 
 using namespace std;
 using namespace continental::datamanagement;
-using namespace continental::hydrotools::shape;
+// using namespace continental::hydrotools::shape;
 
 namespace continental
 {
@@ -59,7 +59,7 @@ void Catchment::readStreamSegmentData(const QString &fileName)
     //Pega os dados de stream segment e joga na matriz de watershed para marcar pontos na bacia
     m_waterShed = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(fileName));
 }
-
+/*
 void Catchment::setPointOutlets(const QString &shapeFileOutlets)
 {
     m_shapefile.Open(shapeFileOutlets);
@@ -68,7 +68,7 @@ void Catchment::setPointOutlets(const QString &shapeFileOutlets)
     size_t countCellExhilarating = static_cast<size_t>(m_shapefile.GetEntityCount());
     m_CellExhilarating->resize(countCellExhilarating);
 
-    for (size_t i = 0; i < countCellExhilarating; i++)
+    for (size_t i = 0; i < countCellExhilarating; ++i)
     {
         ShapeObject object;
         m_shapefile.GetShape(i, object);
@@ -78,7 +78,6 @@ void Catchment::setPointOutlets(const QString &shapeFileOutlets)
 
     // Insere os exutórios na matriz de dados
     insertOutlets();
-
 }
 
 void Catchment::setPointOutlets(const QString &ShapeFileOutlets, size_t index)
@@ -97,6 +96,21 @@ void Catchment::setPointOutlets(const QString &ShapeFileOutlets, size_t index)
     //Insere os exutórios na matriz de dados
     insertOutlets();
 }
+*/
+void Catchment::setPointOutlets(std::vector<std::pair<double, double>> vectorPairLatitudeLongitude)
+{
+    // atribui o número de exutórios
+    size_t countCellExhilarating = static_cast<size_t>(vectorPairLatitudeLongitude.size());
+    m_CellExhilarating->resize(countCellExhilarating);
+
+    for (size_t i = 0; i < countCellExhilarating; ++i)
+    {
+        (*m_CellExhilarating)[i] = make_shared<CellWatershed>(vectorPairLatitudeLongitude[i].first, vectorPairLatitudeLongitude[i].second, m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getCellSize(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), i);
+    }
+
+    // Insere os exutórios na matriz de dados
+    insertOutlets();
+}
 
 void Catchment::findWatersheds()
 {
@@ -111,10 +125,10 @@ void Catchment::identifiesWatershed()
     int limitRows = static_cast<int>(m_flowDirection->getRows() - 1);
     int limitCols = static_cast<int>(m_flowDirection->getCols() - 1);
 
-    for (int i = 0; i <= limitCols; i++)
+    for (int i = 0; i <= limitCols; ++i)
     {
         int y = i;
-        for (int j = 0; j <= limitRows; j++)
+        for (int j = 0; j <= limitRows; ++j)
         {
             int x = j;
 
@@ -177,7 +191,7 @@ void Catchment::insertOutlets()
 {
 
     //Insere em cada exutório o valor do atributo, que corresponderá à Sub-bacia
-    for (size_t i = 0; i < m_CellExhilarating->size(); i++)
+    for (size_t i = 0; i < m_CellExhilarating->size(); ++i)
     {
         m_waterShed->setData((*m_CellExhilarating)[i]->y, (*m_CellExhilarating)[i]->x, static_cast<short>((*m_CellExhilarating)[i]->getAttribute()));
     }

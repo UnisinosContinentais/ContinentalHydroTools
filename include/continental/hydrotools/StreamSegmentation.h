@@ -7,7 +7,6 @@
 
 //*******************************************************************
 //DETERMINAÇÃO DO STREAM SEGMENTATION
-//Criado por Vinícius Alencar Siqueira - 20/01/2014
 //*******************************************************************
 
 namespace continental
@@ -27,13 +26,7 @@ std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
 public:
 StreamSegmentation();
 
-//Lê os dados do FlowDirection
-void readFlowDirectionData(const QString &fileName);
-
-//Lê os dados do FlowDirection
-void readStreamDefinitionData(const QString &fileName);
-
-void setFlowDirectionData(std::shared_ptr<datamanagement::Raster<short>> flowDirection);
+void setFlowDirection(std::shared_ptr<datamanagement::Raster<short>> flowDirection);
 
 void setStreamDefinition(std::shared_ptr<datamanagement::Raster<short>> streamDefinition);
 
@@ -41,6 +34,8 @@ void setStreamDefinition(std::shared_ptr<datamanagement::Raster<short>> streamDe
 /// Separa os trechos de rio em todas as confluências
 /// </summary>
 void segmentStreams();
+
+std::shared_ptr<datamanagement::Raster<short>> getStreamSegmentation();
 
 private:
 //Verifica se algum vizinho de mesma cota, ou inferior já possui flow direction, atribuindo a mesma em caso verdadeiro

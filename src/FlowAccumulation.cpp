@@ -1,7 +1,6 @@
 ﻿#include "continental/hydrotools/FlowAccumulation.h"
 #include "continental/hydrotools/FlowDirection.h"
 #include "continental/hydrotools/HeuristicSinkRemovalUtil.h"
-#include <continental/datamanagement/RasterFile.h>
 
 using namespace std;
 using namespace continental::datamanagement;
@@ -32,9 +31,9 @@ FlowAccumulation::FlowAccumulation()
     this->m_flowDirection = make_shared<Raster<short>>();
 }
 
-void FlowAccumulation::readFlowDirection(const QString &Local)
+FlowAccumulation::~FlowAccumulation()
 {
-    setFlowDirection(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(Local)));
+
 }
 
 void FlowAccumulation::runoff()
@@ -43,9 +42,9 @@ void FlowAccumulation::runoff()
 
     m_checkedNodeList.resize(m_flowDirection->getTotalCells());
 
-    for (int i = 0; i < static_cast<int>(m_flowDirection->getRows()); i++)
+    for (int i = 0; i < static_cast<int>(m_flowDirection->getRows()); ++i)
     {
-        for (int j = 0; j < static_cast<int>(m_flowDirection->getCols()); j++)
+        for (int j = 0; j < static_cast<int>(m_flowDirection->getCols()); ++j)
         {
             posX = j;
             posY = i;
@@ -101,10 +100,10 @@ bool FlowAccumulation::neighbourCellsAnalyzed(int xc, int yc)
     int yi = 0;
     bool cellContribution = false;
 
-    for (short y = -1; y <= 1; y++)
+    for (short y = -1; y <= 1; ++y)
     {
         yi = yc + y;
-        for (short x = -1; x <= 1; x++)
+        for (short x = -1; x <= 1; ++x)
         {
             xi = xc + x;
 
