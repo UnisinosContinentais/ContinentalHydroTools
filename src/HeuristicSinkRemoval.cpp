@@ -33,20 +33,20 @@ void HeuristicSinkRemoval::setProcessMode(ProcessingMode value)
     m_algorithmMode = value;
 }
 
-const Raster<short> & HeuristicSinkRemoval::getMDE() const
+shared_ptr<Raster<short>> HeuristicSinkRemoval::getDem() const
 {
-    return *m_MDE.get();
+    return m_Dem;
 }
 
-void HeuristicSinkRemoval::setMDE(shared_ptr<Raster<short>> mde)
+void HeuristicSinkRemoval::setDem(shared_ptr<Raster<short>> dem)
 {
-    m_MDE = mde;
-    m_flowDirection = Raster<short>(m_MDE->getRows(), m_MDE->getCols(), m_MDE->getXOrigin(), m_MDE->getYOrigin(), m_MDE->getCellSize(), m_MDE->getNoDataValue());
+    m_Dem = dem;
+    m_flowDirection = make_shared<Raster<short>>(m_Dem->getRows(), m_Dem->getCols(), m_Dem->getXOrigin(), m_Dem->getYOrigin(), m_Dem->getCellSize(), m_Dem->getNoDataValue());
     m_forcedOutlets.clear();
-    m_forcedOutlets.resize(m_MDE->getRows() * m_MDE->getCols());
+    m_forcedOutlets.resize(m_Dem->getRows() * m_Dem->getCols());
 }
 
-const Raster<short> & HeuristicSinkRemoval::getFlowDirection() const
+shared_ptr<Raster<short>> HeuristicSinkRemoval::getFlowDirection() const
 {
     return m_flowDirection;
 }
@@ -70,7 +70,7 @@ void HeuristicSinkRemoval::removeSinks()
     error = true;
 
     m_array.clear();
-    m_array.resize(m_MDE->getRows() * m_MDE->getCols());
+    m_array.resize(m_Dem->getRows() * m_Dem->getCols());
 
     // Calcula o Flow Direction na borda
     flowDirectionAtBounds();
@@ -87,7 +87,7 @@ void HeuristicSinkRemoval::removeSinks()
     m_openListPosition.resize(m_maxOpenList);
 
     m_openListBoolean.clear();
-    m_openListBoolean.resize(m_MDE->getRows() * m_MDE->getCols());
+    m_openListBoolean.resize(m_Dem->getRows() * m_Dem->getCols());
 
     // Lista de nós que já foram selecionados e checados
     m_closedList.clear();
@@ -97,11 +97,11 @@ void HeuristicSinkRemoval::removeSinks()
     m_closedListPosition.resize(m_maxClosedList);
 
     m_closedListBoolean.clear();
-    m_closedListBoolean.resize(m_MDE->getRows() * m_MDE->getCols());
+    m_closedListBoolean.resize(m_Dem->getRows() * m_Dem->getCols());
 
     // Matriz que indica o caminho de volta, a partir do outlet
     m_traceBackMatrix.clear();
-    m_traceBackMatrix.resize(m_MDE->getRows() * m_MDE->getCols());
+    m_traceBackMatrix.resize(m_Dem->getRows() * m_Dem->getCols());
 
     // Remove as depressões
     removeDepressions();
@@ -141,10 +141,10 @@ void HeuristicSinkRemoval::removeDepressions()
         yPosition = m_array[iArray]->y;
 
         // Pode ser que o Flow Direction já tenha sido calculado em uma das etapas abaixo!
-        if (m_flowDirection.getData(yPosition, xPosition) == 0)
+        if (m_flowDirection->getData(yPosition, xPosition) == 0)
         {
             // Identifica a elevação da depressão selecionada
-            startElevation = m_MDE->getData(yPosition, xPosition);
+            startElevation = m_Dem->getData(yPosition, xPosition);
             // Adiciona inicialmente a célula com a depressão na open list, para ser analisada
             addDepressionToOpenList(xPosition, yPosition, numberOpenList);
             // Move a célula da depressão, da open list para a closed list
@@ -186,7 +186,7 @@ void HeuristicSinkRemoval::removeDepressions()
                 // Identifica a célula com o maior value heurístico na open list
                 size_t iNextCell = enumMinHeuristicInfo(numberOpenList);
                 // Elevação inicial da depressão
-                endElevation = m_MDE->getData(m_openList[iNextCell]->y, m_openList[iNextCell]->x);
+                endElevation = m_Dem->getData(m_openList[iNextCell]->y, m_openList[iNextCell]->x);
 
                 // Verifica se encontrou a saída para o problema
                 outletFound = isOutlet(endElevation, startElevation, m_openList[iNextCell]->y, m_openList[iNextCell]->x);
@@ -260,11 +260,11 @@ void HeuristicSinkRemoval::addDepressionToOpenList(size_t xc, size_t yc, size_t 
     // Coloca a célula na open list
     m_openList[numberElements] = make_unique<HeuristicCell>(yc, xc);
     //Aciona o Flag para indicar que a célula está na open list
-    m_openListBoolean[yc * m_MDE->getCols() + xc] = true;
+    m_openListBoolean[yc * m_Dem->getCols() + xc] = true;
     m_openList[numberElements]->relParentX = 0;
     m_openList[numberElements]->relParentY = 0;
     // Identifica a posição da célula na matriz (na forma de vetor)
-    m_openListPosition[numberElements] = yc * m_MDE->getCols() + xc;
+    m_openListPosition[numberElements] = yc * m_Dem->getCols() + xc;
 
     numberElements += 1;
 }
@@ -284,13 +284,13 @@ void HeuristicSinkRemoval::addNeighboursToOpenList(size_t yc, size_t xc, size_t 
             posX = static_cast<int>(xc) + x;
 
             // Evita que o vizinho saia fora dos limites da grade
-            if (posX < 0 || posY < 0 || posX >= static_cast<int>(m_MDE->getCols()) || posY >= static_cast<int>(m_MDE->getRows()))
+            if (posX < 0 || posY < 0 || posX >= static_cast<int>(m_Dem->getCols()) || posY >= static_cast<int>(m_Dem->getRows()))
 			{
 				continue;
 			}
 
             // Somente adiciona se não estiver nem na open list e nem na closed list
-            size_t position = static_cast<size_t>(posY) * m_MDE->getCols() + static_cast<size_t>(posX);
+            size_t position = static_cast<size_t>(posY) * m_Dem->getCols() + static_cast<size_t>(posX);
 			if (m_closedListBoolean[position] || m_openListBoolean[position])
 			{
 				continue;
@@ -309,7 +309,7 @@ void HeuristicSinkRemoval::addNeighboursToOpenList(size_t yc, size_t xc, size_t 
             // Aciona o flag indicando que a célula está na open list
             m_openListBoolean[position] = true;
             // Indica a posição do ponto da open list
-            m_openListPosition[numberElementos] = static_cast<size_t>(posY) * m_MDE->getCols() + static_cast<size_t>(posX);
+            m_openListPosition[numberElementos] = static_cast<size_t>(posY) * m_Dem->getCols() + static_cast<size_t>(posX);
             numberElementos += 1;
         }
     }
@@ -321,11 +321,11 @@ void HeuristicSinkRemoval::adjustDemFinalElevations()
     std::vector<bool> checkedNodes;
     bool nextCell = false;
     checkedNodes.clear();
-    checkedNodes.resize(m_MDE->getRows() * m_MDE->getCols());
+    checkedNodes.resize(m_Dem->getRows() * m_Dem->getCols());
 
     nextCell = false;
 
-    int rows = static_cast<int>(m_MDE->getRows()), cols = static_cast<int>(m_MDE->getCols());
+    int rows = static_cast<int>(m_Dem->getRows()), cols = static_cast<int>(m_Dem->getCols());
 
     // Fazer para toda a grade
     for (int row = 0; row < rows; ++row)
@@ -333,7 +333,7 @@ void HeuristicSinkRemoval::adjustDemFinalElevations()
         for (int column = 0; column < cols; ++column)
         {
             // Armazena a elevação da célula atual
-            short previousElevation = m_MDE->getData(row, column);
+            short previousElevation = m_Dem->getData(row, column);
 
             size_t position = static_cast<size_t>(row * cols + column);
 
@@ -343,7 +343,7 @@ void HeuristicSinkRemoval::adjustDemFinalElevations()
                 while (true)
                 {
                     // Move para a célula de jusante, de acordo com o flow direction
-                    HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection.getData(row, column), row, column);
+                    HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection->getData(row, column), row, column);
                     // Evita sair fora dos limites
                     if (row > (rows - 1) || column > (cols - 1))
                         break;
@@ -353,12 +353,12 @@ void HeuristicSinkRemoval::adjustDemFinalElevations()
                         break;
 
                     // Armazena a elevação da célula a jusante
-                    short nextElevation = m_MDE->getData(row, column);
+                    short nextElevation = m_Dem->getData(row, column);
 
                     // Se a célula a jusante tiver uma cota superior à anterior, iguala a da anterior
                     if (nextElevation > previousElevation)
                     {
-                        m_MDE->setData(row, column, previousElevation);
+                        m_Dem->setData(row, column, previousElevation);
                     }
                     // Assume a célula como checada
                     checkedNodes[position] = true;
@@ -376,11 +376,11 @@ void HeuristicSinkRemoval::adjustDemFinalElevations()
 void HeuristicSinkRemoval::breaching(size_t closedListCount)
 {
     //identifica as elevações inicial e final da pathlist
-    short initElevation = m_MDE->getData(m_closedList[0]->y, m_closedList[0]->x);
-    short finalElevation = m_MDE->getData(m_closedList[closedListCount - 1]->y, m_closedList[closedListCount - 1]->x);
+    short initElevation = m_Dem->getData(m_closedList[0]->y, m_closedList[0]->x);
+    short finalElevation = m_Dem->getData(m_closedList[closedListCount - 1]->y, m_closedList[closedListCount - 1]->x);
 
     //Evita que o programa utilize o value do NoDATA como elevação final, o que pode comprometer o resultado
-    if (finalElevation == m_MDE->getNoDataValue())
+    if (finalElevation == m_Dem->getNoDataValue())
     {
         finalElevation = initElevation;
     }
@@ -389,7 +389,7 @@ void HeuristicSinkRemoval::breaching(size_t closedListCount)
     {
         // Pode ocorrer em situações de limite do MDE, nesse caso, força o decréscimo na cota
         finalElevation = initElevation;
-        m_MDE->setData(m_closedList[closedListCount - 1]->y, m_closedList[closedListCount - 1]->x, finalElevation);
+        m_Dem->setData(m_closedList[closedListCount - 1]->y, m_closedList[closedListCount - 1]->x, finalElevation);
     }
 
     size_t numberCells = 0, xParent = 0, yParent = 0;
@@ -407,7 +407,7 @@ void HeuristicSinkRemoval::breaching(size_t closedListCount)
             foundStartNode = true;
 
         // Identifica o enumerador do nó de coordenada x,y
-        enumerator = m_traceBackMatrix[yParent * m_MDE->getCols() + xParent];
+        enumerator = m_traceBackMatrix[yParent * m_Dem->getCols() + xParent];
         numberCells += 1;
     }
 
@@ -424,18 +424,18 @@ void HeuristicSinkRemoval::breaching(size_t closedListCount)
         xParent = m_closedList[enumerator]->x + static_cast<size_t>(m_closedList[enumerator]->relParentX);
         yParent = m_closedList[enumerator]->y + static_cast<size_t>(m_closedList[enumerator]->relParentY);
         //Atribuo o novo flow direction
-        m_flowDirection.setData(yParent, xParent, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xParent, m_closedList[enumerator]->x, yParent, m_closedList[enumerator]->y));
+        m_flowDirection->setData(yParent, xParent, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xParent, m_closedList[enumerator]->x, yParent, m_closedList[enumerator]->y));
 
         // Só atribuo a cota se ela for menor do que a existente
         auto value = static_cast<short>(finalElevation + std::round(incremental * i));
-        if (m_MDE->getData(yParent, xParent) > value)
+        if (m_Dem->getData(yParent, xParent) > value)
         {
             // Atribuo a nova cota
-            m_MDE->setData(yParent, xParent, value);
+            m_Dem->setData(yParent, xParent, value);
         }
 
         // Identifica o enumerador do nó de coordenada x,y
-        enumerator = m_traceBackMatrix[yParent * m_MDE->getCols() + xParent];
+        enumerator = m_traceBackMatrix[yParent * m_Dem->getCols() + xParent];
     }
 }
 
@@ -474,7 +474,7 @@ void HeuristicSinkRemoval::fillDepressions(int differenceHeight)
         xc = m_array[i]->x;
 
         //Assume a elevação da célula '//MODIFICADO EM 21/11/2013
-        elevation = m_MDE->getData(yc, xc);
+        elevation = m_Dem->getData(yc, xc);
         lowerBound = 9999;
 
         //Verifica qual é o vizinho com menor elevação
@@ -492,24 +492,24 @@ void HeuristicSinkRemoval::fillDepressions(int differenceHeight)
                 auto x = static_cast<size_t>(static_cast<int>(xc) + xi);
 
                 //Não calcula a elevação for NODATA
-                if (m_MDE->getData(y, x) == m_MDE->getNoDataValue())
+                if (m_Dem->getData(y, x) == m_Dem->getNoDataValue())
 				{
 					continue;
 				}
 
-                if (m_MDE->getData(y, x) >= lowerBound)
+                if (m_Dem->getData(y, x) >= lowerBound)
 				{
 					continue;
 				}
 
-                lowerBound = m_MDE->getData(y, x);
+                lowerBound = m_Dem->getData(y, x);
             }
         }
 
         //Se a diferença entre a elevação de um vizinho e a elevação da depressão é maior do que um limite pré definido, aumenta a cota até este ponto
         if ((lowerBound - elevation) >= differenceHeight)
         {
-            m_MDE->setData(yc, xc, lowerBound);
+            m_Dem->setData(yc, xc, lowerBound);
         }
     }
 
@@ -522,7 +522,7 @@ void HeuristicSinkRemoval::forceBoundOutlet(size_t yc, size_t xc, size_t maxClos
     // Verifica, dentre todas as células da closed list, a primeira célula que for de borda
     for (size_t w = 0; w < maxClosedListElements; ++w)
     {
-        if (m_closedList[w]->x == 0 || m_closedList[w]->y == 0 || m_closedList[w]->x == (m_MDE->getCols() - 1) || m_closedList[w]->y == (m_MDE->getRows() - 1))
+        if (m_closedList[w]->x == 0 || m_closedList[w]->y == 0 || m_closedList[w]->x == (m_Dem->getCols() - 1) || m_closedList[w]->y == (m_Dem->getRows() - 1))
         {
             elements = static_cast<int>(w) + 1;
             break;
@@ -548,7 +548,7 @@ float HeuristicSinkRemoval::heuristicValue(int yc, int xc, short es)
     //Es = value da elevação na célula inicial (starting node)
 
     int numberCells = 0;
-    short ei = m_MDE->getData(yc, xc);
+    short ei = m_Dem->getData(yc, xc);
     int posX = 0, posY = 0;
 
     // Divide dimensão por 2 e arredonda para o inteiro inferior; se n = 5, vai de -2 até 2
@@ -568,9 +568,9 @@ float HeuristicSinkRemoval::heuristicValue(int yc, int xc, short es)
             posX = xc + x;
 
             // Evita que o vizinho saia fora dos limites da grade
-            if (posX >= 0 && posY >= 0 && posX < static_cast<int>(m_MDE->getCols()) && posY < static_cast<int>(m_MDE->getRows()))
+            if (posX >= 0 && posY >= 0 && posX < static_cast<int>(m_Dem->getCols()) && posY < static_cast<int>(m_Dem->getRows()))
             {
-                sum += static_cast<size_t>(m_MDE->getData(static_cast<size_t>(yc + y), static_cast<size_t>(xc + x)));
+                sum += static_cast<size_t>(m_Dem->getData(static_cast<size_t>(yc + y), static_cast<size_t>(xc + x)));
                 numberCells += 1;
             }
         }
@@ -589,14 +589,14 @@ float HeuristicSinkRemoval::heuristicValue(int yc, int xc, short es)
 bool HeuristicSinkRemoval::isOutlet(short ei, short es, size_t posY, size_t posX)
 {
     // Se chegar no NODATA, retorna true
-    if (ei == m_MDE->getNoDataValue())
+    if (ei == m_Dem->getNoDataValue())
         return true;
 
     // Se a diferença de cota do ponto final for menor ou igual a 2 e estiver na borda do MDE, aceita como exutório
     else if (ei < es)
         return true;
 
-    else if ((ei - es) <= 2 && (posX == 0 || posY == 0 || (posX == m_MDE->getCols() - 1) || (posY == m_MDE->getRows() - 1)))
+    else if ((ei - es) <= 2 && (posX == 0 || posY == 0 || (posX == m_Dem->getCols() - 1) || (posY == m_Dem->getRows() - 1)))
         return true;
 
     return false;
@@ -608,7 +608,7 @@ float HeuristicSinkRemoval::modifiedHeuristicValue(int yc, int xc, short es, sho
     //es = value da elevação na célula inicial (starting node)
 
     int numberCells = 0;
-    short ei = m_MDE->getData(static_cast<size_t>(yc), static_cast<size_t>(xc));
+    short ei = m_Dem->getData(static_cast<size_t>(yc), static_cast<size_t>(xc));
     int posX = 0;
     int posY = 0;
     short dy1 = 0;
@@ -664,9 +664,9 @@ float HeuristicSinkRemoval::modifiedHeuristicValue(int yc, int xc, short es, sho
         {
             posX = static_cast<int>(xc) + x;
 
-            if (posX >= 0 && posY >= 0 && posX < static_cast<int>(m_MDE->getCols()) && posY < static_cast<int>(m_MDE->getRows())) //Evita que o vizinho saia fora dos limites da grade
+            if (posX >= 0 && posY >= 0 && posX < static_cast<int>(m_Dem->getCols()) && posY < static_cast<int>(m_Dem->getRows())) //Evita que o vizinho saia fora dos limites da grade
             {
-                sum += m_MDE->getData(static_cast<size_t>(yc + y), static_cast<size_t>(xc + x));
+                sum += m_Dem->getData(static_cast<size_t>(yc + y), static_cast<size_t>(xc + x));
                 numberCells += 1;
             }
         }
@@ -687,14 +687,14 @@ float HeuristicSinkRemoval::PFSValue(size_t yc, size_t xc, short es)
     // ei = value da elevação na célula de indice 'i'
     // es = value da elevação na célula inicial (starting node)
 
-    short ei = m_MDE->getData(yc, xc);
+    short ei = m_Dem->getData(yc, xc);
     // value da função PFS(i) -> diferença de cota entre o nó inicial e o de índice 'i'
     return ei - es;
 }
 
 void HeuristicSinkRemoval::pushCellToClosedList(size_t enumCell, size_t &numberClosed)
 {
-    size_t position = m_openList[enumCell]->y * m_MDE->getCols() + m_openList[enumCell]->x;
+    size_t position = m_openList[enumCell]->y * m_Dem->getCols() + m_openList[enumCell]->x;
 
     // Aciona o Flag para indicar que a célula está na closed list
     m_closedListBoolean[position] = true;
@@ -735,23 +735,23 @@ void HeuristicSinkRemoval::resetAllList(size_t nClosedList, size_t nOpenList)
     for (size_t i = 0; i < nClosedList; ++i)
     {
         // Identifica a linha
-        y = static_cast<size_t>(std::floor(static_cast<double>(m_closedListPosition[i]) / static_cast<double>(m_MDE->getCols())));
+        y = static_cast<size_t>(std::floor(static_cast<double>(m_closedListPosition[i]) / static_cast<double>(m_Dem->getCols())));
         // Identifica a Coluna
-        x = m_closedListPosition[i] - (y * m_MDE->getCols());
+        x = m_closedListPosition[i] - (y * m_Dem->getCols());
         // Retira da Closed List
-        m_closedListBoolean[y * m_MDE->getCols() + x] = false;
+        m_closedListBoolean[y * m_Dem->getCols() + x] = false;
         // Reinicia o value da Matriz de volta
-        m_traceBackMatrix[y * m_MDE->getCols() + x] = 0;
+        m_traceBackMatrix[y * m_Dem->getCols() + x] = 0;
     }
 
     for (size_t i = 0; i < nOpenList; ++i)
     {
         // Identifica a linha
-        y = static_cast<size_t>(std::floor(static_cast<double>(m_openListPosition[i]) / static_cast<double>(m_MDE->getCols())));
+        y = static_cast<size_t>(std::floor(static_cast<double>(m_openListPosition[i]) / static_cast<double>(m_Dem->getCols())));
         // Identifica a Coluna
-        x = m_openListPosition[i] - (y * m_MDE->getCols());
+        x = m_openListPosition[i] - (y * m_Dem->getCols());
         // Retira da Open List
-        m_openListBoolean[y * m_MDE->getCols() + x] = false;
+        m_openListBoolean[y * m_Dem->getCols() + x] = false;
     }
 
 }
@@ -762,15 +762,15 @@ void HeuristicSinkRemoval::calculateFlowDirection()
     bool fdFound = false;
 
     // Calcula para toda a grade as direções de fluxo
-    size_t tempVar = m_MDE->getRows() - 2;
-    size_t tempVar2 = m_MDE->getCols() - 2;
+    size_t tempVar = m_Dem->getRows() - 2;
+    size_t tempVar2 = m_Dem->getCols() - 2;
     for (size_t y = 1; y <= tempVar; ++y)
     {
         for (size_t x = 1; x <= tempVar2; ++x)
         {
-            m_flowDirection.setData(y, x, incipientFlowDirection(x, y));
+            m_flowDirection->setData(y, x, incipientFlowDirection(x, y));
             // Se for = 0, verifica se existe uma célula com igual cota para onde possa verter
-            if (m_flowDirection.getData(y, x) == 0)
+            if (m_flowDirection->getData(y, x) == 0)
             {
                 verifyFlowDirAtBounds(x, y, fdFound);
                 // Se não encontrar célula para verter água, identifica uma depressão
@@ -806,7 +806,7 @@ void HeuristicSinkRemoval::verifyFlowDirAtBounds(size_t xc, size_t yc, bool &val
     //posX = (xc + x)
 
     validated = false;
-    short elevation = m_MDE->getData(static_cast<size_t>(yc), static_cast<size_t>(xc));
+    short elevation = m_Dem->getData(static_cast<size_t>(yc), static_cast<size_t>(xc));
     size_t xi = 0, yi = 0;
 
     // Para os elementos da matriz de direções
@@ -816,12 +816,12 @@ void HeuristicSinkRemoval::verifyFlowDirAtBounds(size_t xc, size_t yc, bool &val
         xi = static_cast<size_t>(static_cast<int>(xc) + m_directionsX[index]);
 
         // Somente se a célula possui cota igual àquela sendo analisada
-        if (m_MDE->getData(yi, xi) != elevation)
+        if (m_Dem->getData(yi, xi) != elevation)
 		{
 			continue;
 		}
 
-		if (m_flowDirection.getData(yi, xi) == 0)
+        if (m_flowDirection->getData(yi, xi) == 0)
 		{
 			validated = true;
 		}
@@ -829,7 +829,7 @@ void HeuristicSinkRemoval::verifyFlowDirAtBounds(size_t xc, size_t yc, bool &val
         // caso tenha sido encontrado algum vizinho com direção de fluxo atribuída, manda água pra ele
         if (validated)
         {
-            m_flowDirection.setData(yc, xc, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xc, xi, yc, yi));
+            m_flowDirection->setData(yc, xc, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xc, xi, yc, yi));
             break;
         }
     }
@@ -840,42 +840,42 @@ void HeuristicSinkRemoval::flowDirectionAtBounds()
     const size_t zero = 0;
 
     //Define o Flow direction dos cantos
-    m_flowDirection.setData(zero, zero, -9999);
-    m_flowDirection.setData(zero, m_MDE->getCols() - 1, -9999);
-    m_flowDirection.setData(m_MDE->getRows() - 1, zero, -9999);
-    m_flowDirection.setData(m_MDE->getRows() - 1, m_MDE->getCols() - 1, -9999);
+    m_flowDirection->setData(zero, zero, -9999);
+    m_flowDirection->setData(zero, m_Dem->getCols() - 1, -9999);
+    m_flowDirection->setData(m_Dem->getRows() - 1, zero, -9999);
+    m_flowDirection->setData(m_Dem->getRows() - 1, m_Dem->getCols() - 1, -9999);
 
     //Atribui o flow direction para fora dos limites da grade
-    size_t tempVar = m_MDE->getRows() - 2;
+    size_t tempVar = m_Dem->getRows() - 2;
 	for (size_t y = 1; y <= tempVar; ++y)
 	{
-        m_flowDirection.setData(y, zero, -9999);
+        m_flowDirection->setData(y, zero, -9999);
 	}
 
     for (size_t y = 1; y <= tempVar; ++y)
 	{
-        m_flowDirection.setData(y, m_MDE->getCols() - 1, -9999);
+        m_flowDirection->setData(y, m_Dem->getCols() - 1, -9999);
 	}
 
-    size_t tempVar3 = m_MDE->getCols() - 2;
+    size_t tempVar3 = m_Dem->getCols() - 2;
     for (size_t x = 1; x <= tempVar3; ++x)
 	{
-        m_flowDirection.setData(zero, x, -9999);
+        m_flowDirection->setData(zero, x, -9999);
 	}
 
     for (size_t x = 1; x <= tempVar3; ++x)
 	{
-        m_flowDirection.setData(m_MDE->getRows() - 1, x, -9999);
+        m_flowDirection->setData(m_Dem->getRows() - 1, x, -9999);
 	}
 }
 
 short HeuristicSinkRemoval::incipientFlowDirection(size_t x, size_t y)
 {
-    auto value = m_MDE->getData(y, x);
+    auto value = m_Dem->getData(y, x);
     // Retorna o value do NODATA caso encontrá-lo
-    if (value == m_MDE->getNoDataValue())
+    if (value == m_Dem->getNoDataValue())
 	{
-        return static_cast<short>(m_MDE->getNoDataValue());
+        return static_cast<short>(m_Dem->getNoDataValue());
 	}
 
     //Matriz D8 - 8 vizinhos:
@@ -889,14 +889,14 @@ short HeuristicSinkRemoval::incipientFlowDirection(size_t x, size_t y)
     //Para os sentidos 1, 3, 4 e 6 o comprimento é igual a 1
 
     auto sqrt2 = static_cast<float>(std::sqrt(2));
-    m_matrixD8[0] = (value - m_MDE->getData(y - 1, x - 1)) / sqrt2;
-    m_matrixD8[1] = value - m_MDE->getData(y - 1, x);
-    m_matrixD8[2] = (value - m_MDE->getData(y - 1, x + 1)) / sqrt2;
-    m_matrixD8[3] = value - m_MDE->getData(y, x - 1);
-    m_matrixD8[4] = value - m_MDE->getData(y, x + 1);
-    m_matrixD8[5] = (value - m_MDE->getData(y + 1, x - 1)) / sqrt2;
-    m_matrixD8[6] = value - m_MDE->getData(y + 1, x);
-    m_matrixD8[7] = (value - m_MDE->getData(y + 1, x + 1)) / sqrt2;
+    m_matrixD8[0] = (value - m_Dem->getData(y - 1, x - 1)) / sqrt2;
+    m_matrixD8[1] = value - m_Dem->getData(y - 1, x);
+    m_matrixD8[2] = (value - m_Dem->getData(y - 1, x + 1)) / sqrt2;
+    m_matrixD8[3] = value - m_Dem->getData(y, x - 1);
+    m_matrixD8[4] = value - m_Dem->getData(y, x + 1);
+    m_matrixD8[5] = (value - m_Dem->getData(y + 1, x - 1)) / sqrt2;
+    m_matrixD8[6] = value - m_Dem->getData(y + 1, x);
+    m_matrixD8[7] = (value - m_Dem->getData(y + 1, x + 1)) / sqrt2;
 
     //32	64	    128
     //16	0	    1      'Configuração das direções de fluxo

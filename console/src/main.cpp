@@ -28,11 +28,11 @@ void sinkDestroy()
     float weightFunctionG = 2;
     auto processingAlgorithm = HeuristicSinkRemoval::ProcessingMode::MHS;
     auto sinkDestroy = make_unique<HeuristicSinkRemoval>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-    sinkDestroy->setMDE(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
+    sinkDestroy->setDem(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
     sinkDestroy->removeSinks();
 
-    RasterFile<short>::writeData(sinkDestroy->getMDE(), outputCorrectedFile);
-    RasterFile<short>::writeData(sinkDestroy->getFlowDirection(), outputFlowDirectionFile);
+    RasterFile<short>::writeData(*sinkDestroy->getDem(), outputCorrectedFile);
+    RasterFile<short>::writeData(*sinkDestroy->getFlowDirection(), outputFlowDirectionFile);
 }
 
 void flowAccumulation()
@@ -74,7 +74,7 @@ void watershedDelineation()
 
     Catchment catchement;
     catchement.setFlowDirection(flowDirectionData);
-    catchement.setPointOutlets(inputShapeFilePointOutletsSnap);
+    // catchement.setPointOutlets(inputShapeFilePointOutletsSnap);
     catchement.findWatersheds();
     RasterFile<short>::writeData(*catchement.getWaterShed().get(), outputWatershedDelineation);
 }

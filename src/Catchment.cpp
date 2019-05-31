@@ -114,7 +114,6 @@ void Catchment::setPointOutlets(std::vector<std::pair<double, double>> vectorPai
 
 void Catchment::findWatersheds()
 {
-    //If _CellExutorios Is Nothing Then Throw New Exception("Não existem pontos de exutório!")
     identifiesWatershed();
 }
 

@@ -20,11 +20,14 @@ class StreamSegmentation
 {
 private:
 std::shared_ptr<datamanagement::Raster<short>> m_strDef;
-std::shared_ptr<datamanagement::Raster<short>> m_strSeg;
 std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
+
+protected:
+std::shared_ptr<datamanagement::Raster<short>> m_strSeg;
 
 public:
 StreamSegmentation();
+virtual ~StreamSegmentation() = default;
 
 void setFlowDirection(std::shared_ptr<datamanagement::Raster<short>> flowDirection);
 
@@ -33,7 +36,7 @@ void setStreamDefinition(std::shared_ptr<datamanagement::Raster<short>> streamDe
 /// <summary>
 /// Separa os trechos de rio em todas as confluências
 /// </summary>
-void segmentStreams();
+virtual void segmentStreams();
 
 std::shared_ptr<datamanagement::Raster<short>> getStreamSegmentation();
 

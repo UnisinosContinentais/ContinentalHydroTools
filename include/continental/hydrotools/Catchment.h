@@ -25,13 +25,15 @@ namespace hydrotools
 class Catchment
 {
 private:
-std::shared_ptr<datamanagement::Raster<short>> m_waterShed;
 //Raster com FlowDirection
 std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
 //Células com a posição dos exutórios
 std::shared_ptr<std::vector<std::shared_ptr<CellWatershed>>> m_CellExhilarating;
 size_t m_numberCellsBasin = 0;
 // shape::ShapeFile m_shapefile;
+
+protected:
+std::shared_ptr<datamanagement::Raster<short>> m_waterShed;
 
 public:
     std::shared_ptr<datamanagement::Raster<short>> getWaterShed() const;
@@ -54,6 +56,8 @@ public:
     /// Cria uma nova instância da class
     /// </summary>
     Catchment();
+
+    virtual ~Catchment() = default;
 
     //Lê os dados do FlowDirection
     void readFlowDirectionData(const QString &local);
@@ -78,7 +82,7 @@ public:
     /// <summary>
     /// Identifica as catchments
     /// </summary>
-    void findWatersheds();
+    virtual void findWatersheds();
 
     //Identifica a bacia hidrográfica
 private:

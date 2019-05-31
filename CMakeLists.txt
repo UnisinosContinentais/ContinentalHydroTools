@@ -119,4 +119,4 @@ export(EXPORT ContinentalHydroTools-targets FILE ${CMAKE_CURRENT_BINARY_DIR}/Con
 export(PACKAGE ContinentalHydroTools)
 
 # add_subdirectory(test)
-# add_subdirectory(console)
+add_subdirectory(console)

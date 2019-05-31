@@ -36,8 +36,8 @@ public:
         PFS = 2
     };
 protected:
-    std::shared_ptr<datamanagement::Raster<short>> m_MDE;
-    datamanagement::Raster<short> m_flowDirection;
+    std::shared_ptr<datamanagement::Raster<short>> m_Dem;
+    std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
 private:
     // Matriz dos 8 vizinhos
     float m_matrixD8[8];
@@ -100,14 +100,14 @@ public:
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    virtual const datamanagement::Raster<short> & getMDE() const;
+    virtual std::shared_ptr<datamanagement::Raster<short>> getDem() const;
 
-    void setMDE(std::shared_ptr<datamanagement::Raster<short>> mde);
+    void setDem(std::shared_ptr<datamanagement::Raster<short>> mde);
 
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    virtual const datamanagement::Raster<short> & getFlowDirection() const;
+    virtual std::shared_ptr<datamanagement::Raster<short>> getFlowDirection() const;
 
     /// <summary>
     /// Rotina para removção das depressões do MDE.

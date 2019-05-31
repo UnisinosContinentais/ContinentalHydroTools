@@ -22,12 +22,14 @@ class StreamDefinition
 private:
     //Matriz de Fluxo acumulado
     std::shared_ptr<datamanagement::Raster<float>> m_flowAcc;
-    //Matriz com o Stream Definition
-    std::shared_ptr<datamanagement::Raster<short>> m_streamDef;
     //Matriz com os Grupos de treshold
     std::shared_ptr<datamanagement::Raster<float>> m_streamGroups;
     //Número mínimo de células acumuladas para formar uma rede de drenagem
     size_t m_threshold = 0;
+
+protected:
+    //Matriz com o Stream Definition
+    std::shared_ptr<datamanagement::Raster<short>> m_streamDef;
 
 public:
     /// <summary>
@@ -70,11 +72,13 @@ public:
     /// </summary>
     StreamDefinition();
 
+    virtual ~StreamDefinition() = default;
+
     /// <summary>
     /// Rotina que define os trechos de rio.
     /// </summary>
     /// <remarks></remarks>
-    void defineStreams();
+    virtual void defineStreams();
 private:
     //Calcula o valor do threshold a ser adotado
     void calculateThreshold(float value, ThresholdType thrType);
