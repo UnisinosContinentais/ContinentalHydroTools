@@ -47,7 +47,7 @@ public:
     virtual void runoff();
 private:
     //Verifica se algum vizinho de mesma cota, ou inferior já possui flow direction, atribuindo a mesma em caso verdadeiro
-    bool neighbourCellsAnalyzed(int xc, int yc);
+    bool neighbourCellsAnalyzed(int yc, int xc);
 };
 }
 }

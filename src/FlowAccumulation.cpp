@@ -38,36 +38,34 @@ FlowAccumulation::~FlowAccumulation()
 
 void FlowAccumulation::runoff()
 {
-    int posX = 0, posY = 0;
-
     m_checkedNodeList.resize(m_flowDirection->getTotalCells());
 
     for (int i = 0; i < static_cast<int>(m_flowDirection->getRows()); ++i)
     {
         for (int j = 0; j < static_cast<int>(m_flowDirection->getCols()); ++j)
         {
-            posX = j;
-            posY = i;
+            int posX = j;
+            int posY = i;
 
             // Se a célula ainda não foi checada
-            auto posCheckedNodeList = static_cast<size_t>(posY) + static_cast<size_t>(posX) * m_flowDirection->getCols();
+            auto posCheckedNodeList = static_cast<size_t>(posY) * m_flowDirection->getCols() + static_cast<size_t>(posX);
             if (m_checkedNodeList[posCheckedNodeList] == false)
             {
-                float totalCells = 0;
-
                 while (true)
                 {
                     // Verifica se todas as células vwizinhas já foram analizadas; Caso sim:
-                    if (neighbourCellsAnalyzed(posX, posY) == false)
+                    if (neighbourCellsAnalyzed(posY, posX) == false)
+                    {
                         break;
+                    }
 
                     // Armazena o número de células acumuladas
-                    totalCells = m_flowAccumulation->getData(static_cast<size_t>(posY), static_cast<size_t>(posX));
+                    float totalCells = m_flowAccumulation->getData(static_cast<size_t>(posY), static_cast<size_t>(posX));
                     //Indica que a célula foi analizada
                     m_checkedNodeList[posCheckedNodeList] = true;
                     // Move na direção do flow direction
-                    int posYTemp = posY, posXTemp = posX;
-                    HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)), posYTemp, posXTemp);
+                    HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)), posY, posX);
+                    posCheckedNodeList = static_cast<size_t>(posY) * m_flowDirection->getCols() + static_cast<size_t>(posX);
 
                     //Se extrapolar os limites da matriz, sai do loop
                     if (posX < 0 || posY < 0 || posX > static_cast<int>(m_flowDirection->getCols() - 1) || posY > static_cast<int>(m_flowDirection->getRows() - 1))
@@ -80,15 +78,14 @@ void FlowAccumulation::runoff()
                     }
 
                     // Acumula as células anteriores
-                    m_flowAccumulation->setData(static_cast<size_t>(posY), static_cast<size_t>(posX), m_flowAccumulation->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)) + (totalCells + 1));
+                    m_flowAccumulation->setData(static_cast<size_t>(posY), static_cast<size_t>(posX), m_flowAccumulation->getData(static_cast<size_t>(posY), static_cast<size_t>(posX)) + totalCells + 1);
                 }
             }
         }
     }
-
 }
 
-bool FlowAccumulation::neighbourCellsAnalyzed(int xc, int yc)
+bool FlowAccumulation::neighbourCellsAnalyzed(int yc, int xc)
 {
     //na openlist:,         'direções de apontamento para a célula central
     //For y = -1 To 1       2  4  8
@@ -96,8 +93,7 @@ bool FlowAccumulation::neighbourCellsAnalyzed(int xc, int yc)
     //For x = -1 To 1       128   64  32
     //posX = (xc + x)
 
-    int xi = 0;
-    int yi = 0;
+    int xi = 0, yi = 0;
     bool cellContribution = false;
 
     for (short y = -1; y <= 1; ++y)
@@ -109,19 +105,27 @@ bool FlowAccumulation::neighbourCellsAnalyzed(int xc, int yc)
 
             // Evita a análise da própria célula (nó central)
             if (x == 0 && y == 0)
+            {
                 continue;
+            }
 
             // Evita sair dos limites do raster
             if (xi < 0 || yi < 0 || static_cast<size_t>(xi) >= m_flowDirection->getCols() || static_cast<size_t>(yi) >= m_flowDirection->getRows())
+            {
                 continue;
+            }
 
             // Se houver uma das células vizinhas apontando para o centro, aciona o flag
-            if (HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<size_t>(xi), static_cast<size_t>(xc), static_cast<size_t>(yi), static_cast<size_t>(yc)) == m_flowDirection->getData(static_cast<size_t>(yi), static_cast<size_t>(xi)))
+            if (HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(xi, xc, yi, yc) == m_flowDirection->getData(static_cast<size_t>(yi), static_cast<size_t>(xi)))
+            {
                 cellContribution = true;
+            }
 
             // Se a célula vizinha estiver apontando para o centro, mas não tiver sido checada ainda, retorna falso.
-            if (cellContribution == true && m_checkedNodeList[static_cast<size_t>(yi) + static_cast<size_t>(xi) * m_flowDirection->getCols()] == false)
+            if (cellContribution == true && m_checkedNodeList[static_cast<size_t>(yi) * m_flowDirection->getCols() + static_cast<size_t>(xi)] == false)
+            {
                 return false;
+            }
 
             // Reseta para verificar a próxima célula
             cellContribution = false;

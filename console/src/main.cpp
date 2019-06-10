@@ -12,13 +12,14 @@ using namespace continental::hydrotools;
 using namespace continental::datamanagement;
 using namespace std;
 
-QString inputDemFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\rioSinos.asc";
-QString outputCorrectedFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\cplusplus_rioSinos_sink.asc";
-QString outputFlowDirectionFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\cplusplus_rioSinos_fdr.asc";
-QString outputFlowAccumulationFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\cplusplus_rioSinos_fac.asc";
-QString outputStreamDefinitionFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\cplusplus_rioSinos_str.asc";
-QString outputStreamSegmentationDefinitionFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\cplusplus_rioSinos_strseg.asc";
-QString outputWatershedDelineation = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\cplusplus_rioSinos_wat.asc";
+QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets";
+QString inputDemFile = basePath + "/riosinos90arcgis.asc";
+QString outputCorrectedFile = basePath + "/rioSinos90_sink.asc";
+QString outputFlowDirectionFile = basePath + "/IPHrioSinos90_fdr.asc";
+QString outputFlowAccumulationFile = basePath + "/rioSinos90_fac.asc";
+QString outputStreamDefinitionFile = basePath + "/rioSinos90_str.asc";
+QString outputStreamSegmentationDefinitionFile = basePath + "/rioSinos90_strseg.asc";
+QString outputWatershedDelineation = basePath + "/rioSinos90_wat.asc";
 QString inputShapeFilePointOutletsSnap = "";
 
 void sinkDestroy()
@@ -81,7 +82,10 @@ void watershedDelineation()
 
 int main(int argc, char **argv)
 {
-    streamDefinition();
+    // sinkDestroy();
+    // flowAccumulation();
+    // streamDefinition();
+    streamSegmention();
 
     return 0;
 }

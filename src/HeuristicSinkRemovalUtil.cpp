@@ -15,32 +15,32 @@ void HeuristicSinkRemovalUtil::moveToFlowDirection(short value, int &row, int &c
     switch (value) //Identifica o sentido conforme o numero
     {
         case 128:
-            row = row - 1;
-            column = column + 1;
+            row--;
+            column++;
             break;
         case 1:
-            column = column + 1;
+            column++;
             break;
         case 2:
-            row = row + 1;
-            column = column + 1;
+            row++;
+            column++;
             break;
         case 4:
-            row = row + 1;
+            row++;
             break;
         case 8:
-            row = row + 1;
-            column = column - 1;
+            row++;
+            column--;
             break;
         case 16:
-            column = column - 1;
+            column--;
             break;
         case 32:
-            row = row - 1;
-            column = column - 1;
+            row--;
+            column--;
             break;
         case 64:
-            row = row - 1;
+            row--;
             break;
         default:
             //Não muda, pois encontrou uma borda/depressão
@@ -48,13 +48,13 @@ void HeuristicSinkRemovalUtil::moveToFlowDirection(short value, int &row, int &c
     }
 }
 
-short HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(size_t x1, size_t x2, size_t y1, size_t y2)
+short HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(int x1, int x2, int y1, int y2)
 {
     //célula 1 = célula de origem
     //célula 2 = célula de destino
 
-    int xRel = static_cast<int>(x2) - static_cast<int>(x1);
-    int yRel = static_cast<int>(y2) - static_cast<int>(y1);
+    int xRel = x2 - x1;
+    int yRel = y2 - y1;
 
     if (xRel == 1 && yRel == -1)
     {
