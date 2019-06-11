@@ -115,8 +115,5 @@ install(FILES
 
 export(EXPORT ContinentalHydroTools-targets FILE ${CMAKE_CURRENT_BINARY_DIR}/ContinentalHydroToolsTargets.cmake NAMESPACE ContinentalHydroTools::)
 
-#Register package in user's package registry
-export(PACKAGE ContinentalHydroTools)
-
 # add_subdirectory(test)
 add_subdirectory(console)
