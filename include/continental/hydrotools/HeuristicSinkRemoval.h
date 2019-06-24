@@ -36,7 +36,7 @@ public:
         PFS = 2
     };
 protected:
-    std::shared_ptr<datamanagement::Raster<short>> m_Dem;
+    std::shared_ptr<datamanagement::Raster<short>> m_dem;
     std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
 private:
     // Matriz dos 8 vizinhos
@@ -150,7 +150,7 @@ private:
     float modifiedHeuristicValue(int yc, int xc, short es, short relPosY, short relPosX, float wg);
 
     //Retorna o valor da função custo PFS, para uma célula localizada na posição Yc, Xc
-    float PFSValue(size_t yc, size_t xc, short es);
+    float pfsValue(size_t yc, size_t xc, short es);
 
     //Adiciona os elementos da open list na closed list, excluindo o valor central (que deve ir para o Path list)
     void pushCellToClosedList(size_t enumCell, size_t &numberClosed);

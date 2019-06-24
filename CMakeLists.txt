@@ -13,8 +13,8 @@ list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
 ##############################################
 # Declare dependencies
-# find_package(SHAPELIB REQUIRED)
-# include_directories(${SHAPELIB_INCLUDE_DIR})
+find_package(SHP REQUIRED)
+include_directories(${SHP_INCLUDE_DIR})
 
 find_package(ContinentalDataManagement REQUIRED)
 include_directories(${ContinentalDataManagement_INCLUDE_DIRS})
@@ -34,12 +34,12 @@ add_library(ContinentalHydroTools
     src/HeuristicSinkRemoval.cpp
     src/HeuristicSinkRemovalUtil.cpp
     src/JunctionCell.cpp
-    src/LengthSegmentation.cpp
-#    src/shape/Box.cpp
-#    src/shape/Part.cpp
-#    src/shape/Point.cpp
-#    src/shape/ShapeFile.cpp
-#    src/shape/ShapeObject.cpp
+#    src/LengthSegmentation.cpp
+    src/shape/Box.cpp
+    src/shape/Part.cpp
+    src/shape/Point.cpp
+    src/shape/ShapeFile.cpp
+    src/shape/ShapeObject.cpp
     src/StreamAccumLength.cpp
     src/StreamDefinition.cpp
     src/StreamSegmentation.cpp
@@ -62,6 +62,7 @@ target_compile_options(ContinentalHydroTools PRIVATE $<$<CXX_COMPILER_ID:GNU>:-W
 
 target_link_libraries(ContinentalHydroTools
     PUBLIC ContinentalDataManagement::ContinentalDataManagement
+    PUBLIC SHP::SHP
     PUBLIC Qt5::Core
 )
 
@@ -107,7 +108,6 @@ configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/ContinentalHydroTo
 
 #Install the config, configversion and custom find modules
 install(FILES
-#     ${CMAKE_CURRENT_LIST_DIR}/cmake/FindRapidJSON.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/ContinentalHydroToolsConfig.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/ContinentalHydroToolsConfigVersion.cmake
     DESTINATION ${INSTALL_CONFIGDIR}

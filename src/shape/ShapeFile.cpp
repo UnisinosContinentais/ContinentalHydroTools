@@ -59,6 +59,43 @@ int ShapeFile::GetShape(size_t index, ShapeObject &object)
     return 0;
 }
 
+QString shapeTypeAsString(int shapeType)
+{
+   switch (shapeType)
+   {
+       case SHPT_NULL:
+           return "None";
+       case SHPT_POINT:
+           return "2D Point";
+       case SHPT_ARC:
+           return "2D Arc";
+       case SHPT_POLYGON:
+           return "2D Polygon";
+       case SHPT_MULTIPOINT:
+           return "2D Multi-point";
+       case SHPT_POINTZ:
+           return "3D Point";
+       case SHPT_ARCZ:
+           return "3D Arc";
+       case SHPT_POLYGONZ:
+           return "3D Polygon";
+       case SHPT_MULTIPOINTZ:
+           return "3D Multi-point";
+       case SHPT_POINTM:
+           return "2D Measure Point";
+       case SHPT_ARCM:
+           return "2D Measure Arc";
+       case SHPT_POLYGONM:
+           return "2D Measure Polygon";
+       case SHPT_MULTIPOINTM:
+           return "2D Measure Multi-point";
+       case SHPT_MULTIPATCH:
+           return "Multi-patch";
+       default:
+           return "Unknown";
+   }
+}
+
 }
 }
 }

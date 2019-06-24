@@ -6,12 +6,12 @@
 #include "continental/hydrotools/CellWatershed.h"
 #include "continental/hydrotools/FlowDirection.h"
 #include "continental/hydrotools/HeuristicSinkRemovalUtil.h"
-// #include "continental/hydrotools/shape/ShapeFile.h"
-// #include "continental/hydrotools/shape/ShapeObject.h"
+#include "continental/hydrotools/shape/ShapeFile.h"
+#include "continental/hydrotools/shape/ShapeObject.h"
 
 using namespace std;
 using namespace continental::datamanagement;
-// using namespace continental::hydrotools::shape;
+using namespace continental::hydrotools::shape;
 
 namespace continental
 {
@@ -59,19 +59,21 @@ void Catchment::readStreamSegmentData(const QString &fileName)
     //Pega os dados de stream segment e joga na matriz de watershed para marcar pontos na bacia
     m_waterShed = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(fileName));
 }
-/*
+
 void Catchment::setPointOutlets(const QString &shapeFileOutlets)
 {
-    m_shapefile.Open(shapeFileOutlets);
+    shape::ShapeFile shapeFile;
+    shapeFile.Open(shapeFileOutlets);
 
     // atribui o número de exutórios
-    size_t countCellExhilarating = static_cast<size_t>(m_shapefile.GetEntityCount());
+    size_t countCellExhilarating = static_cast<size_t>(shapeFile.GetEntityCount());
+    m_CellExhilarating = make_shared<vector<shared_ptr<CellWatershed>>>();
     m_CellExhilarating->resize(countCellExhilarating);
 
     for (size_t i = 0; i < countCellExhilarating; ++i)
     {
         ShapeObject object;
-        m_shapefile.GetShape(i, object);
+        shapeFile.GetShape(i, object);
         auto point = object.getVertices()->at(0);
         (*m_CellExhilarating)[i] = make_shared<CellWatershed>(point->y(), point->x(), m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getCellSize(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), i);
     }
@@ -83,27 +85,29 @@ void Catchment::setPointOutlets(const QString &shapeFileOutlets)
 void Catchment::setPointOutlets(const QString &ShapeFileOutlets, size_t index)
 {
     //Especial para Ferramenta "Depth-Area-Volume", analisando os vários pontos de um shapefile um de cada vez
-    m_shapefile.Open(ShapeFileOutlets);
+    shape::ShapeFile shapeFile;
+    shapeFile.Open(ShapeFileOutlets);
 
-    size_t countCellExhilarating = static_cast<size_t>(m_shapefile.GetEntityCount());
+    size_t countCellExhilarating = static_cast<size_t>(shapeFile.GetEntityCount());
+    m_CellExhilarating = make_shared<vector<shared_ptr<CellWatershed>>>();
     m_CellExhilarating->resize(countCellExhilarating);
 
     ShapeObject object;
-    m_shapefile.GetShape(index, object);
+    shapeFile.GetShape(index, object);
     auto point = object.getVertices()->at(0);
     (*m_CellExhilarating)[index] = make_shared<CellWatershed>(point->y(), point->x(), m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getCellSize(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), index);
 
     //Insere os exutórios na matriz de dados
     insertOutlets();
 }
-*/
-void Catchment::setPointOutlets(std::vector<std::pair<double, double>> vectorPairLatitudeLongitude)
-{
-    // atribui o número de exutórios
-    size_t countCellExhilarating = static_cast<size_t>(vectorPairLatitudeLongitude.size());
-    m_CellExhilarating->resize(countCellExhilarating);
 
-    for (size_t i = 0; i < countCellExhilarating; ++i)
+void Catchment::setPointOutlets(std::vector<std::pair<double, double>> &vectorPairLatitudeLongitude)
+{
+    auto limit = vectorPairLatitudeLongitude.size();
+    m_CellExhilarating = make_shared<vector<shared_ptr<CellWatershed>>>();
+    m_CellExhilarating->resize(limit);
+
+    for (size_t i = 0; i < limit; ++i)
     {
         (*m_CellExhilarating)[i] = make_shared<CellWatershed>(vectorPairLatitudeLongitude[i].first, vectorPairLatitudeLongitude[i].second, m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getCellSize(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), i);
     }
@@ -124,10 +128,10 @@ void Catchment::identifiesWatershed()
     int limitRows = static_cast<int>(m_flowDirection->getRows() - 1);
     int limitCols = static_cast<int>(m_flowDirection->getCols() - 1);
 
-    for (int i = 0; i <= limitCols; ++i)
+    for (int i = 0; i <= limitRows; ++i)
     {
         int y = i;
-        for (int j = 0; j <= limitRows; ++j)
+        for (int j = 0; j <= limitCols; ++j)
         {
             int x = j;
 
@@ -140,7 +144,7 @@ void Catchment::identifiesWatershed()
                 //Identifica a posição da célula antes de mover-se na matriz
                 int xAnterior = x;
                 int yAnterior = y;
-                if (m_flowDirection->getData(x, y) == m_flowDirection->getNoDataValue())
+                if (m_flowDirection->getData(y, x) == m_flowDirection->getNoDataValue())
                 {
                     updateWaterShed(yInicial, xInicial, static_cast<short>(m_flowDirection->getNoDataValue()));
                     break;
@@ -154,7 +158,6 @@ void Catchment::identifiesWatershed()
                 {
                     updateWaterShed(yInicial, xInicial, m_flowDirection->getNoDataValue());
                     break;
-
                 }
                 //Cheguei em um NODATA; o caminho ao longo da matriz deverá ser = NODATA
                 else if (x == xAnterior && y == yAnterior)
@@ -176,7 +179,6 @@ void Catchment::identifiesWatershed()
                     updateWaterShed(yInicial, xInicial, m_flowDirection->getNoDataValue());
                     break;
                 }
-
                 //Se o atributo for igual a 0 na matriz watershed, continua seguindo através das direções de fluxo
             }
             //retorna o y para a linha atual
@@ -212,7 +214,7 @@ void Catchment::updateWaterShed(int row, int column, short attribute)
         {
             //If _WaterShed.Dados(lin, col) = _WaterShed.NoDataValue Then 'Modificado por Vinícius Siqueira 09/07/2015 (Compatibilização com o NoData da bacia)
 
-            m_waterShed->setData(row, column, attribute);
+            m_waterShed->setData(static_cast<size_t>(row), static_cast<size_t>(column), attribute);
             m_numberCellsBasin += 1;
             HeuristicSinkRemovalUtil::moveToFlowDirection(m_flowDirection->getData(row, column), row, column);
             //Cheguei na borda do MDE
@@ -228,7 +230,6 @@ void Catchment::updateWaterShed(int row, int column, short attribute)
             break;
         }
     }
-
 }
 
 }

@@ -12,15 +12,15 @@ using namespace continental::hydrotools;
 using namespace continental::datamanagement;
 using namespace std;
 
-QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets";
-QString inputDemFile = basePath + "/riosinos90arcgis.asc";
-QString outputCorrectedFile = basePath + "/rioSinos90_sink.asc";
-QString outputFlowDirectionFile = basePath + "/IPHrioSinos90_fdr.asc";
-QString outputFlowAccumulationFile = basePath + "/rioSinos90_fac.asc";
-QString outputStreamDefinitionFile = basePath + "/rioSinos90_str.asc";
-QString outputStreamSegmentationDefinitionFile = basePath + "/rioSinos90_strseg.asc";
-QString outputWatershedDelineation = basePath + "/rioSinos90_wat.asc";
-QString inputShapeFilePointOutletsSnap = "";
+QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos";
+QString inputDemFile = basePath + "/rioSinos.asc";
+QString outputCorrectedFile = basePath + "/rioSinos_sink.asc";
+QString outputFlowDirectionFile = basePath + "/rioSinos_fdr.asc";
+QString outputFlowAccumulationFile = basePath + "/rioSinos_fac.asc";
+QString outputStreamDefinitionFile = basePath + "/rioSinos_str.asc";
+QString outputStreamSegmentationDefinitionFile = basePath + "/rioSinos_strseg.asc";
+QString outputWatershedDelineation = basePath + "/rioSinos_wat.asc";
+QString inputShapeFilePointOutletsSnap = basePath + "/Exutorio_aproximado.shp";
 
 void sinkDestroy()
 {
@@ -75,17 +75,21 @@ void watershedDelineation()
 
     Catchment catchement;
     catchement.setFlowDirection(flowDirectionData);
-    // catchement.setPointOutlets(inputShapeFilePointOutletsSnap);
+    catchement.setPointOutlets(inputShapeFilePointOutletsSnap);
+    // vector<pair<double, double>> pointOutlets;
+    // pointOutlets.push_back(pair<double, double>(-51.2043965249999, -29.837411478));
+    // catchement.setPointOutlets(pointOutlets);
     catchement.findWatersheds();
     RasterFile<short>::writeData(*catchement.getWaterShed().get(), outputWatershedDelineation);
 }
 
 int main(int argc, char **argv)
 {
-    // sinkDestroy();
+    sinkDestroy();
     // flowAccumulation();
     // streamDefinition();
-    streamSegmention();
+    // streamSegmention();
+    // watershedDelineation();
 
     return 0;
 }

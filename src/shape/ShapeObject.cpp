@@ -55,6 +55,7 @@ void ShapeObject::assign(const SHPObject* obj)
         m_vertexCount = static_cast<size_t>(obj->nVertices);
         if (m_vertexCount > 0)
         {
+            m_vertices = make_shared<vector<shared_ptr<Point<double>>>>();
             m_vertices->resize(m_vertexCount);
 
             double *xptr = obj->padfX, *yptr = obj->padfY;

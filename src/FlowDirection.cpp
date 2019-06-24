@@ -90,7 +90,7 @@ void FlowDirection::verifyFlowDirAtBounds(size_t xc, size_t yc, bool &validated)
 
                     if (validated == true) //caso tenha sido encontrado algum vizinho com direção de fluxo atribuída, manda água pra ele
                     {
-                        m_flowDirection->setData(xc, yc, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<size_t>(xc), static_cast<size_t>(xi), static_cast<size_t>(yc), static_cast<size_t>(yi)));
+                        m_flowDirection->setData(xc, yc, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<int>(xc), static_cast<int>(xi), static_cast<int>(yc), static_cast<int>(yi)));
                         return;
                     }
 

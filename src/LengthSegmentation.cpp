@@ -422,32 +422,34 @@ void LengthSegmentation::doubleSegmentByLength()
     // Reinicializa o vetor das células analizadas
     m_cellAnalyzed.resize(m_strSeg->getRows() * m_strSeg->getCols());
     int SegmentNumber = 1;
-    int VariableSegmentNumber = 0;
+    int variableSegmentNumber = 0;
     short xAnterior = 0;
     short yAnterior = 0;
-    short row = 0;
-    short col = 0;
+    size_t row = 0;
+    size_t col = 0;
     float yLat = 0;
     float xLon = 0;
     float totalLength = 0;
 
     //Faz da maior área para a menor
-    for (auto nJunction = m_numberOfJunctionCells; nJunction >= 0; nJunction--)
+    for (int nJunction = m_numberOfJunctionCells; nJunction >= 0; nJunction--)
     {
+        auto nJunctionPos = static_cast<size_t>(nJunction);
+
         totalLength = 0;
-        col = m_junctionCells[nJunction]->x;
-        row = m_junctionCells[nJunction]->y;
+        col = m_junctionCells[nJunctionPos]->x;
+        row = m_junctionCells[nJunctionPos]->y;
 
         //Caso não tiver sido atribuído previamente o valor do segmento para a célula em questão
-        if (m_junctionCells[nJunction]->SegmentValue == 0)
+        if (qFuzzyCompare(m_junctionCells[nJunctionPos]->SegmentValue, 0.0f))
         {
-            m_junctionCells[nJunction]->SegmentValue = SegmentNumber;
-            VariableSegmentNumber = SegmentNumber;
+            m_junctionCells[nJunctionPos]->SegmentValue = SegmentNumber;
+            variableSegmentNumber = SegmentNumber;
         }
         else
         {
-            totalLength = m_junctionCells[nJunction]->ActualLength;
-            VariableSegmentNumber = m_junctionCells[nJunction]->SegmentValue;
+            totalLength = m_junctionCells[nJunctionPos]->ActualLength;
+            variableSegmentNumber = static_cast<int>(m_junctionCells[nJunctionPos]->SegmentValue);
         }
 
         //Se a célula já foi analisada, passa para a próxima junção
@@ -464,7 +466,7 @@ void LengthSegmentation::doubleSegmentByLength()
 
             m_cellAnalyzed[row * m_strSeg->getCols() + col] = true;
             //enumera o trecho segmentado
-            m_strSeg->setData(row, col, VariableSegmentNumber);
+            m_strSeg->setData(row, col, variableSegmentNumber);
 
             moveToUpstreamDoubleSegmented(yAnterior, xAnterior, row, col, false, totalLength, VariableSegmentNumber); //Move em direção à célula à montante com maior área
 
@@ -495,7 +497,7 @@ void LengthSegmentation::doubleSegmentByLength()
 
                 //Indica que deve ser incrementado o número de segmentos
                 SegmentNumber += 1;
-                VariableSegmentNumber = SegmentNumber;
+                variableSegmentNumber = SegmentNumber;
                 //Sai fora do loop geral
                 break;
             }
@@ -503,7 +505,7 @@ void LengthSegmentation::doubleSegmentByLength()
             //Indica que a célula já foi analisada
             m_cellAnalyzed[row * m_strSeg->getCols() + col] = true;
             //enumera o trecho segmentado
-            m_strSeg->setData(row, col, VariableSegmentNumber);
+            m_strSeg->setData(row, col, variableSegmentNumber);
 
             //Pega as coordanadas do ponto
             yLat = (float)(m_flowDirection->getYOrigin() + (m_flowDirection->getRows() - 1 - row) * m_flowDirection->getCellSize() + (m_flowDirection->getCellSize() / 2));
@@ -516,7 +518,7 @@ void LengthSegmentation::doubleSegmentByLength()
             {
                 //Aumenta a numeração dos segmentos
                 SegmentNumber += 1;
-                VariableSegmentNumber = SegmentNumber;
+                variableSegmentNumber = SegmentNumber;
                 //Reinicia o comprimento acumulado
                 totalLength = 0;
             }

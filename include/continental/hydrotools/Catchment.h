@@ -69,15 +69,15 @@ public:
     /// Atribui os exutóros na matriz
     /// </summary>
     /// <param name="ShapeFileOutlets">Descrição: O arquivo em formato shapefile com os exutorios</param>
-    // void setPointOutlets(const QString &shapeFileOutlets);
+    void setPointOutlets(const QString &shapeFileOutlets);
 
     /// <summary>
     /// Atribui os exutóros na matriz para Ferramenta "Depth-Area-Volume"
     /// </summary>
     /// <param name="ShapeFileOutlets">Descrição: O arquivo em formato shapefile com os exutorios</param>
-    // void setPointOutlets(const QString &shapeFileOutlets, size_t index);
+    void setPointOutlets(const QString &shapeFileOutlets, size_t index);
 
-    void setPointOutlets(std::vector<std::pair<double, double>> vectorPairLatitudeLongitude);
+    void setPointOutlets(std::vector<std::pair<double, double>> &vectorPairLatitudeLongitude);
 
     /// <summary>
     /// Identifica as catchments
