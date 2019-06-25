@@ -433,7 +433,7 @@ void HeuristicSinkRemoval::breaching(size_t closedListCount)
         m_flowDirection->setData(yParent, xParent, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<int>(xParent), static_cast<int>(m_closedList[enumerator]->x), static_cast<int>(yParent), static_cast<int>(m_closedList[enumerator]->y)));
 
         // Só atribuo a cota se ela for menor do que a existente
-        auto value = static_cast<short>(finalElevation + std::round(incremental * i));
+        auto value = static_cast<short>(finalElevation + std::nearbyint(incremental * i));
         if (m_dem->getData(yParent, xParent) > value)
         {
             // Atribuo a nova cota

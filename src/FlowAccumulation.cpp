@@ -40,9 +40,11 @@ void FlowAccumulation::runoff()
 {
     m_checkedNodeList.resize(m_flowDirection->getTotalCells());
 
-    for (int i = 0; i < static_cast<int>(m_flowDirection->getRows()); ++i)
+    auto rows = static_cast<int>(m_flowDirection->getRows());
+    auto cols = static_cast<int>(m_flowDirection->getCols());
+    for (int i = 0; i < rows; ++i)
     {
-        for (int j = 0; j < static_cast<int>(m_flowDirection->getCols()); ++j)
+        for (int j = 0; j < cols; ++j)
         {
             int posX = j;
             int posY = i;

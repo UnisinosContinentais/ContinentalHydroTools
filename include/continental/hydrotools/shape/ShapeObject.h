@@ -1,11 +1,11 @@
-#ifndef CONTINENTAL_HYDRO_TOOLS_SHAPE_SHAPEOBJECT_H
-#define CONTINENTAL_HYDRO_TOOLS_SHAPE_SHAPEOBJECT_H
+#ifndef CONTINENTAL_HYDROTOOLS_SHAPE_SHAPEOBJECT_H
+#define CONTINENTAL_HYDROTOOLS_SHAPE_SHAPEOBJECT_H
 
 #include <QString>
 #include <vector>
 #include <memory>
 #include <vector>
-#include <shapelib/shapefil.h>
+#include <shapefil.h>
 
 #include "continental/hydrotools/shape/Box.h"
 #include "continental/hydrotools/shape/Point.h"
@@ -59,4 +59,4 @@ QString shapeTypeAsString(int shapetype);
 }
 }
 
-#endif // CONTINENTAL_HYDRO_TOOLS_SHAPE_SHAPEOBJECT_H
+#endif // CONTINENTAL_HYDROTOOLS_SHAPE_SHAPEOBJECT_H

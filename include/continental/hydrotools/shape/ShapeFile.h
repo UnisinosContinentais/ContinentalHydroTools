@@ -1,8 +1,8 @@
-#ifndef CONTINENTAL_HYDRO_TOOLS_SHAPE_SHAPEFILE_H
-#define CONTINENTAL_HYDRO_TOOLS_SHAPE_SHAPEFILE_H
+#ifndef CONTINENTAL_HYDROTOOLS_SHAPE_SHAPEFILE_H
+#define CONTINENTAL_HYDROTOOLS_SHAPE_SHAPEFILE_H
 
 #include <QString>
-#include <shapelib/shapefil.h>
+#include <shapefil.h>
 
 #include "continental/hydrotools/shape/ShapeObject.h"
 
@@ -57,4 +57,4 @@ class ShapeFileError
 }
 }
 
-#endif // CONTINENTAL_HYDRO_TOOLS_SHAPE_SHAPEFILE_H
+#endif // CONTINENTAL_HYDROTOOLS_SHAPE_SHAPEFILE_H
