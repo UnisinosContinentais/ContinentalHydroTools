@@ -152,30 +152,32 @@ void HeuristicSinkRemoval::removeDepressions()
             while (!outletFound)
             {
                 // Calcula o value heurístico de cada uma das células da openlist
-                for (size_t z = 0; z < numberOpenList; ++z)
+                #pragma omp parallel
+                #pragma omp for
+                for (int z = 0; z < static_cast<int>(numberOpenList); ++z)
                 {
-                    if (m_openList[z].get() != nullptr)
+                    size_t zSizeT = static_cast<size_t>(z);
+                    if (m_openList[zSizeT].get() != nullptr)
                     {
                         //Identifica o método que será utilizado para remoção de depressões
                         if (m_algorithmMode == ProcessingMode::MHS)
                         {
-                            m_openList[z]->costFunction = modifiedHeuristicValue(
-                                        static_cast<int>(m_openList[z]->y),
-                                        static_cast<int>(m_openList[z]->x),
+                            m_openList[zSizeT]->costFunction = modifiedHeuristicValue(
+                                        static_cast<int>(m_openList[zSizeT]->y),
+                                        static_cast<int>(m_openList[zSizeT]->x),
                                         startElevation,
-                                        static_cast<short>(m_openList[z]->y - yPosition),
-                                        static_cast<short>(m_openList[z]->x - xPosition),
+                                        static_cast<short>(m_openList[zSizeT]->y - yPosition),
+                                        static_cast<short>(m_openList[zSizeT]->x - xPosition),
                                         m_weightFunctionCost);
                         }
                         else if (m_algorithmMode == ProcessingMode::HS)
                         {
-                            m_openList[z]->costFunction = heuristicValue(static_cast<int>(m_openList[z]->y), static_cast<int>(m_openList[z]->x), startElevation);
+                            m_openList[zSizeT]->costFunction = heuristicValue(static_cast<int>(m_openList[zSizeT]->y), static_cast<int>(m_openList[zSizeT]->x), startElevation);
                         }
                         else if (m_algorithmMode == ProcessingMode::PFS)
                         {
-                            m_openList[z]->costFunction = pfsValue(m_openList[z]->y, m_openList[z]->x, startElevation);
+                            m_openList[zSizeT]->costFunction = pfsValue(m_openList[zSizeT]->y, m_openList[zSizeT]->x, startElevation);
                         }
-
                     }
                 }
 

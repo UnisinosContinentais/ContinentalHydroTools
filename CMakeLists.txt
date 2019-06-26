@@ -21,6 +21,8 @@ include_directories(${ContinentalDataManagement_INCLUDE_DIRS})
 
 find_package(Qt5Core CONFIG REQUIRED)
 
+find_package(OpenMP)
+
 ##############################################
 # Create target and set properties
 
@@ -64,6 +66,7 @@ target_link_libraries(ContinentalHydroTools
     PUBLIC ContinentalDataManagement::ContinentalDataManagement
     PUBLIC SHP::SHP
     PUBLIC Qt5::Core
+    PUBLIC OpenMP::OpenMP_CXX
 )
 
 ##############################################

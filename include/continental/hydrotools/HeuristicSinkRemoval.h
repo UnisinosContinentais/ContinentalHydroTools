@@ -434,9 +434,13 @@ private:
         }
 
         //Utiliza uma matriz 'n x n' nos limites das células em torno da célula central, fazendo um somatório das elevações
+        #pragma omp parallel
+        #pragma omp for
         for (int y = dy1; y <= dy2; ++y)
         {
             posY = static_cast<int>(yc) + y;
+            #pragma omp parallel
+            #pragma omp for
             for (int x = dx1; x <= dx2; ++x)
             {
                 posX = static_cast<int>(xc) + x;
