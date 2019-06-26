@@ -450,8 +450,8 @@ size_t HeuristicSinkRemoval::enumMinHeuristicInfo(size_t nOpenlist)
 
     float value = 99999;
     size_t enumerator = 0;
-
-    for (size_t i = 0; i < nOpenlist; ++i)
+    size_t limit = nOpenlist;
+    for (size_t i = 0; i < limit; ++i)
     {
         if (m_openList[i] == nullptr)
         {
@@ -690,7 +690,7 @@ float HeuristicSinkRemoval::modifiedHeuristicValue(int yc, int xc, short es, sho
     //value da função H(i), evita divisão por 0 (modificado em relação à original)
     if (numberCells != 0)
     {
-        hi = static_cast<short>(round(sum / static_cast<double>(numberCells)));
+        hi = static_cast<short>(nearbyint(sum / static_cast<double>(numberCells)));
     }
 
     //value da função heurística F(i) = H(i) + G(i) * peso

@@ -30,7 +30,6 @@ void StreamSegmentation::setStreamDefinition(std::shared_ptr<datamanagement::Ras
 void StreamSegmentation::segmentStreams()
 {
     short segmentNumber = 1;
-    bool junctionFound = false;
 
     int rows = static_cast<int>(m_strSeg->getRows());
     int cols = static_cast<int>(m_strSeg->getCols());
@@ -69,7 +68,7 @@ void StreamSegmentation::segmentStreams()
                             if (m_strSeg->getData(yEnd, xEnd) == 0)
                             {
                                 m_strSeg->setData(yEnd, xEnd, segmentNumber);
-                                segmentNumber += 1;
+								++segmentNumber;
                             }
                             updateSegments(yStart, xStart, yEnd, xEnd, m_strSeg->getData(yEnd, xEnd));
                             break;
@@ -80,19 +79,18 @@ void StreamSegmentation::segmentStreams()
                             if (m_strSeg->getData(yEnd, xEnd) == 0)
                             {
                                 m_strSeg->setData(yEnd, xEnd, segmentNumber);
-                                segmentNumber += 1;
+								++segmentNumber;
                             }
                             updateSegments(yStart, xStart, yEnd, xEnd, m_strSeg->getData(yEnd, xEnd));
                             //Passa se mover para um NODATA
                             break;
                         }
 
-                        junctionFound = verifyStreamOutlet(i, j);
-                        if (junctionFound == true)
+                        if (verifyStreamOutlet(i, j))
                         {
                             updateSegments(yStart, xStart, yEnd, xEnd, segmentNumber);
                             //Aumenta o número dos segmentos identificados
-                            segmentNumber += 1;
+							++segmentNumber;
                             break;
                         }
 
@@ -103,9 +101,6 @@ void StreamSegmentation::segmentStreams()
                             break;
                         }
                     }
-
-                    junctionFound = false;
-
                 }
             }
         }
@@ -140,12 +135,12 @@ bool StreamSegmentation::verifyStreamOutlet(int yc, int xc)
             if (x != 0 || y != 0)
             {
                 //Evita sair dos limites do raster
-                if (xi >= 0 && yi >= 0 && static_cast<size_t>(xi) < m_flowDirection->getCols() && static_cast<size_t>(yi) < m_flowDirection->getRows())
+                if (xi >= 0 && yi >= 0 && xi < static_cast<int>(m_flowDirection->getCols()) && yi < static_cast<int>(m_flowDirection->getRows()))
                 {
                     //Somente se a célula faz parte da rede de drenagem principal
                     auto data = m_strDef->getData(static_cast<size_t>(yi), static_cast<size_t>(xi));
                     //Se a célula analisada apontar para a célula de origem, é contabilizada
-                    if (data == 1 && HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<size_t>(xi), static_cast<size_t>(xc), static_cast<size_t>(yi), static_cast<size_t>(yc)) == data)
+                    if (data == 1 && HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<size_t>(xi), static_cast<size_t>(xc), static_cast<size_t>(yi), static_cast<size_t>(yc)) == m_flowDirection->getData(yi, xi))
                     {
                         nPointingCells += 1;
                     }

@@ -12,7 +12,7 @@ using namespace continental::hydrotools;
 using namespace continental::datamanagement;
 using namespace std;
 
-QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos";
+QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos12.5m";
 QString inputDemFile = basePath + "/rioSinos.asc";
 QString outputCorrectedFile = basePath + "/rioSinos_sink.asc";
 QString outputFlowDirectionFile = basePath + "/rioSinos_fdr.asc";
@@ -71,7 +71,6 @@ void streamSegmention()
 void watershedDelineation()
 {
     auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputFlowDirectionFile));
-    auto streamDefinitionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputStreamDefinitionFile));
 
     Catchment catchement;
     catchement.setFlowDirection(flowDirectionData);
@@ -86,10 +85,10 @@ void watershedDelineation()
 int main(int argc, char **argv)
 {
     sinkDestroy();
-    // flowAccumulation();
-    // streamDefinition();
-    // streamSegmention();
-    // watershedDelineation();
+    flowAccumulation();
+    streamDefinition();
+    streamSegmention();
+    watershedDelineation();
 
     return 0;
 }
