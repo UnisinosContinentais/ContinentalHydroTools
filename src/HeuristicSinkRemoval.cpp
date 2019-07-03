@@ -101,8 +101,6 @@ void HeuristicSinkRemoval::removeSinks()
 
     // Remove as depressões
     removeDepressions();
-    // Libera a memória
-    releaseMemory();
     // Remove os ruídos do MDE final de acordo com as direções de fluxo
     adjustDemFinalElevations();
 
@@ -132,9 +130,9 @@ void HeuristicSinkRemoval::removeDepressions()
         // Torna falso o encontro da saída
         outletFound = false;
         // Identifica a posição X da depressão
-        xPosition = m_array[iArray]->x;
+        xPosition = m_array[iArray].x;
         // Identifica a posição Y da depressão
-        yPosition = m_array[iArray]->y;
+        yPosition = m_array[iArray].y;
 
         // Pode ser que o Flow Direction já tenha sido calculado em uma das etapas abaixo!
         if (m_flowDirection->getData(yPosition, xPosition) == 0)
@@ -157,26 +155,26 @@ void HeuristicSinkRemoval::removeDepressions()
                 for (int z = 0; z < static_cast<int>(numberOpenList); ++z)
                 {
                     size_t zSizeT = static_cast<size_t>(z);
-                    if (m_openList[zSizeT].get() != nullptr)
+                    if (m_openList[zSizeT].valid)
                     {
                         //Identifica o método que será utilizado para remoção de depressões
                         if (m_algorithmMode == ProcessingMode::MHS)
                         {
-                            m_openList[zSizeT]->costFunction = modifiedHeuristicValue(
-                                        static_cast<int>(m_openList[zSizeT]->y),
-                                        static_cast<int>(m_openList[zSizeT]->x),
+                            m_openList[zSizeT].costFunction = modifiedHeuristicValue(
+                                        static_cast<int>(m_openList[zSizeT].y),
+                                        static_cast<int>(m_openList[zSizeT].x),
                                         startElevation,
-                                        static_cast<short>(m_openList[zSizeT]->y - yPosition),
-                                        static_cast<short>(m_openList[zSizeT]->x - xPosition),
+                                        static_cast<short>(m_openList[zSizeT].y - yPosition),
+                                        static_cast<short>(m_openList[zSizeT].x - xPosition),
                                         m_weightFunctionCost);
                         }
                         else if (m_algorithmMode == ProcessingMode::HS)
                         {
-                            m_openList[zSizeT]->costFunction = heuristicValue(static_cast<int>(m_openList[zSizeT]->y), static_cast<int>(m_openList[zSizeT]->x), startElevation);
+                            m_openList[zSizeT].costFunction = heuristicValue(static_cast<int>(m_openList[zSizeT].y), static_cast<int>(m_openList[zSizeT].x), startElevation);
                         }
                         else if (m_algorithmMode == ProcessingMode::PFS)
                         {
-                            m_openList[zSizeT]->costFunction = pfsValue(m_openList[zSizeT]->y, m_openList[zSizeT]->x, startElevation);
+                            m_openList[zSizeT].costFunction = pfsValue(m_openList[zSizeT].y, m_openList[zSizeT].x, startElevation);
                         }
                     }
                 }
@@ -184,16 +182,16 @@ void HeuristicSinkRemoval::removeDepressions()
                 // Identifica a célula com o maior value heurístico na open list
                 size_t iNextCell = enumMinHeuristicInfo(numberOpenList);
                 // Elevação inicial da depressão
-                endElevation = m_dem->getData(m_openList[iNextCell]->y, m_openList[iNextCell]->x);
+                endElevation = m_dem->getData(m_openList[iNextCell].y, m_openList[iNextCell].x);
 
                 // Verifica se encontrou a saída para o problema
-                outletFound = isOutlet(endElevation, startElevation, m_openList[iNextCell]->y, m_openList[iNextCell]->x);
+                outletFound = isOutlet(endElevation, startElevation, m_openList[iNextCell].y, m_openList[iNextCell].x);
 
                 // Força a saída de água no limite mais próximo da borda, caso exceder um numero pré-determinado de células
                 if (numberClosedList == m_maxClosedList)
                 {
                     numberClosedListForcedBound = m_maxClosedList;
-                    forceBoundOutlet(m_closedList[0]->y, m_closedList[0]->x, m_maxClosedList, numberClosedList);
+                    forceBoundOutlet(m_closedList[0].y, m_closedList[0].x, m_maxClosedList, numberClosedList);
                     outletFound = true;
 
                     //Modifica o MDE para o caminho encontrado
@@ -218,8 +216,8 @@ void HeuristicSinkRemoval::removeDepressions()
                     // Se não encontrou um ponto para verter a água, continua realizando a análise
 
 					// Atualiza a posição da célula atual
-					yPosition = m_openList[iNextCell]->y;
-					xPosition = m_openList[iNextCell]->x;
+                    yPosition = m_openList[iNextCell].y;
+                    xPosition = m_openList[iNextCell].x;
 
                     // Move a célula para a closed list e retira a mesma da open list
                     pushCellToClosedList(iNextCell, numberClosedList);
@@ -323,8 +321,8 @@ void HeuristicSinkRemoval::fillDepressions(int differenceHeight)
 
     for (size_t i = 0; i < nDepressions; ++i)
     {
-        yc = m_array[i]->y;
-        xc = m_array[i]->x;
+        yc = m_array[i].y;
+        xc = m_array[i].x;
 
         //Assume a elevação da célula '//MODIFICADO EM 21/11/2013
         elevation = m_dem->getData(yc, xc);
@@ -368,40 +366,28 @@ void HeuristicSinkRemoval::fillDepressions(int differenceHeight)
 
 }
 
-void HeuristicSinkRemoval::releaseMemory()
-{
-    m_openList.clear();
-    m_closedList.clear();
-    m_array.clear();
-    m_traceBackMatrix.clear();
-    m_closedListBoolean.clear();
-    m_closedListPosition.clear();
-    m_openListBoolean.clear();
-    m_openListPosition.clear();
-}
-
 void HeuristicSinkRemoval::resetAllList(size_t nClosedList, size_t nOpenList)
 {
-    size_t x = 0, y = 0;
-
-    for (size_t i = 0; i < nClosedList; ++i)
+    for (int i = 0; i < static_cast<int>(nClosedList); ++i)
     {
         // Identifica a linha
-        y = static_cast<size_t>(std::floor(static_cast<double>(m_closedListPosition[i]) / static_cast<double>(m_dem->getCols())));
+        size_t y = static_cast<size_t>(std::floor(m_closedListPosition[static_cast<size_t>(i)] / static_cast<double>(m_dem->getCols())));
         // Identifica a Coluna
-        x = m_closedListPosition[i] - (y * m_dem->getCols());
+        size_t x = m_closedListPosition[static_cast<size_t>(i)] - (y * m_dem->getCols());
         // Retira da Closed List
         m_closedListBoolean[y * m_dem->getCols() + x] = false;
         // Reinicia o value da Matriz de volta
         m_traceBackMatrix[y * m_dem->getCols() + x] = 0;
     }
 
-    for (size_t i = 0; i < nOpenList; ++i)
+    #pragma omp parallel
+    #pragma omp for
+    for (int i = 0; i < static_cast<int>(nOpenList); ++i)
     {
         // Identifica a linha
-        y = static_cast<size_t>(std::floor(static_cast<double>(m_openListPosition[i]) / static_cast<double>(m_dem->getCols())));
+        size_t y = static_cast<size_t>(std::floor(m_openListPosition[static_cast<size_t>(i)] / static_cast<double>(m_dem->getCols())));
         // Identifica a Coluna
-        x = m_openListPosition[i] - (y * m_dem->getCols());
+        size_t x = m_openListPosition[static_cast<size_t>(i)] - (y * m_dem->getCols());
         // Retira da Open List
         m_openListBoolean[y * m_dem->getCols() + x] = false;
     }
@@ -411,28 +397,29 @@ void HeuristicSinkRemoval::resetAllList(size_t nClosedList, size_t nOpenList)
 void HeuristicSinkRemoval::calculateFlowDirection()
 {
     size_t countDepression = 0;
-    bool fdFound = false;
+    bool flowDirectionFound = false;
 
     // Calcula para toda a grade as direções de fluxo
-    size_t tempVar = m_dem->getRows() - 2;
-    size_t tempVar2 = m_dem->getCols() - 2;
-    for (size_t y = 1; y <= tempVar; ++y)
+    size_t limitRows = m_dem->getRows() - 2;
+    size_t limitCols = m_dem->getCols() - 2;
+    for (size_t y = 1; y <= limitRows; ++y)
     {
-        for (size_t x = 1; x <= tempVar2; ++x)
+        for (size_t x = 1; x <= limitCols; ++x)
         {
             m_flowDirection->setData(y, x, incipientFlowDirection(x, y));
             // Se for = 0, verifica se existe uma célula com igual cota para onde possa verter
             if (m_flowDirection->getData(y, x) == 0)
             {
-                verifyFlowDirAtBounds(x, y, fdFound);
+                verifyFlowDirAtBounds(x, y, flowDirectionFound);
                 // Se não encontrar célula para verter água, identifica uma depressão
-                if (!fdFound)
+                if (!flowDirectionFound)
                 {
-                    m_array[countDepression] = make_unique<Cell>(y, x);
+                    m_array[countDepression].x = x;
+                    m_array[countDepression].y = y;
                     countDepression += 1;
                 }
 
-                fdFound = false;
+                flowDirectionFound = false;
             }
         }
     }
@@ -460,26 +447,26 @@ void HeuristicSinkRemoval::flowDirectionAtBounds()
     m_flowDirection->setData(m_dem->getRows() - 1, m_dem->getCols() - 1, -9999);
 
     //Atribui o flow direction para fora dos limites da grade
-    size_t tempVar = m_dem->getRows() - 2;
-	for (size_t y = 1; y <= tempVar; ++y)
+    auto limitRows = static_cast<int>(m_dem->getRows() - 2);
+    auto fixedColumn = m_dem->getCols() - 1;
+
+    #pragma omp parallel
+    #pragma omp for
+    for (int y = 1; y <= limitRows; ++y)
 	{
-        m_flowDirection->setData(y, zero, -9999);
+        m_flowDirection->setData(static_cast<size_t>(y), zero, -9999);
+        m_flowDirection->setData(static_cast<size_t>(y), fixedColumn, -9999);
 	}
 
-    for (size_t y = 1; y <= tempVar; ++y)
-	{
-        m_flowDirection->setData(y, m_dem->getCols() - 1, -9999);
-	}
+    auto limitCols = static_cast<int>(m_dem->getCols() - 2);
+    auto fixedRows = m_dem->getRows() - 1;
 
-    size_t tempVar3 = m_dem->getCols() - 2;
-    for (size_t x = 1; x <= tempVar3; ++x)
+    #pragma omp parallel
+    #pragma omp for
+    for (int x = 1; x <= limitCols; ++x)
 	{
-        m_flowDirection->setData(zero, x, -9999);
-	}
-
-    for (size_t x = 1; x <= tempVar3; ++x)
-	{
-        m_flowDirection->setData(m_dem->getRows() - 1, x, -9999);
+        m_flowDirection->setData(zero, static_cast<size_t>(x), -9999);
+        m_flowDirection->setData(fixedRows, static_cast<size_t>(x), -9999);
 	}
 }
 

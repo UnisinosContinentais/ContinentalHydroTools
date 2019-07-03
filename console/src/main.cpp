@@ -12,7 +12,7 @@ using namespace continental::hydrotools;
 using namespace continental::datamanagement;
 using namespace std;
 
-QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos12.5m";
+QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos";
 QString inputDemFile = basePath + "/rioSinos.asc";
 QString outputCorrectedFile = basePath + "/rioSinos_sink.asc";
 QString outputFlowDirectionFile = basePath + "/rioSinos_fdr.asc";

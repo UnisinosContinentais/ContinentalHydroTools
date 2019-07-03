@@ -23,8 +23,11 @@ class HeuristicCell : public Cell
         // posições relativas de X e Y, de onde a célula vem
         int relParentX = 0;
         int relParentY = 0;
+		bool valid = false;
 
         HeuristicCell(size_t row, size_t column);
+
+        HeuristicCell();
 };
 }
 }

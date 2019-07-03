@@ -44,7 +44,7 @@ private:
     // Matriz dos 8 vizinhos
     float m_matrixD8[8];
     // Matriz de células sem Direcao de Fluxo - células com depressão
-    std::vector<std::unique_ptr<Cell>> m_array;
+    std::vector<Cell> m_array;
     // Tamanho da janela é a dimensão para N x N do método orinal de Hou et al (2011);
     int m_windowSize = 5;
     size_t m_maxOpenList = 0;
@@ -59,9 +59,9 @@ private:
     short m_directionsY[8] = {0, -1, 0, 1, 1, -1, -1, 1};
 
     // Conjunto das células candidatas
-    std::vector<std::unique_ptr<HeuristicCell>> m_openList;
+    std::vector<HeuristicCell> m_openList;
     // Conjunto das células selecionadas
-    std::vector<std::unique_ptr<HeuristicCell>> m_closedList;
+    std::vector<HeuristicCell> m_closedList;
     std::vector<bool> m_closedListBoolean;
     std::vector<bool> m_openListBoolean;
     std::vector<size_t> m_closedListPosition;
@@ -123,11 +123,13 @@ private:
     inline void addDepressionToOpenList(size_t xc, size_t yc, size_t &numberElements)
     {
         // Coloca a célula na open list
-        m_openList[numberElements] = std::make_unique<HeuristicCell>(yc, xc);
+        m_openList[numberElements].valid = true;
+        m_openList[numberElements].x = xc;
+        m_openList[numberElements].y = yc;
         //Aciona o Flag para indicar que a célula está na open list
         m_openListBoolean[yc * m_dem->getCols() + xc] = true;
-        m_openList[numberElements]->relParentX = 0;
-        m_openList[numberElements]->relParentY = 0;
+        m_openList[numberElements].relParentX = 0;
+        m_openList[numberElements].relParentY = 0;
         // Identifica a posição da célula na matriz (na forma de vetor)
         m_openListPosition[numberElements] = yc * m_dem->getCols() + xc;
 
@@ -168,10 +170,12 @@ private:
                     continue;
                 }
 
-                m_openList[numberElementos] = std::make_unique<HeuristicCell>(static_cast<size_t>(posY), static_cast<size_t>(posX));
                 // Estabelece pointers relativos para o o nó de origem
-                m_openList[numberElementos]->relParentX = static_cast<int>(xc) - posX;
-                m_openList[numberElementos]->relParentY = static_cast<int>(yc) - posY;
+                m_openList[numberElementos].valid = true;
+                m_openList[numberElementos].x = static_cast<size_t>(posX);
+                m_openList[numberElementos].y = static_cast<size_t>(posY);
+                m_openList[numberElementos].relParentX = static_cast<int>(xc) - posX;
+                m_openList[numberElementos].relParentY = static_cast<int>(yc) - posY;
                 // Aciona o flag indicando que a célula está na open list
                 m_openListBoolean[position] = true;
                 // Indica a posição do ponto da open list
@@ -189,8 +193,8 @@ private:
     inline void breaching(size_t closedListCount)
     {
         //identifica as elevações inicial e final da pathlist
-        short initElevation = m_dem->getData(m_closedList[0]->y, m_closedList[0]->x);
-        short finalElevation = m_dem->getData(m_closedList[closedListCount - 1]->y, m_closedList[closedListCount - 1]->x);
+        short initElevation = m_dem->getData(m_closedList[0].y, m_closedList[0].x);
+        short finalElevation = m_dem->getData(m_closedList[closedListCount - 1].y, m_closedList[closedListCount - 1].x);
 
         //Evita que o programa utilize o value do NoDATA como elevação final, o que pode comprometer o resultado
         if (finalElevation == m_dem->getNoDataValue())
@@ -202,7 +206,7 @@ private:
         {
             // Pode ocorrer em situações de limite do MDE, nesse caso, força o decréscimo na cota
             finalElevation = initElevation;
-            m_dem->setData(m_closedList[closedListCount - 1]->y, m_closedList[closedListCount - 1]->x, finalElevation);
+            m_dem->setData(m_closedList[closedListCount - 1].y, m_closedList[closedListCount - 1].x, finalElevation);
         }
 
         size_t numberCells = 0, xParent = 0, yParent = 0;
@@ -213,10 +217,10 @@ private:
         while (!foundStartNode)
         {
             // Acha a coordenada do parent node
-            xParent = m_closedList[enumerator]->x + static_cast<size_t>(m_closedList[enumerator]->relParentX);
-            yParent = m_closedList[enumerator]->y + static_cast<size_t>(m_closedList[enumerator]->relParentY);
+            xParent = m_closedList[enumerator].x + static_cast<size_t>(m_closedList[enumerator].relParentX);
+            yParent = m_closedList[enumerator].y + static_cast<size_t>(m_closedList[enumerator].relParentY);
 
-            if (m_closedList[enumerator]->relParentX == 0 && m_closedList[enumerator]->relParentY == 0)
+            if (m_closedList[enumerator].relParentX == 0 && m_closedList[enumerator].relParentY == 0)
             {
                 foundStartNode = true;
             }
@@ -236,10 +240,10 @@ private:
         for (size_t i = 1; i < numberCells; ++i)
         {
             //Acha a coordenada do parent node
-            xParent = m_closedList[enumerator]->x + static_cast<size_t>(m_closedList[enumerator]->relParentX);
-            yParent = m_closedList[enumerator]->y + static_cast<size_t>(m_closedList[enumerator]->relParentY);
+            xParent = m_closedList[enumerator].x + static_cast<size_t>(m_closedList[enumerator].relParentX);
+            yParent = m_closedList[enumerator].y + static_cast<size_t>(m_closedList[enumerator].relParentY);
             //Atribuo o novo flow direction
-            m_flowDirection->setData(yParent, xParent, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<int>(xParent), static_cast<int>(m_closedList[enumerator]->x), static_cast<int>(yParent), static_cast<int>(m_closedList[enumerator]->y)));
+            m_flowDirection->setData(yParent, xParent, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<int>(xParent), static_cast<int>(m_closedList[enumerator].x), static_cast<int>(yParent), static_cast<int>(m_closedList[enumerator].y)));
 
             // Só atribuo a cota se ela for menor do que a existente
             auto value = static_cast<short>(finalElevation + std::nearbyint(incremental * i));
@@ -259,21 +263,14 @@ private:
     {
         float value = 99999;
         size_t enumerator = 0;
-        for (size_t i = 0; i < numberOpenlist; ++i)
+
+        for (int i = 0; i < numberOpenlist; ++i)
         {
-            if (m_openList[i] == nullptr)
+            if (m_openList[i].valid && m_openList[i].costFunction < value)
             {
-                continue;
+                value = m_openList[i].costFunction;
+                enumerator = i;
             }
-
-            auto costFunction = m_openList[i]->costFunction;
-            if (costFunction >= value)
-            {
-                continue;
-            }
-
-            value = costFunction;
-            enumerator = i;
         }
 
         return enumerator;
@@ -291,7 +288,7 @@ private:
         // Verifica, dentre todas as células da closed list, a primeira célula que for de borda
         for (size_t w = 0; w < maxClosedListElements; ++w)
         {
-            if (m_closedList[w]->x == 0 || m_closedList[w]->y == 0 || m_closedList[w]->x == (m_dem->getCols() - 1) || m_closedList[w]->y == (m_dem->getRows() - 1))
+            if (m_closedList[w].x == 0 || m_closedList[w].y == 0 || m_closedList[w].x == (m_dem->getCols() - 1) || m_closedList[w].y == (m_dem->getRows() - 1))
             {
                 elements = static_cast<int>(w) + 1;
                 break;
@@ -434,13 +431,9 @@ private:
         }
 
         //Utiliza uma matriz 'n x n' nos limites das células em torno da célula central, fazendo um somatório das elevações
-        #pragma omp parallel
-        #pragma omp for
         for (int y = dy1; y <= dy2; ++y)
         {
             posY = static_cast<int>(yc) + y;
-            #pragma omp parallel
-            #pragma omp for
             for (int x = dx1; x <= dx2; ++x)
             {
                 posX = static_cast<int>(xc) + x;
@@ -479,14 +472,16 @@ private:
     //Adiciona os elementos da open list na closed list, excluindo o valor central (que deve ir para o Path list)
     inline void pushCellToClosedList(size_t enumCell, size_t &numberClosed)
     {
-        size_t position = m_openList[enumCell]->y * m_dem->getCols() + m_openList[enumCell]->x;
+        size_t position = m_openList[enumCell].y * m_dem->getCols() + m_openList[enumCell].x;
 
         // Aciona o Flag para indicar que a célula está na closed list
         m_closedListBoolean[position] = true;
         // Coloca a célula na closed list
-        m_closedList[numberClosed] = std::make_unique<HeuristicCell>(m_openList[enumCell]->y, m_openList[enumCell]->x);
-        m_closedList[numberClosed]->relParentX = m_openList[enumCell]->relParentX;
-        m_closedList[numberClosed]->relParentY = m_openList[enumCell]->relParentY;
+        m_closedList[numberClosed].valid = true;
+        m_closedList[numberClosed].x = m_openList[enumCell].x;
+        m_closedList[numberClosed].y = m_openList[enumCell].y;
+        m_closedList[numberClosed].relParentX = m_openList[enumCell].relParentX;
+        m_closedList[numberClosed].relParentY = m_openList[enumCell].relParentY;
 
         //Identifica a posição da célula na matriz (na forma de vetor)
         m_closedListPosition[numberClosed] = position;
@@ -496,13 +491,10 @@ private:
         //Retira o flag para indicar que a célula não está mais na open list
         m_openListBoolean[position] = false;
         // Retira a célula da open list
-        m_openList[enumCell] = nullptr;
+        m_openList[enumCell].valid = false;
 
         numberClosed += 1;
     }
-
-    //Libera da memória todas as matrizes utilizadas nas operações
-    void releaseMemory();
 
     //Reinicia as open e closed lists, para a próxima depressão
     void resetAllList(size_t nClosedList, size_t nOpenList);

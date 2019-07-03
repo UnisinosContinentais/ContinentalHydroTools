@@ -21,6 +21,8 @@ class Cell
         size_t y = 0;
 
         Cell(size_t x, size_t y);
+
+        Cell() = default;
 };
 }
 }
