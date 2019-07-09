@@ -116,10 +116,7 @@ void HeuristicSinkRemoval::removeDepressions()
 	size_t numberOpenList = 0;
 	size_t numberClosedListForcedBound = 0;
 
-    bool outletFound = false;
     size_t nDepressions = m_array.size();
-    short startElevation = 0, endElevation = 0;
-    size_t xPosition = 0, yPosition = 0;
 			
     // Faça para todas as depressões encontradas
     for (size_t iArray = 0; iArray < nDepressions; ++iArray)
@@ -128,17 +125,17 @@ void HeuristicSinkRemoval::removeDepressions()
         percent = iArray / nDepressions;
 
         // Torna falso o encontro da saída
-        outletFound = false;
+        bool outletFound = false;
         // Identifica a posição X da depressão
-        xPosition = m_array[iArray].x;
+        size_t xPosition = m_array[iArray].x;
         // Identifica a posição Y da depressão
-        yPosition = m_array[iArray].y;
+        size_t yPosition = m_array[iArray].y;
 
         // Pode ser que o Flow Direction já tenha sido calculado em uma das etapas abaixo!
         if (m_flowDirection->getData(yPosition, xPosition) == 0)
         {
             // Identifica a elevação da depressão selecionada
-            startElevation = m_dem->getData(yPosition, xPosition);
+            short startElevation = m_dem->getData(yPosition, xPosition);
             // Adiciona inicialmente a célula com a depressão na open list, para ser analisada
             addDepressionToOpenList(xPosition, yPosition, numberOpenList);
             // Move a célula da depressão, da open list para a closed list
@@ -150,8 +147,7 @@ void HeuristicSinkRemoval::removeDepressions()
             while (!outletFound)
             {
                 // Calcula o value heurístico de cada uma das células da openlist
-                #pragma omp parallel
-                #pragma omp for
+                #pragma omp parallel for
                 for (int z = 0; z < static_cast<int>(numberOpenList); ++z)
                 {
                     size_t zSizeT = static_cast<size_t>(z);
@@ -182,7 +178,7 @@ void HeuristicSinkRemoval::removeDepressions()
                 // Identifica a célula com o maior value heurístico na open list
                 size_t iNextCell = enumMinHeuristicInfo(numberOpenList);
                 // Elevação inicial da depressão
-                endElevation = m_dem->getData(m_openList[iNextCell].y, m_openList[iNextCell].x);
+                short endElevation = m_dem->getData(m_openList[iNextCell].y, m_openList[iNextCell].x);
 
                 // Verifica se encontrou a saída para o problema
                 outletFound = isOutlet(endElevation, startElevation, m_openList[iNextCell].y, m_openList[iNextCell].x);
@@ -380,8 +376,6 @@ void HeuristicSinkRemoval::resetAllList(size_t nClosedList, size_t nOpenList)
         m_traceBackMatrix[y * m_dem->getCols() + x] = 0;
     }
 
-    #pragma omp parallel
-    #pragma omp for
     for (int i = 0; i < static_cast<int>(nOpenList); ++i)
     {
         // Identifica a linha
@@ -450,8 +444,7 @@ void HeuristicSinkRemoval::flowDirectionAtBounds()
     auto limitRows = static_cast<int>(m_dem->getRows() - 2);
     auto fixedColumn = m_dem->getCols() - 1;
 
-    #pragma omp parallel
-    #pragma omp for
+    #pragma omp parallel for
     for (int y = 1; y <= limitRows; ++y)
 	{
         m_flowDirection->setData(static_cast<size_t>(y), zero, -9999);
@@ -461,8 +454,7 @@ void HeuristicSinkRemoval::flowDirectionAtBounds()
     auto limitCols = static_cast<int>(m_dem->getCols() - 2);
     auto fixedRows = m_dem->getRows() - 1;
 
-    #pragma omp parallel
-    #pragma omp for
+    #pragma omp parallel for
     for (int x = 1; x <= limitCols; ++x)
 	{
         m_flowDirection->setData(zero, static_cast<size_t>(x), -9999);

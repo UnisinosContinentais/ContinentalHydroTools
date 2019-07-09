@@ -85,10 +85,10 @@ void watershedDelineation()
 int main(int argc, char **argv)
 {
     sinkDestroy();
-    // flowAccumulation();
-    // streamDefinition();
-    // streamSegmention();
-    // watershedDelineation();
+    flowAccumulation();
+    streamDefinition();
+    streamSegmention();
+    watershedDelineation();
 
     return 0;
 }
