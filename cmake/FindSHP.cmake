@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 include(FindPackageHandleStandardArgs)
 
-find_path(SHP_INCLUDE_DIR shapefil.h PATHS "D:/git/shapelib/install/debug/include")
+find_path(SHP_INCLUDE_DIR shapefil.h PATHS "C:/git/shapelib/install/debug/include")
 
-find_library(SHP_LIBRARY NAMES shp PATHS D:/git/shapelib/install/debug/lib)
+find_library(SHP_LIBRARY NAMES shp PATHS C:/git/shapelib/install/debug/lib)
 
 #-----------------------------------------------------------------------
 # handle the QUIETLY and REQUIRED arguments and set SQLite3_FOUND to TRUE
