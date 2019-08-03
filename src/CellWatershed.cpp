@@ -17,23 +17,25 @@ void CellWatershed::convertCoordToRowCol(double latitude, double longitude, size
 {
     // Transformação das coordenadas do ponto em linhas e colunas
     // Lembrando que a posição (1,1) equivale a (0,0)
-    double xllCenter = 0;
-    double yllCenter = 0;
-    // Calcula a coordenada X do centro da célula no canto esquerdo
-    xllCenter = xllCorner + (cellSize / 2);
-    // Calcula a coordenada Y do centro da célula no canto esquerdo
-    yllCenter = yllCorner + (cellSize / 2);
 
-    int x = static_cast<int>(std::round((longitude - xllCenter) / cellSize));
-    int y = static_cast<int>(std::round((rows - 1) - (latitude - yllCenter) / cellSize));
-    if (x < 0 || x > static_cast<int>(cols))
+    // Calcula a coordenada X do centro da célula no canto esquerdo
+    double xllCenter = xllCorner + (cellSize / 2);
+    // Calcula a coordenada Y do centro da célula no canto esquerdo
+    double yllCenter = yllCorner + (cellSize / 2);
+
+    int xTemp = static_cast<int>(std::round((longitude - xllCenter) / cellSize));
+    int yTemp = static_cast<int>(std::round((rows - 1) - (latitude - yllCenter) / cellSize));
+    if (xTemp < 0 || xTemp > static_cast<int>(cols))
     {
         throw std::invalid_argument("Longitude " + std::to_string(longitude) + "º is outside the boundaries from the DEM.");
     }
-    if (y < 0 || y > static_cast<int>(rows))
+    if (yTemp < 0 || yTemp > static_cast<int>(rows))
     {
         throw std::invalid_argument("Latitude " + std::to_string(latitude) + "º is outside the boundaries from the DEM.");
     }
+
+    x = static_cast<size_t>(xTemp);
+    y = static_cast<size_t>(yTemp);
 }
 
 void CellWatershed::reset(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xllCorner, double yllCorner, size_t attribute)

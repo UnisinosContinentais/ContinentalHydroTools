@@ -1,4 +1,11 @@
-﻿#ifndef CONTINENTAL_HYDROTOOLS_CATCHMENTS_H
+﻿/*
+* Developed by UNISINOS
+* author: Luiz Felipe Bertoldi de Oliveira
+* email: lbertoldio@unisinos.br
+* date: January, 2019
+*/
+
+#ifndef CONTINENTAL_HYDROTOOLS_CATCHMENTS_H
 #define CONTINENTAL_HYDROTOOLS_CATCHMENTS_H
 
 #include <QString>
@@ -7,7 +14,6 @@
 
 #include <continental/datamanagement/Raster.h>
 #include "continental/hydrotools/CellWatershed.h"
-// #include "continental/hydrotools/shape/ShapeFile.h"
 
 //*******************************************************************
 //DETERMINAÇÃO DE BACIAS
@@ -48,7 +54,7 @@ public:
     /// <summary>
     /// Retorna as células com a posição dos exutórios
     /// </summary>
-    std::shared_ptr<std::vector<std::shared_ptr<CellWatershed>>> getCellsExhilarating() const;
+    std::shared_ptr<std::vector<std::shared_ptr<Cell>>> getCellsExhilarating() const;
 
     size_t getNumberCellsBasin() const;
 
@@ -59,11 +65,8 @@ public:
 
     virtual ~Catchment() = default;
 
-    //Lê os dados do FlowDirection
-    void readFlowDirectionData(const QString &local);
-
     //Lê os dados do StreamSegmentation
-    void readStreamSegmentData(const QString &local);
+    void setStreamSegmentation(std::shared_ptr<datamanagement::Raster<short>> streamSegmentation);
 
     /// <summary>
     /// Atribui os exutóros na matriz
@@ -84,8 +87,9 @@ public:
     /// </summary>
     virtual void findWatersheds();
 
-    //Identifica a bacia hidrográfica
+    void insertOutletByRowCol(const size_t row, const size_t column);
 private:
+    //Identifica a bacia hidrográfica
     void identifiesWatershed();
 
     //Insere os pontos dos exutórios especificados pelo shapefile de entrada

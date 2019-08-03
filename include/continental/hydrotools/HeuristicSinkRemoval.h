@@ -1,4 +1,11 @@
-﻿#ifndef CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVAL_H
+﻿/*
+* Developed by UNISINOS
+* author: Luiz Felipe Bertoldi de Oliveira
+* email: lbertoldio@unisinos.br
+* date: January, 2019
+*/
+
+#ifndef CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVAL_H
 #define CONTINENTAL_HYDROTOOLS_HEURISTICSINKREMOVAL_H
 
 #include <memory>
@@ -44,7 +51,8 @@ private:
     // Matriz dos 8 vizinhos
     float m_matrixD8[8];
     // Matriz de células sem Direcao de Fluxo - células com depressão
-    std::vector<Cell> m_array;
+    Cell* m_array;
+    size_t m_arraySize = 0;
     // Tamanho da janela é a dimensão para N x N do método orinal de Hou et al (2011);
     int m_windowSize = 5;
     size_t m_maxOpenList = 0;
@@ -59,15 +67,14 @@ private:
     short m_directionsY[8] = {0, -1, 0, 1, 1, -1, -1, 1};
 
     // Conjunto das células candidatas
-    std::vector<HeuristicCell> m_openList;
+    HeuristicCell* m_openList;
     // Conjunto das células selecionadas
-    std::vector<HeuristicCell> m_closedList;
-    std::vector<bool> m_closedListBoolean;
-    std::vector<bool> m_openListBoolean;
-    std::vector<size_t> m_closedListPosition;
-    std::vector<size_t> m_openListPosition;
-    std::vector<size_t> m_traceBackMatrix;
-    std::vector<bool> m_forcedOutlets;
+    HeuristicCell* m_closedList;
+    bool* m_closedListBoolean;
+    bool* m_openListBoolean;
+    size_t* m_closedListPosition;
+    size_t* m_openListPosition;
+    size_t* m_traceBackMatrix;
     // Método de remoção de depressões
     ProcessingMode m_algorithmMode = ProcessingMode::MHS;
 	

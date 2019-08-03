@@ -1,4 +1,11 @@
-﻿#ifndef CONTINENTAL_HYDROTOOLS_STREAMACCUMLENGTH_H
+﻿/*
+* Developed by UNISINOS
+* author: Luiz Felipe Bertoldi de Oliveira
+* email: lbertoldio@unisinos.br
+* date: January, 2019
+*/
+
+#ifndef CONTINENTAL_HYDROTOOLS_STREAMACCUMLENGTH_H
 #define CONTINENTAL_HYDROTOOLS_STREAMACCUMLENGTH_H
 
 #include <memory>

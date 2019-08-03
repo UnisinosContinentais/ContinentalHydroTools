@@ -1,3 +1,10 @@
+/*
+* Developed by UNISINOS
+* author: Luiz Felipe Bertoldi de Oliveira
+* email: lbertoldio@unisinos.br
+* date: January, 2019
+*/
+
 #ifndef CONTINENTAL_HYDROTOOLS_JUNCTIONCELL_H
 #define CONTINENTAL_HYDROTOOLS_JUNCTIONCELL_H
 

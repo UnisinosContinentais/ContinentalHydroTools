@@ -38,8 +38,6 @@ void HeuristicSinkRemoval::setDem(shared_ptr<Raster<short>> dem)
 {
     m_dem = dem;
     m_flowDirection = make_shared<Raster<short>>(m_dem->getRows(), m_dem->getCols(), m_dem->getXOrigin(), m_dem->getYOrigin(), m_dem->getCellSize(), m_dem->getNoDataValue());
-    m_forcedOutlets.clear();
-    m_forcedOutlets.resize(m_dem->getRows() * m_dem->getCols());
 }
 
 shared_ptr<Raster<short>> HeuristicSinkRemoval::getFlowDirection() const
@@ -57,7 +55,14 @@ HeuristicSinkRemoval::HeuristicSinkRemoval(size_t maxOpenList, size_t maxClosedL
 
 HeuristicSinkRemoval::~HeuristicSinkRemoval()
 {
-
+    delete[] m_array;
+    delete[] m_openList;
+    delete[] m_closedList;
+    delete[] m_closedListBoolean;
+    delete[] m_openListBoolean;
+    delete[] m_closedListPosition;
+    delete[] m_openListPosition;
+    delete[] m_traceBackMatrix;
 }
 
 void HeuristicSinkRemoval::removeSinks()
@@ -65,8 +70,12 @@ void HeuristicSinkRemoval::removeSinks()
     // Flag que indica se ocorreu algum erro no processo: inicialmente é dado como VERDADEIRO
     error = true;
 
-    m_array.clear();
-    m_array.resize(m_dem->getRows() * m_dem->getCols());
+    if (m_arraySize > 0)
+    {
+        delete[] m_array;
+    }
+    m_arraySize = m_dem->getTotalCells();
+    m_array = new Cell[m_arraySize];
 
     // Calcula o Flow Direction na borda
     flowDirectionAtBounds();
@@ -76,28 +85,21 @@ void HeuristicSinkRemoval::removeSinks()
     fillDepressions(0);
 
     // Lista de nós, candidatos a serem selecionados para um possível trajeto de mínimo custo
-    m_openList.clear();
-    m_openList.resize(m_maxOpenList);
+    m_openList = new HeuristicCell[m_maxOpenList];
 
-    m_openListPosition.clear();
-    m_openListPosition.resize(m_maxOpenList);
+    m_openListPosition = new size_t[m_maxOpenList];
 
-    m_openListBoolean.clear();
-    m_openListBoolean.resize(m_dem->getRows() * m_dem->getCols());
+    m_openListBoolean = new bool[m_dem->getTotalCells()];
 
     // Lista de nós que já foram selecionados e checados
-    m_closedList.clear();
-    m_closedList.resize(m_maxClosedList);
+    m_closedList = new HeuristicCell[m_maxClosedList];
 
-    m_closedListPosition.clear();
-    m_closedListPosition.resize(m_maxClosedList);
+    m_closedListPosition = new size_t[m_maxClosedList];
 
-    m_closedListBoolean.clear();
-    m_closedListBoolean.resize(m_dem->getRows() * m_dem->getCols());
+    m_closedListBoolean = new bool[m_dem->getTotalCells()];
 
     // Matriz que indica o caminho de volta, a partir do outlet
-    m_traceBackMatrix.clear();
-    m_traceBackMatrix.resize(m_dem->getRows() * m_dem->getCols());
+    m_traceBackMatrix = new size_t[m_dem->getTotalCells()];
 
     // Remove as depressões
     removeDepressions();
@@ -116,7 +118,7 @@ void HeuristicSinkRemoval::removeDepressions()
 	size_t numberOpenList = 0;
 	size_t numberClosedListForcedBound = 0;
 
-    size_t nDepressions = m_array.size();
+    size_t nDepressions = m_arraySize;
 			
     // Faça para todas as depressões encontradas
     for (size_t iArray = 0; iArray < nDepressions; ++iArray)
@@ -311,7 +313,7 @@ void HeuristicSinkRemoval::adjustDemFinalElevations()
 
 void HeuristicSinkRemoval::fillDepressions(int differenceHeight)
 {
-    size_t xc = 0, yc = 0, nDepressions = m_array.size();
+    size_t xc = 0, yc = 0, nDepressions = m_arraySize;
     short elevation = 0;
     short lowerBound = 0;
 
@@ -419,14 +421,16 @@ void HeuristicSinkRemoval::calculateFlowDirection()
     }
 
     // Caso não houverem depressões, a lista não existirá
-	if (countDepression == 0)
+    if (countDepression == 0 && m_arraySize > 0)
 	{
-		m_array.clear();
+        // delete[] m_array;
+        m_arraySize = 0;
 	}
 	else
 	{
 		// Caso houverem depressões, redimensiona o vetor para o tamanho de células encontradas
-		m_array.resize(countDepression);
+        m_arraySize = countDepression;
+        // m_array = new Cell[m_arraySize];
 	}
 }
 

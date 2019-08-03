@@ -1,4 +1,11 @@
-﻿#ifndef CONTINENTAL_HYDROTOOLS_CELLWATERSHED_H
+﻿/*
+* Developed by UNISINOS
+* author: Luiz Felipe Bertoldi de Oliveira
+* email: lbertoldio@unisinos.br
+* date: January, 2019
+*/
+
+#ifndef CONTINENTAL_HYDROTOOLS_CELLWATERSHED_H
 #define CONTINENTAL_HYDROTOOLS_CELLWATERSHED_H
 
 #include "continental/hydrotools/Cell.h"
@@ -18,7 +25,7 @@ namespace hydrotools
 class CellWatershed : public Cell
 {
 public:
-    size_t m_attribute = 0;
+    short m_attribute = 0;
     double m_latitude = 0;
     double m_longitude = 0;
 
@@ -28,12 +35,12 @@ public:
     /// </summary>
     void convertCoordToRowCol(double latitude, double m_longitude, size_t rows, size_t cols, double cellSize, double xOrigin, double yOrigin);
 
-    size_t getAttribute()
+    short getAttribute()
     {
         return m_attribute;
     }
 
-    void setAttribute(size_t attribute)
+    void setAttribute(short attribute)
     {
         m_attribute = attribute;
     }
