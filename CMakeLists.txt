@@ -8,6 +8,11 @@ set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
 
+# Load custom configuration file for CMake (if any).
+if(EXISTS ${CMAKE_SOURCE_DIR}/CMakeLists.config)
+    include(${CMAKE_SOURCE_DIR}/CMakeLists.config)
+endif()
+
 #Make sure that custom modules like FindRapidJSON are found
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
