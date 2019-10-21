@@ -1,14 +1,14 @@
 #include <continental/datamanagement/RasterFile.h>
-#include <continental/hydrotools/HeuristicSinkRemoval.h>
-#include <continental/hydrotools/FlowAccumulation.h>
-#include <continental/hydrotools/StreamDefinition.h>
-#include <continental/hydrotools/StreamSegmentation.h>
-#include <continental/hydrotools/Catchment.h>
+#include <continental/hydrotools/service/HeuristicSinkRemoval.h>
+#include <continental/hydrotools/service/FlowAccumulation.h>
+#include <continental/hydrotools/service/StreamDefinition.h>
+#include <continental/hydrotools/service/StreamSegmentation.h>
+#include <continental/hydrotools/service/Catchment.h>
 
 #include <memory>
 #include <QString>
 
-using namespace continental::hydrotools;
+using namespace continental::hydrotools::service;
 using namespace continental::datamanagement;
 using namespace std;
 

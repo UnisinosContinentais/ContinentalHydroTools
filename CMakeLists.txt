@@ -28,28 +28,63 @@ find_package(Qt5Core CONFIG REQUIRED)
 
 find_package(OpenMP)
 
+# find_package(HDF5 REQUIRED COMPONENTS C CXX)
+include_directories(${HDF5_INCLUDE_DIRS})
 ##############################################
 # Create target and set properties
 
 add_library(ContinentalHydroTools
-    src/Catchment.cpp
-    src/Cell.cpp
-    src/CellWatershed.cpp
-    src/FlowAccumulation.cpp
-    src/FlowDirection.cpp
-    src/HeuristicCell.cpp
-    src/HeuristicSinkRemoval.cpp
-    src/HeuristicSinkRemovalUtil.cpp
-    src/JunctionCell.cpp
+    src/Readme.h
+    src/util/HDF5Util.cpp
+    src/util/HydroToolsUtil.cpp
+    src/service/Catchment.cpp
+    src/service/Cell.cpp
+    src/service/CellWatershed.cpp
+    src/service/FlowAccumulation.cpp
+    src/service/FlowDirection.cpp
+    src/service/HeuristicCell.cpp
+    src/service/HeuristicSinkRemoval.cpp
+    src/service/HeuristicSinkRemovalUtil.cpp
+    src/service/JunctionCell.cpp
 #    src/LengthSegmentation.cpp
-    src/shape/Box.cpp
-    src/shape/Part.cpp
-    src/shape/Point.cpp
-    src/shape/ShapeFile.cpp
-    src/shape/ShapeObject.cpp
-    src/StreamAccumLength.cpp
-    src/StreamDefinition.cpp
-    src/StreamSegmentation.cpp
+    src/service/shape/Box.cpp
+    src/service/shape/Part.cpp
+    src/service/shape/Point.cpp
+    src/service/shape/ShapeFile.cpp
+    src/service/shape/ShapeObject.cpp
+    src/service/StreamAccumLength.cpp
+    src/service/StreamDefinition.cpp
+    src/service/StreamSegmentation.cpp
+    src/domain/HydrotoolsProcessType.cpp
+    src/domain/FileCommand.cpp
+    src/domain/AbstractCommandInput.cpp
+    src/domain/WatershedDelineationCommandInput.cpp
+    src/domain/StreamSegmentationCommandInput.cpp
+    src/domain/StreamDefinitionCommandInput.cpp
+    src/domain/HeuristicSinkRemovalCommandInput.cpp
+    src/domain/CatchmentCommandInput.cpp
+    src/domain/FlowAccumulationCommandInput.cpp
+    src/command/AbstractCommand.cpp
+    src/command/CatchmentCommand.cpp
+    src/command/WatershedDelineationCommand.cpp
+    src/command/SinkDestroyCommand.cpp
+    src/command/FlowAccumulationCommand.cpp
+    src/command/StreamDefinitionCommand.cpp
+    src/command/StreamSegmentationCommand.cpp
+    src/infrastructure/AbstractRasterIO.cpp
+    src/infrastructure/RasterIO.cpp
+    src/exception/CatchmentDelineationIsNotValidInputCommandException.cpp
+    src/exception/CatchmentDelineationProcessException.cpp
+    src/exception/FlowAccumulationIsNotValidInputCommandException.cpp
+    src/exception/FlowAccumulationProcessException.cpp
+    src/exception/SinkDestroyProcessException.cpp
+    src/exception/SinkDestroyIsNotValidInputCommandException.cpp
+    src/exception/StreamDefinitionProcessException.cpp
+    src/exception/StreamDefinitionIsNotValidInputCommandException.cpp
+    src/exception/StreamSegmentationProcessException.cpp
+    src/exception/StreamSegmentationIsNotValidInputCommandException.cpp
+    src/exception/WatershedDelineationIsNotValidInputCommandException.cpp
+    src/exception/WatershedDelineationProcessException.cpp
 )
 
 #Add an alias so that library can be used inside the build tree, e.g. when testing
@@ -72,6 +107,7 @@ target_link_libraries(ContinentalHydroTools
     PUBLIC SHP::SHP
     PUBLIC Qt5::Core
     PUBLIC OpenMP::OpenMP_CXX
+    PUBLIC ${HDF5_LIBRARIES}
 )
 
 ##############################################
@@ -123,5 +159,5 @@ install(FILES
 
 export(EXPORT ContinentalHydroTools-targets FILE ${CMAKE_CURRENT_BINARY_DIR}/ContinentalHydroToolsTargets.cmake NAMESPACE ContinentalHydroTools::)
 
-# add_subdirectory(test)
+#add_subdirectory(test)
 add_subdirectory(console)
