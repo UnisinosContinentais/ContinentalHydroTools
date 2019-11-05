@@ -68,13 +68,20 @@ private:
 
     // Conjunto das células candidatas
     HeuristicCell* m_openList;
+    size_t m_openListSize = 0;
     // Conjunto das células selecionadas
     HeuristicCell* m_closedList;
+    size_t m_closedListSize = 0;
     bool* m_closedListBoolean;
+    size_t m_closedListBooleanSize = 0;
     bool* m_openListBoolean;
+    size_t m_openListBooleanSize = 0;
     size_t* m_closedListPosition;
+    size_t m_closedListPositionSize = 0;
     size_t* m_openListPosition;
+    size_t m_openListPositionSize = 0;
     size_t* m_traceBackMatrix;
+    size_t m_traceBackMatrixSize = 0;
     // Método de remoção de depressões
     ProcessingMode m_algorithmMode = ProcessingMode::MHS;
 	

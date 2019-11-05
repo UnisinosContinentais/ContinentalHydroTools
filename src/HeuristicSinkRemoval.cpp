@@ -55,14 +55,38 @@ HeuristicSinkRemoval::HeuristicSinkRemoval(size_t maxOpenList, size_t maxClosedL
 
 HeuristicSinkRemoval::~HeuristicSinkRemoval()
 {
-    delete[] m_array;
-    delete[] m_openList;
-    delete[] m_closedList;
-    delete[] m_closedListBoolean;
-    delete[] m_openListBoolean;
-    delete[] m_closedListPosition;
-    delete[] m_openListPosition;
-    delete[] m_traceBackMatrix;
+    if (m_arraySize > 0)
+    {
+        delete[] m_array;
+    }
+    if (m_openListSize > 0)
+    {
+        delete[] m_openList;
+    }
+    if (m_closedListSize > 0)
+    {
+        delete[] m_closedList;
+    }
+    if (m_closedListBooleanSize > 0)
+    {
+        delete[] m_closedListBoolean;
+    }
+    if (m_openListBooleanSize > 0)
+    {
+        delete[] m_openListBoolean;
+    }
+    if (m_closedListPositionSize > 0)
+    {
+        delete[] m_closedListPosition;
+    }
+    if (m_openListPositionSize > 0)
+    {
+        delete[] m_openListPosition;
+    }
+    if (m_traceBackMatrixSize > 0)
+    {
+        delete[] m_traceBackMatrix;
+    }
 }
 
 void HeuristicSinkRemoval::removeSinks()
@@ -85,20 +109,27 @@ void HeuristicSinkRemoval::removeSinks()
     fillDepressions(0);
 
     // Lista de nós, candidatos a serem selecionados para um possível trajeto de mínimo custo
+    m_openListSize = m_maxOpenList;
     m_openList = new HeuristicCell[m_maxOpenList];
 
+    m_openListPositionSize = m_maxOpenList;
     m_openListPosition = new size_t[m_maxOpenList];
 
+    m_openListBooleanSize = m_dem->getTotalCells();
     m_openListBoolean = new bool[m_dem->getTotalCells()];
 
     // Lista de nós que já foram selecionados e checados
+    m_closedListSize = m_maxClosedList;
     m_closedList = new HeuristicCell[m_maxClosedList];
 
+    m_closedListPositionSize = m_maxClosedList;
     m_closedListPosition = new size_t[m_maxClosedList];
 
+    m_closedListBooleanSize = m_dem->getTotalCells();
     m_closedListBoolean = new bool[m_dem->getTotalCells()];
 
     // Matriz que indica o caminho de volta, a partir do outlet
+    m_traceBackMatrixSize = m_dem->getTotalCells();
     m_traceBackMatrix = new size_t[m_dem->getTotalCells()];
 
     // Remove as depressões
