@@ -1,6 +1,7 @@
 ﻿#include "continental/hydrotools/Cell.h"
 #include "continental/hydrotools/CellWatershed.h"
-
+#include <cmath>
+#include <stdexcept>
 #include <string>
 
 namespace continental

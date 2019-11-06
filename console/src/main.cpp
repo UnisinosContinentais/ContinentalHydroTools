@@ -1,10 +1,10 @@
+#include <iostream>
 #include <continental/datamanagement/RasterFile.h>
 #include <continental/hydrotools/HeuristicSinkRemoval.h>
 #include <continental/hydrotools/FlowAccumulation.h>
 #include <continental/hydrotools/StreamDefinition.h>
 #include <continental/hydrotools/StreamSegmentation.h>
 #include <continental/hydrotools/Catchment.h>
-
 #include <memory>
 #include <QString>
 
@@ -12,15 +12,16 @@ using namespace continental::hydrotools;
 using namespace continental::datamanagement;
 using namespace std;
 
-static QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos";
-static QString inputDemFile = basePath + "/rioSinos.asc";
-static QString outputCorrectedFile = basePath + "/rioSinos_sink.asc";
-static QString outputFlowDirectionFile = basePath + "/rioSinos_fdr.asc";
-static QString outputFlowAccumulationFile = basePath + "/rioSinos_fac.asc";
-static QString outputStreamDefinitionFile = basePath + "/rioSinos_str.asc";
-static QString outputStreamSegmentationFile = basePath + "/rioSinos_strseg.asc";
-static QString outputWatershedDelineation = basePath + "/rioSinos_wat.asc";
-static QString outputCatchmentDelineation = basePath + "/rioSinos_catch.asc";
+static QString basePath = "C:/git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos/";
+static QString baseFilename = "rioSinosFloat";
+static QString inputDemFile = basePath + baseFilename + ".asc";
+static QString outputCorrectedFile = basePath + baseFilename + "_sink.asc";
+static QString outputFlowDirectionFile = basePath + baseFilename + "_fdr.asc";
+static QString outputFlowAccumulationFile = basePath + baseFilename + "_fac.asc";
+static QString outputStreamDefinitionFile = basePath + baseFilename + "_str.asc";
+static QString outputStreamSegmentationFile = basePath + baseFilename + "_strseg.asc";
+static QString outputWatershedDelineation = basePath + baseFilename + "_wat.asc";
+static QString outputCatchmentDelineation = basePath + baseFilename + "_catch.asc";
 static QString inputShapeFilePointOutletsSnap = basePath + "/Exutorio_snap.shp";
 
 void sinkDestroy()
@@ -28,12 +29,13 @@ void sinkDestroy()
     size_t maxOpenList = 1000000;
     size_t maxClosedList = 500000;
     float weightFunctionG = 2;
-    auto processingAlgorithm = HeuristicSinkRemoval::ProcessingMode::MHS;
-    auto sinkDestroy = make_unique<HeuristicSinkRemoval>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-    sinkDestroy->setDem(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
+    auto processingAlgorithm = HeuristicSinkRemoval<float>::ProcessingMode::MHS;
+    auto sinkDestroy = make_unique<HeuristicSinkRemoval<float>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
+	auto dem = make_shared<Raster<float>>(RasterFile<float>::loadRasterByFile(inputDemFile));
+	sinkDestroy->setDem(dem);
     sinkDestroy->removeSinks();
 
-    RasterFile<short>::writeData(*sinkDestroy->getDem(), outputCorrectedFile);
+    RasterFile<float>::writeData(*sinkDestroy->getDem(), outputCorrectedFile);
     RasterFile<short>::writeData(*sinkDestroy->getFlowDirection(), outputFlowDirectionFile);
 }
 
@@ -52,7 +54,7 @@ void streamDefinition()
     auto flowAccumulationData = make_shared<Raster<float>>(RasterFile<float>::loadRasterByFile(outputFlowAccumulationFile));
 
     StreamDefinition streamDefinition;
-    streamDefinition.setFlowAccumulation(flowAccumulationData, 3000, StreamDefinition::ThresholdType::NumberOfCells);
+    streamDefinition.setFlowAccumulation(flowAccumulationData, 1000, StreamDefinition::ThresholdType::NumberOfCells);
     streamDefinition.defineStreams();
     RasterFile<short>::writeData(*streamDefinition.getStreamDefinition().get(), outputStreamDefinitionFile);
 }
@@ -85,7 +87,7 @@ void watershedDelineation()
 void catchmentDelineation()
 {
     auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputFlowDirectionFile));
-    auto streamSegmentationData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputStreamSegmentationFile));
+    auto streamSegmentationData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputCatchmentDelineation));
 
     Catchment catchment;
     catchment.setFlowDirection(flowDirectionData);
@@ -100,12 +102,19 @@ int main(int argc, char **argv)
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
-    // sinkDestroy();
-    // flowAccumulation();
-    // streamDefinition();
-    // streamSegmention();
-    watershedDelineation();
-    // catchmentDelineation();
+	/*try
+	{*/
+		sinkDestroy();
+		flowAccumulation();
+		streamDefinition();
+		streamSegmention();
+		// catchmentDelineation();
+		// watershedDelineation();
+	/*}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << endl;
+	}*/
 
     return 0;
 }
