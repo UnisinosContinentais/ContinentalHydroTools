@@ -16,40 +16,36 @@ namespace domain {
 StreamDefinitionCommandInput::StreamDefinitionCommandInput(QStringList argv)
 {
   m_argv = argv;
-  prepare();
 }
 
-/*
- * Modelo de entrada do Console
- * ===============================
- * [2] = pathFlowAccumulationInput
- * [3] = groupFlowAccumulationInput
- * [4] = pathStreamDefinitionOutput
- * [5] = grouStreamDefinitionOutput
- * [6] = thresoldValue
-*/
+///
+/// Modelo de entrada do Console
+/// Parametros de Entrda Vetor de 7 posições
+/// [2] = pathFlowAccumulationInput
+/// [3] = groupFlowAccumulationInput
+/// [4] = pathStreamDefinitionOutput
+/// [5] = grouStreamDefinitionOutput
+/// [6] = thresoldValue
+///
 void StreamDefinitionCommandInput::prepare()
 {
-    try
+    if(m_argv.length() != 8)
     {
-        if(m_argv.length() != 7)
-        {
-            throw;
-        }
-
-        //Parse dos parametros de entradas do console
-        auto fileFlowAccumulationInput = FileCommand(m_argv[2], m_argv[3]);
-        auto fileStreamDefinitionOutput = FileCommand(m_argv[4], m_argv[5]);
-        size_t thresoldValue = static_cast<size_t>(m_argv[6].toInt());
-
-        //prepara o objeto
-        this->setFlowAccumulationInput(fileFlowAccumulationInput);
-        this->setThresoldValue(thresoldValue);
-        this->setStreamDefinitionOutput(fileStreamDefinitionOutput);
-    } catch (...)
-    {
-        throw streamDefinitionIsNotValidInputCommandException;
+        throw exception::StreamDefinitionIsNotValidInputCommandException();
     }
+
+    //Parse dos parametros de entradas do console
+    auto fileFlowAccumulationInput = FileCommand(m_argv[2], m_argv[3]);
+    auto fileStreamDefinitionOutput = FileCommand(m_argv[4], m_argv[5]);
+
+    StreamDefinition::ThresholdType thresholdType = static_cast<StreamDefinition::ThresholdType>(m_argv[6].toInt());
+    size_t thresoldValue = static_cast<size_t>(m_argv[7].toInt());
+
+    //prepara o objeto
+    this->setFlowAccumulationInput(fileFlowAccumulationInput);
+    this->setThresoldValue(thresoldValue);
+    this->setThresholdType(thresholdType);
+    this->setStreamDefinitionOutput(fileStreamDefinitionOutput);
 }
 
 void StreamDefinitionCommandInput::setThresoldValue(const float thresoldValue)

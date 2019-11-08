@@ -20,34 +20,50 @@ using namespace continental::hydrotools::service;
 namespace continental {
 namespace hydrotools {
 namespace domain {
-/// <summary>
-/// Classe base da célula, para indicar a posição na matriz
-/// </summary>
+/** @brief Classe Comandos de Entrada para o Método de Definição do Rio
+ *  Esta classe é derivada de AbstractCommandInput
+ */
 class StreamDefinitionCommandInput : AbstractCommandInput
 {
 public:
     /// Construtor
     StreamDefinitionCommandInput(QStringList argv);
+
+    /// Função que executa a preparação/trsnformação dos comandos de entrada em parâmetros
     void prepare();
 
     void setThresoldValue (const float thresoldValue);
     void setThresholdType(const StreamDefinition::ThresholdType thresholdType);
+
+    /// Função Getter do atributo ThresoldValue.
+    float getThresoldValue() const;
+
+    /// Função Getter do atributo ThresholdType
+    StreamDefinition::ThresholdType getThresholdType() const;
 	
     void setFlowAccumulationInput (const FileCommand flowAccumulationData);
     void setStreamDefinitionOutput (const FileCommand streamDefinitionOutput);
 	
-    float getThresoldValue() const;
-    StreamDefinition::ThresholdType getThresholdType() const;
-
+    /// Função Getter do arquivo de entrada do Flow Accumulation.
     FileCommand getFlowAccumulationInput() const;
     
+    /// Função Getter do arquivo de entrada do Stream Definition.
     FileCommand getStreamDefinitionOutput() const;
 
+    /// Destrutor
+    ~StreamDefinitionCommandInput() = default;
+
 private:
+    /// Atributo
     float m_thresoldValue;
+
+    /// Atributo
     StreamDefinition::ThresholdType m_thresholdType;
     
+    /// Atributo
     FileCommand m_flowAccumulationInput;
+
+    /// Atributo
     FileCommand m_streamDefinitionOutput;
 };
 

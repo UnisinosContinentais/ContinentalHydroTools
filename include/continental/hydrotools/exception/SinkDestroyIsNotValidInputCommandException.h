@@ -12,19 +12,22 @@
 #include <QString>
 #include <iostream>
 #include <exception>
+
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-
-class SinkDestroyIsNotValidInputCommandException: public exception
+class SinkDestroyIsNotValidInputCommandException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "Dados inválidos para realizar o processo do Sink Destroy!";
-  }
-} sinkDestroyIsNotValidInputCommandException;
+public:
+    /// Construtor
+    explicit SinkDestroyIsNotValidInputCommandException();
+    /// Desconstrutor
+    virtual ~SinkDestroyIsNotValidInputCommandException() noexcept = default;
+};
+
 
 }
 }

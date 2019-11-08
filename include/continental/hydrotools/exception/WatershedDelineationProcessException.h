@@ -12,18 +12,22 @@
 #include <QString>
 #include <iostream>
 #include <exception>
+
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-class WatershedDelineationProcessException: public exception
+class WatershedDelineationProcessException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "O processo do Watershed Delineation não foi processado com sucesso!";
-  }
-} watershedDelineationProcessException;
+public:
+    /// Construtor
+    explicit WatershedDelineationProcessException();
+    /// Desconstrutor
+    virtual ~WatershedDelineationProcessException() noexcept = default;
+};
+
 
 }
 }

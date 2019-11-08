@@ -12,18 +12,23 @@
 #include <QString>
 #include <iostream>
 #include <exception>
+
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-class CatchmentDelineationProcessException: public exception
+class CatchmentDelineationProcessException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "O processo do Catchment Delineation não foi processado com sucesso!";
-  }
-} catchmentDelineationProcessException;
+public:
+    /// Construtor
+    explicit CatchmentDelineationProcessException();
+    /// Desconstrutor
+    virtual ~CatchmentDelineationProcessException() noexcept = default;
+};
+
+
 
 }
 }

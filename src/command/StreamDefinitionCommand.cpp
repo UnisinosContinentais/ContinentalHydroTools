@@ -29,14 +29,16 @@ void StreamDefinitionCommand::execute()
     try
     {
         //Parametros de Entrada
-        auto flowDirectionInputFile = RasterIO<float>(m_streamDefinitionCommandInput.getFlowAccumulationInput());
+        auto flowAccumulationInputFile = RasterIO<float>(m_streamDefinitionCommandInput.getFlowAccumulationInput());
         auto flowStreamDefinitionOutputFile = RasterIO<short>(m_streamDefinitionCommandInput.getStreamDefinitionOutput());
 
-        auto flowAccumulationData = make_shared<Raster<float>>(flowDirectionInputFile.read());
+        auto flowAccumulationData = make_shared<Raster<float>>(flowAccumulationInputFile.read());
+        float thresoldValue = m_streamDefinitionCommandInput.getThresoldValue();
+        StreamDefinition::ThresholdType thresholdType =  m_streamDefinitionCommandInput.getThresholdType();
 
         //Prepara o objeto para processamento
         StreamDefinition streamDefinition;
-        streamDefinition.setFlowAccumulation(flowAccumulationData, 3000, StreamDefinition::ThresholdType::NumberOfCells);
+        streamDefinition.setFlowAccumulation(flowAccumulationData, thresoldValue, thresholdType);
         streamDefinition.defineStreams();
 
         //Grava o resultado do StreamDefinition
@@ -44,7 +46,7 @@ void StreamDefinitionCommand::execute()
 
     } catch (...)
     {
-         throw streamDefinitionProcessException;
+         throw exception::StreamDefinitionProcessException();
     }
 }
 

@@ -14,18 +14,19 @@
 #include <exception>
 
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-
-class StreamSegmentationIsNotValidInputCommandException: public exception
+class StreamSegmentationIsNotValidInputCommandException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "Dados inválidos para realizar o processo do Stream Segmentation!";
-  }
-} streamSegmentationIsNotValidInputCommandException;
+public:
+    /// Construtor
+    explicit StreamSegmentationIsNotValidInputCommandException();
+    /// Desconstrutor
+    virtual ~StreamSegmentationIsNotValidInputCommandException() noexcept = default;
+};
 
 }
 }

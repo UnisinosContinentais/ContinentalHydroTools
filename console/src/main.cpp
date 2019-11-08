@@ -1,111 +1,141 @@
+/*
+* Developed by UNISINOS
+* author: Cristian Gabriel de Abreu Heylmann
+* email: cristianheylmann@unisinos.br
+* date: October, 2019
+*/
+
+#ifndef CONTINENTAL_HYDROTOOLS_TEST_H
+#define  CONTINENTAL_HYDROTOOLS_TEST_H
+#include <iostream>
 #include <continental/datamanagement/RasterFile.h>
+#include <continental/hydrotools/Version.h>
 #include <continental/hydrotools/service/HeuristicSinkRemoval.h>
 #include <continental/hydrotools/service/FlowAccumulation.h>
 #include <continental/hydrotools/service/StreamDefinition.h>
 #include <continental/hydrotools/service/StreamSegmentation.h>
 #include <continental/hydrotools/service/Catchment.h>
-
+#include <continental/hydrotools/command/WatershedDelineationCommand.h>
+#include <continental/hydrotools/command/CatchmentCommand.h>
+#include <continental/hydrotools/command/SinkDestroyCommand.h>
+#include <continental/hydrotools/command/FlowAccumulation.h>
+#include <continental/hydrotools/command/StreamDefinitionCommand.h>
+#include <continental/hydrotools/command/StreamSegmentationCommand.h>
+#include <continental/hydrotools/domain/HeuristicSinkRemovalCommandInput.h>
+#include <continental/hydrotools/domain/StreamDefinitionCommandInput.h>
+#include <continental/hydrotools/domain/StreamSegmentationCommandInput.h>
+#include <continental/hydrotools/domain/FlowAccumulationCommandInput.h>
+#include <continental/hydrotools/domain/WatershedDelineationCommandInput.h>
+#include <continental/hydrotools/domain/HydrotoolsProcessType.h>
+#include <continental/hydrotools/command/AbstractCommand.h>
+#include <continental/hydrotools/exception/CatchmentDelineationIsNotValidInputCommandException.h>
+#include <continental/hydrotools/exception/CatchmentDelineationIsNotValidInputCommandException.h>
 #include <memory>
 #include <QString>
+#include <QCoreApplication>
 
 using namespace continental::hydrotools::service;
+using namespace continental::hydrotools::command;
+using namespace continental::hydrotools::domain;
+using namespace continental::hydrotools::exception;
 using namespace continental::datamanagement;
 using namespace std;
 
-static QString basePath = "D:/git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos";
-static QString inputDemFile = basePath + "/rioSinos.asc";
-static QString outputCorrectedFile = basePath + "/rioSinos_sink.asc";
-static QString outputFlowDirectionFile = basePath + "/rioSinos_fdr.asc";
-static QString outputFlowAccumulationFile = basePath + "/rioSinos_fac.asc";
-static QString outputStreamDefinitionFile = basePath + "/rioSinos_str.asc";
-static QString outputStreamSegmentationFile = basePath + "/rioSinos_strseg.asc";
-static QString outputWatershedDelineation = basePath + "/rioSinos_wat.asc";
-static QString outputCatchmentDelineation = basePath + "/rioSinos_catch.asc";
-static QString inputShapeFilePointOutletsSnap = basePath + "/Exutorio_snap.shp";
-
-void sinkDestroy()
+void sinkDestroy(QStringList args)
 {
-    size_t maxOpenList = 1000000;
-    size_t maxClosedList = 500000;
-    float weightFunctionG = 2;
-    auto processingAlgorithm = HeuristicSinkRemoval::ProcessingMode::MHS;
-    auto sinkDestroy = make_unique<HeuristicSinkRemoval>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-    sinkDestroy->setDem(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
-    sinkDestroy->removeSinks();
-
-    RasterFile<short>::writeData(*sinkDestroy->getDem(), outputCorrectedFile);
-    RasterFile<short>::writeData(*sinkDestroy->getFlowDirection(), outputFlowDirectionFile);
+    auto inputSinkDestroy = HeuristicSinkRemovalCommandInput(args);
+    inputSinkDestroy.prepare();
+    auto command = new continental::hydrotools::command::SinkDestroyCommand(inputSinkDestroy);
+    command->execute();
 }
 
-void flowAccumulation()
+void flowAccumulation(QStringList args)
 {
-    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputFlowDirectionFile));
-
-    FlowAccumulation flowAccumulation;
-    flowAccumulation.setFlowDirection(flowDirectionData);
-    flowAccumulation.runoff();
-    RasterFile<float>::writeData(*flowAccumulation.getFlowAccumulation().get(), outputFlowAccumulationFile);
+    auto inputFlowAccumulation = FlowAccumulationCommandInput(args);
+    inputFlowAccumulation.prepare();
+    auto command = new continental::hydrotools::command::FlowAccumulationCommand(inputFlowAccumulation);
+    command->execute();
 }
 
-void streamDefinition()
+void streamDefinition(QStringList args)
 {
-    auto flowAccumulationData = make_shared<Raster<float>>(RasterFile<float>::loadRasterByFile(outputFlowAccumulationFile));
-
-    StreamDefinition streamDefinition;
-    streamDefinition.setFlowAccumulation(flowAccumulationData, 3000, StreamDefinition::ThresholdType::NumberOfCells);
-    streamDefinition.defineStreams();
-    RasterFile<short>::writeData(*streamDefinition.getStreamDefinition().get(), outputStreamDefinitionFile);
+    auto inputStreamDefinition = StreamDefinitionCommandInput(args);
+    inputStreamDefinition.prepare();
+    auto command = new continental::hydrotools::command::StreamDefinitionCommand(inputStreamDefinition);
+    command->execute();
 }
 
-void streamSegmention()
-{
-    auto streamDefinitionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputStreamDefinitionFile));
-    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputFlowDirectionFile));
-
-    StreamSegmentation streamSegmentation;
-    streamSegmentation.setStreamDefinition(streamDefinitionData);
-    streamSegmentation.setFlowDirection(flowDirectionData);
-    streamSegmentation.segmentStreams();
-    RasterFile<short>::writeData(*streamSegmentation.getStreamSegmentation().get(), outputStreamSegmentationFile);
+void streamSegmention(QStringList args){
+    auto inputStreamSegmention = StreamSegmentationCommandInput(args);
+    inputStreamSegmention.prepare();
+    auto command = new continental::hydrotools::command::StreamSegmentationCommand(inputStreamSegmention);
+    command->execute();
 }
 
-void watershedDelineation()
+void catchmentDelineation(QStringList args)
 {
-    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputFlowDirectionFile));
-
-    Catchment catchment;
-    catchment.setFlowDirection(flowDirectionData);
-    // catchment.setPointOutlets(inputShapeFilePointOutletsSnap);
-    catchment.insertOutletByRowCol(795, 209);
-    catchment.findWatersheds();
-
-    RasterFile<short>::writeData(*catchment.getWaterShed().get(), outputWatershedDelineation);
+    auto inputCatchment = CatchmentCommandInput(args);
+    inputCatchment.prepare();
+    auto command = new continental::hydrotools::command::CatchmentCommand(inputCatchment);
+    command->execute();
 }
 
-void catchmentDelineation()
+void watershedDelineation(QStringList args)
 {
-    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputFlowDirectionFile));
-    auto streamSegmentationData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(outputStreamSegmentationFile));
-
-    Catchment catchment;
-    catchment.setFlowDirection(flowDirectionData);
-    catchment.setStreamSegmentation(streamSegmentationData);
-    catchment.findWatersheds();
-
-    RasterFile<short>::writeData(*catchment.getWaterShed().get(), outputCatchmentDelineation);
+    auto inputCatchment = WatershedDelineationCommandInput(args);
+    inputCatchment.prepare();
+    auto command = new continental::hydrotools::command::WatershedDelineationCommand(inputCatchment);
+    command->execute();
 }
 
 int main(int argc, char **argv)
 {
-    Q_UNUSED(argc);
-    Q_UNUSED(argv);
-
-    // sinkDestroy();
-    // flowAccumulation();
-    // streamDefinition();
-    // streamSegmention();
-    watershedDelineation();
-    // catchmentDelineation();
-
+    QCoreApplication app(argc, argv);
+    QStringList args = app.arguments();
+    try
+    {
+        if(args.length() > 1)
+        {
+            auto paramProcessModeInput = args[1].toInt();
+            switch(paramProcessModeInput)
+            {
+                case HydrotoolsProcessType::ProgramTestMode:
+                    std::cout << VER_FILE_VERSION_STR << endl;
+                break;
+                case HydrotoolsProcessType::SinkDestroy:
+                    sinkDestroy(args);
+                    break;
+                case HydrotoolsProcessType::FlowAccumulation:
+                    flowAccumulation(args);
+                    break;
+                case HydrotoolsProcessType::StreamDefinition:
+                    streamDefinition(args);
+                    break;
+                case HydrotoolsProcessType::StreamSegmention:
+                    streamSegmention(args);
+                    break;
+                case HydrotoolsProcessType::CatchmentDelineation:
+                    catchmentDelineation(args);
+                    break;
+                case HydrotoolsProcessType::WatershedDelineation:
+                    watershedDelineation(args);
+                    break;
+                default:
+                    throw std::exception("Argumento do processo inválido. Padrão esperado [0 - 6]");
+                    break;
+            }
+        }
+        else
+        {
+           throw std::exception("Argumento do processo inválido");
+        }
+     }
+     catch (exception& e)
+     {
+       std::cout << "Erro ao executar comando no ContinentalHydroTools, erro: " << e.what() << endl;
+       return 1;
+     }
     return 0;
 }
+
+#endif

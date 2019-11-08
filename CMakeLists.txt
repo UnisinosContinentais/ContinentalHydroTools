@@ -34,7 +34,8 @@ include_directories(${HDF5_INCLUDE_DIRS})
 # Create target and set properties
 
 add_library(ContinentalHydroTools
-    src/Readme.h
+    src/Version.cpp
+    src/Readme.cpp
     src/util/HDF5Util.cpp
     src/util/HydroToolsUtil.cpp
     src/service/Catchment.cpp
@@ -156,6 +157,31 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/ContinentalHydroToolsConfigVersion.cmake
     DESTINATION ${INSTALL_CONFIGDIR}
 )
+
+IF (WIN32)
+
+
+message("aaaaa-${CMAKE_CURRENT_BINARY_DIR}/console/*.exe")
+    FILE(GLOB ConsoleFiles ${CMAKE_CURRENT_BINARY_DIR}/console/*.exe)
+    if (DEFINED ConsoleFiles)
+        install(
+            FILES 	${ConsoleFiles}
+            DESTINATION     console/
+        )
+    else()
+    endif()
+
+    FILE(GLOB ConsoleDllFiles ${CMAKE_CURRENT_BINARY_DIR}/console/*.dll)
+    if (DEFINED ConsoleDllFiles)
+        install(
+            FILES 	${ConsoleDllFiles}
+            DESTINATION     console/
+        )
+    else()
+    endif()
+ENDIF()
+
+
 
 export(EXPORT ContinentalHydroTools-targets FILE ${CMAKE_CURRENT_BINARY_DIR}/ContinentalHydroToolsTargets.cmake NAMESPACE ContinentalHydroTools::)
 

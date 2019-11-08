@@ -23,24 +23,20 @@ FlowAccumulationCommandInput::FlowAccumulationCommandInput(QStringList argv)
 */
 void FlowAccumulationCommandInput::prepare()
 {
-    try
-    {
-        if(m_argv.length() != 6)
-        {
-            throw;
-        }
 
-        //Parse dos parametros de entradas do console
-        auto fileFlowDirectionInput = FileCommand(m_argv[2], m_argv[3]);
-        auto fileFlowAccumulationOutput = FileCommand(m_argv[4], m_argv[5]);
-
-        //prepara o objeto
-        this->setFlowDirectionInput(fileFlowDirectionInput);
-        this->setFlowAccumulationOutput(fileFlowAccumulationOutput);
-    } catch (...)
+    if(m_argv.length() != 6)
     {
-        throw flowAccumulationIsNotValidInputCommandException;
+        throw exception::FlowAccumulationIsNotValidInputCommandException();
     }
+
+    //Parse dos parametros de entradas do console
+    auto fileFlowDirectionInput = FileCommand(m_argv[2], m_argv[3]);
+    auto fileFlowAccumulationOutput = FileCommand(m_argv[4], m_argv[5]);
+
+    //prepara o objeto
+    this->setFlowDirectionInput(fileFlowDirectionInput);
+    this->setFlowAccumulationOutput(fileFlowAccumulationOutput);
+
 }
 
 void FlowAccumulationCommandInput::setFlowDirectionInput(const FileCommand flowDirectionInput)

@@ -31,42 +31,35 @@ HeuristicSinkRemovalCommandInput::HeuristicSinkRemovalCommandInput(QStringList a
 void HeuristicSinkRemovalCommandInput::prepare()
 {
 
-    try
+    if(m_argv.length() != 12)
     {
-        if(m_argv.length() != 12)
-        {
-            throw;
-        }
-
-        //Parse dos parametros de entradas do console
-        size_t maxOpenList = static_cast<size_t>(m_argv[8].toInt());
-        size_t maxClosedList = static_cast<size_t>(m_argv[9].toInt());
-        float weightFunctionG = (m_argv[10].toFloat());
-
-        auto fileDemInput = FileCommand(m_argv[2], m_argv[3]);
-        auto fileFlowDirectionOutput = FileCommand(m_argv[4], m_argv[5]);
-        auto fileSinkDestroyOutput = FileCommand(m_argv[6], m_argv[7]);
-        auto processingAlgorithm = static_cast<HeuristicSinkRemoval::ProcessingMode>(m_argv[11].toInt());
-
-        if(processingAlgorithm != HeuristicSinkRemoval::ProcessingMode::MHS)
-        {
-            throw sinkDestroyIsNotValidInputCommandException;
-        }
-
-        //prepara o objeto
-        setDemInput(fileDemInput);
-        setMaxOpenList(maxOpenList);
-        setMaxClosedList(maxClosedList);
-        setWeightFunctionG(weightFunctionG);
-        setProcessingAlgorithm(processingAlgorithm);
-
-        this->setFlowDirectionOutput(fileFlowDirectionOutput);
-        this->setSinkDestroyOutput(fileSinkDestroyOutput);
-
-    } catch (exception::SinkDestroyIsNotValidInputCommandException ex)
-    {
-        throw sinkDestroyIsNotValidInputCommandException;
+        throw exception::SinkDestroyIsNotValidInputCommandException();
     }
+
+    //Parse dos parametros de entradas do console
+    size_t maxOpenList = static_cast<size_t>(m_argv[8].toInt());
+    size_t maxClosedList = static_cast<size_t>(m_argv[9].toInt());
+    float weightFunctionG = (m_argv[10].toFloat());
+
+    auto fileDemInitialSurfaceInput = FileCommand(m_argv[2], m_argv[3]);
+    auto fileFlowDirectionOutput = FileCommand(m_argv[4], m_argv[5]);
+    auto fileSinkDestroyOutput = FileCommand(m_argv[6], m_argv[7]);
+    auto processingAlgorithm = static_cast<HeuristicSinkRemoval::ProcessingMode>(m_argv[11].toInt());
+
+    if(processingAlgorithm != HeuristicSinkRemoval::ProcessingMode::MHS)
+    {
+        throw exception::SinkDestroyIsNotValidInputCommandException();
+    }
+
+    //prepara o objeto
+    setDemInput(fileDemInitialSurfaceInput);
+    setMaxOpenList(maxOpenList);
+    setMaxClosedList(maxClosedList);
+    setWeightFunctionG(weightFunctionG);
+    setProcessingAlgorithm(processingAlgorithm);
+
+    this->setFlowDirectionOutput(fileFlowDirectionOutput);
+    this->setSinkDestroyOutput(fileSinkDestroyOutput);
 }
 
 void HeuristicSinkRemovalCommandInput::setMaxOpenList(const size_t maxOpenList)

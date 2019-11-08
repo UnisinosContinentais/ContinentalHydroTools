@@ -18,13 +18,14 @@ namespace continental {
 namespace hydrotools {
 namespace exception {
 
-class StreamDefinitionProcessException: public exception
+class StreamDefinitionProcessException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "O processo do Stream Definition não foi processado com sucesso!";
-  }
-} streamDefinitionProcessException;
+public:
+    /// Construtor
+    explicit StreamDefinitionProcessException();
+    /// Desconstrutor
+    virtual ~StreamDefinitionProcessException() noexcept = default;
+};
 
 }
 }

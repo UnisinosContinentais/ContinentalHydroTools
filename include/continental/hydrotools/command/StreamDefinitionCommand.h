@@ -18,15 +18,28 @@ namespace hydrotools {
 namespace domain {
 class StreamDefinitionCommandInput;
 }
-namespace command {
+namespace command
+{
     class AbstractCommand;
 
+    /** @brief Classe de implentação do StreamDefinitionCommand
+     *  Esta classe é derivada de AbstractCommand
+     */
     class StreamDefinitionCommand : public AbstractCommand
     {
         public:
+            /// Construtor
+            /// @param estrutura de dados com os parametros de entrada do console que serão utilizados no método prepare
             StreamDefinitionCommand(domain::StreamDefinitionCommandInput streamDefinitionCommandInput);
-            void execute() ;
+
+            /// Função que executa o comando em questão
+            void execute();
+
+            /// Destrutor
+            ~StreamDefinitionCommand() = default;
+
         private:
+            /// Atributo
             domain::StreamDefinitionCommandInput m_streamDefinitionCommandInput;
     };
 

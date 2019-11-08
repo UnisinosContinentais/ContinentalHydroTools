@@ -72,7 +72,8 @@ public:
     bool existRasterIO(const QString &hdf5FileName, const QString &nameGroupRaster) const
     {
         bool result = false;
-        try{
+        try
+        {
             // Open an existing file and dataset.
             if(QFile::exists(hdf5FileName.toLocal8Bit().constData()))
             {
@@ -87,10 +88,12 @@ public:
         catch (H5::FileIException ex ) {}
         catch (H5::GroupIException ex ) {}
         catch (H5::DataSetIException ex ) {}
-        catch (std::exception &e) {
+        catch (std::exception &e)
+        {
             cout << e.what() << endl;
         }
-        catch (...) {
+        catch (...)
+        {
             cout << "erro!" << endl;
         }
         return result;
@@ -153,9 +156,6 @@ public:
 
            delete[] data;
 
-           //raster.setModified(false);
-          // raster.setPersisted(true);
-
            group.close();
            fileDao.close();
        }
@@ -199,8 +199,6 @@ public:
                    {
                       raster.setData(i, data[i]);
                    }
-                   //raster.setModified(false);
-                   //raster.setPersisted(true);
 
                    result.second = std::move(raster);
 

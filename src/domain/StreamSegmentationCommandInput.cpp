@@ -20,33 +20,27 @@ StreamSegmentationCommandInput::StreamSegmentationCommandInput(QStringList argv)
  * ===============================
  * [2] = pathFlowDirectionInput
  * [3] = groupFlowDirectionInput
- * [4] = pathStreamDefinitionInput
- * [5] = grouStreamDefinitionInput
- * [6] = pathStreamSegmentationOutput
- * [7] = grouStreamSegmentationOutput
+ * [5] = pathWatershedDelineationOutput
+ * [6] = groupWatershedDelineationOutput
+ * [7] = col
+ * [8] = row
 */
 void StreamSegmentationCommandInput::prepare()
 {
-    try
+    if(m_argv.length() != 8)
     {
-        if(m_argv.length() != 8)
-        {
-            throw;
-        }
-
-        //Parse dos parametros de entradas do console
-        auto fileFlowDirectionInput = FileCommand(m_argv[2], m_argv[3]);
-        auto fileStreamDefinitionInput = FileCommand(m_argv[4], m_argv[5]);
-        auto fileStreamSegmentationOutput = FileCommand(m_argv[6], m_argv[7]);
-
-        //prepara o objeto
-        setFlowDirectionInput(fileFlowDirectionInput);
-        setStreamDefinitionInput(fileStreamDefinitionInput);
-        setStreamSegmentationOutput(fileStreamSegmentationOutput);
-    } catch (...)
-    {
-        throw streamSegmentationIsNotValidInputCommandException;
+        throw exception::StreamSegmentationIsNotValidInputCommandException();
     }
+
+    //Parse dos parametros de entradas do console
+    auto fileFlowDirectionInput = FileCommand(m_argv[2], m_argv[3]);
+    auto fileStreamDefinitionInput = FileCommand(m_argv[4], m_argv[5]);
+    auto fileStreamSegmentationOutput = FileCommand(m_argv[6], m_argv[7]);
+
+    //prepara o objeto
+    setFlowDirectionInput(fileFlowDirectionInput);
+    setStreamDefinitionInput(fileStreamDefinitionInput);
+    setStreamSegmentationOutput(fileStreamSegmentationOutput);
 }
 
 void StreamSegmentationCommandInput::setStreamDefinitionInput(const FileCommand streamDefinitionInput)

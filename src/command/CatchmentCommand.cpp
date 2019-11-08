@@ -46,7 +46,7 @@ void CatchmentCommand::execute()
     }
     catch (...)
     {
-        throw exception::catchmentDelineationProcessException;
+        throw exception::CatchmentDelineationProcessException();
     }
 }
 

@@ -12,20 +12,34 @@
 #include <QString>
 #include "../domain/FlowAccumulationCommandInput.h"
 #include "AbstractCommand.h"
+
 namespace continental {
 namespace hydrotools {
 
 namespace domain {
     class FlowAccumulationCommandInput;
 }
-namespace command {
+namespace command
+{
     class AbstractCommand;
+    /** @brief Classe de implentação do FlowAccumulationCommand
+     *  Esta classe é derivada de AbstractCommand
+     */
     class FlowAccumulationCommand : public AbstractCommand
     {
         public:
+            /// Construtor
+            /// @param estrutura de dados com os parametros de entrada do console que serão utilizados no método prepare
             FlowAccumulationCommand(domain::FlowAccumulationCommandInput flowAccumulationCommand);
-            void execute() ;
+
+            /// Função que executa o comando em questão
+            void execute();
+
+            /// Destrutor
+            ~FlowAccumulationCommand() = default;
+
         private:
+            /// Atributo
             domain::FlowAccumulationCommandInput m_flowAccumulationCommand;
     };
 }

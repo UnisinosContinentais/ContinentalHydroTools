@@ -14,18 +14,23 @@
 #include <exception>
 
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-
-class StreamDefinitionIsNotValidInputCommandException: public exception
+class StreamDefinitionIsNotValidInputCommandException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "Dados inválidos para realizar o processo do Stream Definition!";
-  }
-} streamDefinitionIsNotValidInputCommandException;
+public:
+    /// Construtor
+    explicit StreamDefinitionIsNotValidInputCommandException();
+    /// Desconstrutor
+    virtual ~StreamDefinitionIsNotValidInputCommandException() noexcept = default;
+};
+
+
+
+
 
 }
 }

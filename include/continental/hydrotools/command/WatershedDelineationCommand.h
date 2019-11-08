@@ -20,15 +20,24 @@ namespace hydrotools
     }
     namespace command
     {
+        /** @brief Classe de implentação do Método de delineação da bacia Hidrográfica
+         *  Esta classe é derivada de AbstractCommand
+         */
         class WatershedDelineationCommand : public AbstractCommand
         {
             public:
+                /// Construtor
+                /// @param estrutura de dados com os parametros de entrada do console que serão utilizados no método prepare
                 WatershedDelineationCommand(domain::WatershedDelineationCommandInput watershedDelineationCommandInput);
+
+                /// Função que executa o comando em questão
                 void execute();
+
+                /// Destrutor
+                ~WatershedDelineationCommand() = default;
             private:
                 domain::WatershedDelineationCommandInput m_watershedDelineationCommandInput;
         };
-
     }
 }
 }

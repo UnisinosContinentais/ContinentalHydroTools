@@ -12,6 +12,7 @@
 #include <QString>
 #include "../domain/CatchmentCommandInput.h"
 #include "AbstractCommand.h"
+
 namespace continental {
 namespace hydrotools
 {
@@ -20,12 +21,24 @@ namespace hydrotools
     }
     namespace command
     {
+        /** @brief Classe de implentação do CatchmentCommand
+         *  Esta classe é derivada de AbstractCommand
+         */
         class CatchmentCommand : public AbstractCommand
         {
             public:
+                /// Construtor
+                /// @param estrutura de dados com os parametros de entrada do console que serão utilizados no método prepare
                 CatchmentCommand(domain::CatchmentCommandInput catchmentCommandInput);
-                void execute() ;
+
+                /// Função que executa o comando em questão
+                void execute();
+
+                /// Destrutor
+                ~CatchmentCommand() = default;
+
             private:
+                /// Atributo
                 domain::CatchmentCommandInput m_catchmentCommandInput;
         };
 

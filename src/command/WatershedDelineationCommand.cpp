@@ -27,6 +27,7 @@ void WatershedDelineationCommand::execute()
 {
     try
     {
+         //Parametros de Entrada
         auto watershedDelineationCommandOutputFile = RasterIO<short>(m_watershedDelineationCommandInput.getWatershedDelineationOutput());
         auto flowDirectionInputFile = RasterIO<short>(m_watershedDelineationCommandInput.getFlowDirectionInput());
 
@@ -34,16 +35,19 @@ void WatershedDelineationCommand::execute()
         size_t m_col =m_watershedDelineationCommandInput.getCol();
         auto flowDirectionData = flowDirectionInputFile.read();
 
+        //Prepara o objeto para processamento
         Catchment catchmentCalculator;
         catchmentCalculator.setFlowDirection(std::make_shared<continental::datamanagement::Raster<short>>(flowDirectionData));
         catchmentCalculator.insertOutletByRowCol(m_row, m_col);
         catchmentCalculator.findWatersheds();
+
+        //Grava o resultado
         watershedDelineationCommandOutputFile.write(*catchmentCalculator.getWaterShed());
 
     }
     catch (...)
     {
-        throw exception::watershedDelineationProcessException;
+        throw exception::WatershedDelineationProcessException();
     }
 }
 

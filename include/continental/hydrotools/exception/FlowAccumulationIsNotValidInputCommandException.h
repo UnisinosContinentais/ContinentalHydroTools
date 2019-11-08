@@ -12,20 +12,21 @@
 #include <QString>
 #include <iostream>
 #include <exception>
+
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-class FlowAccumulationIsNotValidInputCommandException: public exception
+class FlowAccumulationIsNotValidInputCommandException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "Dados inválidos para realizar o processo do Catchment Delineation!";
-  }
-} flowAccumulationIsNotValidInputCommandException;
-
-
+public:
+    /// Construtor
+    explicit FlowAccumulationIsNotValidInputCommandException();
+    /// Desconstrutor
+    virtual ~FlowAccumulationIsNotValidInputCommandException() noexcept = default;
+};
 
 }
 }

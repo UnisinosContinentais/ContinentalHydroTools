@@ -12,18 +12,22 @@
 #include <QString>
 #include <iostream>
 #include <exception>
+
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-class WatershedDelineationIsNotValidInputCommandException: public exception
+class WatershedDelineationIsNotValidInputCommandException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "Dados inválidos para realizar o processo do Watershed Delineation!";
-  }
-} watershedDelineationIsNotValidInputCommandException;
+public:
+    /// Construtor
+    explicit WatershedDelineationIsNotValidInputCommandException();
+    /// Desconstrutor
+    virtual ~WatershedDelineationIsNotValidInputCommandException() noexcept = default;
+};
+
 
 }
 }

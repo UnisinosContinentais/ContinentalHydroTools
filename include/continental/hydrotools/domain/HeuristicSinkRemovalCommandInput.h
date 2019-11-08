@@ -20,46 +20,92 @@ using namespace continental::hydrotools::service;
 namespace continental {
 namespace hydrotools {
 namespace domain {
-/// <summary>
-/// Classe base da célula, para indicar a posição na matriz
-/// </summary>
+/** @brief Classe Comandos de Entrada para o Método de Remoção de Descontinuidade
+ *  Esta classe é derivada de AbstractCommandInput
+ */
 class HeuristicSinkRemovalCommandInput : AbstractCommandInput
 {
 public:
     /// Construtor
     HeuristicSinkRemovalCommandInput(QStringList args);
+
+    /// Função que executa a preparação/trsnformação dos comandos de entrada em parâmetros
     void prepare();
 
+    /// Função Getter do atributo MaxOpenList.
     size_t getMaxOpenList() const;
+
+    /// Função Getter do atributo MaxClosedList.
     size_t getMaxClosedList() const;
+
+    /// Função Getter do atributo WeightFunctionG.
     float getWeightFunctionG() const;
+
+    /// Função Getter do atributo tipo de algoritmo de processamento
     HeuristicSinkRemoval::ProcessingMode getProcessingAlgorithm() const;
 
+    /// Função Getter do arquivo de entrada da Superfície inicial.
     FileCommand getDemInput() const;
+
+    /// Função Getter do arquivo de saída do SinkDestroy.
     FileCommand getSinkDestroyOutput() const;
+
+    /// Função para atualizar o valor do arquivo de saída do Flow Direction.
+    /// @param FileCommand com valor do arquivo e nome do dataset do hdf5
     FileCommand getFlowDirectionOutput() const;
 
+    /// Destrutor
+    ~HeuristicSinkRemovalCommandInput() = default;
 protected:
+    /// Função para atualizar o valor do atributo maxOpenList
+    /// @param maxOpenList com valor do tipo size_t
     void setMaxOpenList (const size_t maxOpenList);
+
+    /// Função para atualizar o valor do atributo maxClosedList
+    /// @param maxClosedList com valor do tipo size_t
     void setMaxClosedList (const size_t maxClosedList);
+
+    /// Função para atualizar o valor do atributo weightFunctionG
+    /// @param weightFunctionG com valor do tipo size_t
     void setWeightFunctionG (const float weightFunctionG);
+
+    /// Função para atualizar o valor do atributo weightFunctionG
+    /// @param weightFunctionG com valor do tipo size_t
     void setProcessingAlgorithm (const HeuristicSinkRemoval::ProcessingMode processingAlgorithm);
 
+    /// Função para atualizar o valor do arquivo de entrada da Superfície inicial.
+    /// @param FileCommand com valor do arquivo e nome do dataset do hdf5
     void setDemInput (const FileCommand demInput);
+
+    /// Função para atualizar o valor do arquivo de saída do Sink and Destroy.
+    /// @param FileCommand com valor do arquivo e nome do dataset do hdf5
     void setSinkDestroyOutput (const FileCommand sinkDestroyOutput);
+
+    /// Função para atualizar o valor do arquivo de saída do Flow Direction.
+    /// @param FileCommand com valor do arquivo e nome do dataset do hdf5
     void setFlowDirectionOutput (const FileCommand flowDirectionOutput);
 
-
 private:
+    /// Atributo
     size_t m_maxOpenList;
+
+    /// Atributo
     size_t m_maxClosedList;
+
+    /// Atributo
     float m_weightFunctionG;
+
+    /// Atributo
     HeuristicSinkRemoval::ProcessingMode m_processingAlgorithm;
-	
+
+    /// Atributo
     FileCommand m_demInput;
+
+    /// Atributo
     FileCommand m_sinkDestroyOutput;
+
+    /// Atributo
     FileCommand m_flowDirectionOutput;
-	
 };
 
 

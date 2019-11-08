@@ -12,20 +12,21 @@
 #include <QString>
 #include <iostream>
 #include <exception>
+
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-class FlowAccumulationProcessException: public exception
+class FlowAccumulationProcessException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "O processo do Flow Accumulation não foi processado com sucesso!";
-  }
-} flowAccumulationProcessException;
-
-
+public:
+    /// Construtor
+    explicit FlowAccumulationProcessException();
+    /// Desconstrutor
+    virtual ~FlowAccumulationProcessException() noexcept = default;
+};
 
 }
 }

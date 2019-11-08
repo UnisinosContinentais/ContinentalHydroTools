@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{D509DD82-B109-4BC9-88F8-04782B63E8E0}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="console\src\main.cpp" />
+    <ClCompile Include="console\src\TestCommand.cpp" />
+    <ClCompile Include="src\command\AbstractCommand.cpp" />
+    <ClCompile Include="src\command\CatchmentCommand.cpp" />
+    <ClCompile Include="src\command\FlowAccumulationCommand.cpp" />
+    <ClCompile Include="src\command\SinkDestroyCommand.cpp" />
+    <ClCompile Include="src\command\StreamDefinitionCommand.cpp" />
+    <ClCompile Include="src\command\StreamSegmentationCommand.cpp" />
+    <ClCompile Include="src\command\WatershedDelineationCommand.cpp" />
+    <ClCompile Include="src\domain\AbstractCommandInput.cpp" />
+    <ClCompile Include="src\domain\CatchmentCommandInput.cpp" />
+    <ClCompile Include="src\domain\FileCommand.cpp" />
+    <ClCompile Include="src\domain\FlowAccumulationCommandInput.cpp" />
+    <ClCompile Include="src\domain\HeuristicSinkRemovalCommandInput.cpp" />
+    <ClCompile Include="src\domain\HydrotoolsProcessType.cpp" />
+    <ClCompile Include="src\domain\StreamDefinitionCommandInput.cpp" />
+    <ClCompile Include="src\domain\StreamSegmentationCommandInput.cpp" />
+    <ClCompile Include="src\domain\WatershedDelineationCommandInput.cpp" />
+    <ClCompile Include="src\exception\CatchmentDelineationIsNotValidInputCommandException.cpp" />
+    <ClCompile Include="src\exception\CatchmentDelineationProcessException.cpp" />
+    <ClCompile Include="src\exception\FlowAccumulationIsNotValidInputCommandException.cpp" />
+    <ClCompile Include="src\exception\FlowAccumulationProcessException.cpp" />
+    <ClCompile Include="src\exception\SinkDestroyIsNotValidInputCommandException.cpp" />
+    <ClCompile Include="src\exception\SinkDestroyProcessException.cpp" />
+    <ClCompile Include="src\exception\StreamDefinitionIsNotValidInputCommandException.cpp" />
+    <ClCompile Include="src\exception\StreamDefinitionProcessException.cpp" />
+    <ClCompile Include="src\exception\StreamSegmentationIsNotValidInputCommandException.cpp" />
+    <ClCompile Include="src\exception\StreamSegmentationProcessException.cpp" />
+    <ClCompile Include="src\exception\WatershedDelineationIsNotValidInputCommandException.cpp" />
+    <ClCompile Include="src\exception\WatershedDelineationProcessException.cpp" />
+    <ClCompile Include="src\infrastructure\AbstractRasterIO.cpp" />
+    <ClCompile Include="src\infrastructure\RasterIO.cpp" />
+    <ClCompile Include="src\service\Catchment.cpp" />
+    <ClCompile Include="src\service\Cell.cpp" />
+    <ClCompile Include="src\service\CellWatershed.cpp" />
+    <ClCompile Include="src\service\FlowAccumulation.cpp" />
+    <ClCompile Include="src\service\FlowDirection.cpp" />
+    <ClCompile Include="src\service\HeuristicCell.cpp" />
+    <ClCompile Include="src\service\HeuristicSinkRemoval.cpp" />
+    <ClCompile Include="src\service\HeuristicSinkRemovalUtil.cpp" />
+    <ClCompile Include="src\service\JunctionCell.cpp" />
+    <ClCompile Include="src\service\LengthSegmentation.cpp" />
+    <ClCompile Include="src\service\shape\Box.cpp" />
+    <ClCompile Include="src\service\shape\Part.cpp" />
+    <ClCompile Include="src\service\shape\Point.cpp" />
+    <ClCompile Include="src\service\shape\ShapeFile.cpp" />
+    <ClCompile Include="src\service\shape\ShapeObject.cpp" />
+    <ClCompile Include="src\service\StreamAccumLength.cpp" />
+    <ClCompile Include="src\service\StreamDefinition.cpp" />
+    <ClCompile Include="src\service\StreamSegmentation.cpp" />
+    <ClCompile Include="src\util\HDF5Util.cpp" />
+    <ClCompile Include="src\util\HydroToolsUtil.cpp" />
+    <ClCompile Include="test\src\main.cpp" />
+    <ClCompile Include="test\src\TestCommand.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\continental\hydrotools\command\AbstractCommand.h" />
+    <ClInclude Include="include\continental\hydrotools\command\CatchmentCommand.h" />
+    <ClInclude Include="include\continental\hydrotools\command\FlowAccumulation.h" />
+    <ClInclude Include="include\continental\hydrotools\command\SinkDestroyCommand.h" />
+    <ClInclude Include="include\continental\hydrotools\command\StreamDefinitionCommand.h" />
+    <ClInclude Include="include\continental\hydrotools\command\StreamSegmentationCommand.h" />
+    <ClInclude Include="include\continental\hydrotools\command\WatershedDelineationCommand.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\AbstractCommandInput.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\CatchmentCommandInput.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\FileCommand.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\FlowAccumulationCommandInput.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\HeuristicSinkRemovalCommandInput.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\HydrotoolsProcessType.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\StreamDefinitionCommandInput.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\StreamSegmentationCommandInput.h" />
+    <ClInclude Include="include\continental\hydrotools\domain\WatershedDelineationCommandInput.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\CatchmentDelineationIsNotValidInputCommandException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\CatchmentDelineationProcessException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\FlowAccumulationIsNotValidInputCommandException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\FlowAccumulationProcessException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\SinkDestroyIsNotValidInputCommandException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\SinkDestroyProcessException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\StreamDefinitionIsNotValidInputCommandException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\StreamDefinitionProcessException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\StreamSegmentationIsNotValidInputCommandException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\StreamSegmentationProcessException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\WatershedDelineationIsNotValidInputCommandException.h" />
+    <ClInclude Include="include\continental\hydrotools\exception\WatershedDelineationProcessException.h" />
+    <ClInclude Include="include\continental\hydrotools\infrastructure\AbstractRasterIO.h" />
+    <ClInclude Include="include\continental\hydrotools\infrastructure\RasterIO.h" />
+    <ClInclude Include="include\continental\hydrotools\service\Catchment.h" />
+    <ClInclude Include="include\continental\hydrotools\service\Cell.h" />
+    <ClInclude Include="include\continental\hydrotools\service\CellWatershed.h" />
+    <ClInclude Include="include\continental\hydrotools\service\FlowAccumulation.h" />
+    <ClInclude Include="include\continental\hydrotools\service\FlowDirection.h" />
+    <ClInclude Include="include\continental\hydrotools\service\HeuristicCell.h" />
+    <ClInclude Include="include\continental\hydrotools\service\HeuristicSinkRemoval.h" />
+    <ClInclude Include="include\continental\hydrotools\service\HeuristicSinkRemovalUtil.h" />
+    <ClInclude Include="include\continental\hydrotools\service\JunctionCell.h" />
+    <ClInclude Include="include\continental\hydrotools\service\LengthSegmentation.h" />
+    <ClInclude Include="include\continental\hydrotools\service\shape\Box.h" />
+    <ClInclude Include="include\continental\hydrotools\service\shape\Part.h" />
+    <ClInclude Include="include\continental\hydrotools\service\shape\Point.h" />
+    <ClInclude Include="include\continental\hydrotools\service\shape\ShapeFile.h" />
+    <ClInclude Include="include\continental\hydrotools\service\shape\ShapeObject.h" />
+    <ClInclude Include="include\continental\hydrotools\service\StreamAccumLength.h" />
+    <ClInclude Include="include\continental\hydrotools\service\StreamDefinition.h" />
+    <ClInclude Include="include\continental\hydrotools\service\StreamSegmentation.h" />
+    <ClInclude Include="include\continental\hydrotools\TestCommand.h" />
+    <ClInclude Include="include\continental\hydrotools\util\HDF5Util.h" />
+    <ClInclude Include="include\continental\hydrotools\util\HydroToolsUtil.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\command\AbstractCommand.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\command\CatchmentCommand.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\command\FlowAccumulation.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\command\SinkDestroyCommand.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\command\StreamDefinitionCommand.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\command\StreamSegmentationCommand.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\command\WatershedDelineationCommand.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\AbstractCommandInput.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\CatchmentCommandInput.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\FileCommand.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\FlowAccumulationCommandInput.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\HeuristicSinkRemovalCommandInput.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\HydrotoolsProcessType.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\StreamDefinitionCommandInput.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\StreamSegmentationCommandInput.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\domain\WatershedDelineationCommandInput.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\CatchmentDelineationIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\CatchmentDelineationProcessException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\FlowAccumulationIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\FlowAccumulationProcessException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\SinkDestroyIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\SinkDestroyProcessException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\StreamDefinitionIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\StreamDefinitionProcessException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\StreamSegmentationIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\StreamSegmentationProcessException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\WatershedDelineationIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\exception\WatershedDelineationProcessException.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\infrastructure\AbstractRasterIO.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\infrastructure\RasterIO.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\Catchment.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\Cell.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\CellWatershed.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\FlowAccumulation.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\FlowDirection.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\HeuristicCell.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\HeuristicSinkRemoval.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\HeuristicSinkRemovalUtil.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\JunctionCell.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\LengthSegmentation.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\shape\Box.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\shape\Part.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\shape\Point.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\shape\ShapeFile.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\shape\ShapeObject.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\StreamAccumLength.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\StreamDefinition.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\service\StreamSegmentation.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\TestCommand.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\util\HDF5Util.h" />
+    <ClInclude Include="install\debug\include\continental\hydrotools\util\HydroToolsUtil.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\command\AbstractCommand.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\command\CatchmentCommand.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\command\FlowAccumulation.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\command\SinkDestroyCommand.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\command\StreamDefinitionCommand.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\command\StreamSegmentationCommand.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\command\WatershedDelineationCommand.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\AbstractCommandInput.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\CatchmentCommandInput.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\FileCommand.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\FlowAccumulationCommandInput.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\HeuristicSinkRemovalCommandInput.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\HydrotoolsProcessType.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\StreamDefinitionCommandInput.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\StreamSegmentationCommandInput.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\domain\WatershedDelineationCommandInput.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\CatchmentDelineationIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\CatchmentDelineationProcessException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\FlowAccumulationIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\FlowAccumulationProcessException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\SinkDestroyIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\SinkDestroyProcessException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\StreamDefinitionIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\StreamDefinitionProcessException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\StreamSegmentationIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\StreamSegmentationProcessException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\WatershedDelineationIsNotValidInputCommandException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\exception\WatershedDelineationProcessException.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\infrastructure\AbstractRasterIO.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\infrastructure\RasterIO.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\Catchment.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\Cell.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\CellWatershed.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\FlowAccumulation.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\FlowDirection.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\HeuristicCell.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\HeuristicSinkRemoval.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\HeuristicSinkRemovalUtil.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\JunctionCell.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\LengthSegmentation.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\shape\Box.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\shape\Part.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\shape\Point.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\shape\ShapeFile.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\shape\ShapeObject.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\StreamAccumLength.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\StreamDefinition.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\service\StreamSegmentation.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\TestCommand.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\util\HDF5Util.h" />
+    <ClInclude Include="install\release\include\continental\hydrotools\util\HydroToolsUtil.h" />
+    <ClInclude Include="src\Readme.h" />
+    <ClInclude Include="src\service\Readme.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

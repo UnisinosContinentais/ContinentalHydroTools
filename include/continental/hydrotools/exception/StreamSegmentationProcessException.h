@@ -14,17 +14,21 @@
 #include <exception>
 
 using namespace std;
+
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-class StreamSegmentationProcessException: public exception
+class StreamSegmentationProcessException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "O processo do Stream Segmentation não foi processado com sucesso!";
-  }
-} streamSegmentationProcessException;
+public:
+    /// Construtor
+    explicit StreamSegmentationProcessException();
+    /// Desconstrutor
+    virtual ~StreamSegmentationProcessException() noexcept = default;
+};
+
+
 
 
 }

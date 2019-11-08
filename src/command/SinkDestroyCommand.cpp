@@ -22,13 +22,13 @@ namespace command {
 SinkDestroyCommand::SinkDestroyCommand(HeuristicSinkRemovalCommandInput sinkDestroyCommandInput):
 m_heuristicSinkRemovalCommandInput(sinkDestroyCommandInput)
 {
-
 }
 
 void SinkDestroyCommand::execute()
 {
     try
     {
+        //Parametros de Entrada
         auto rasterInputFile = RasterIO<short>(m_heuristicSinkRemovalCommandInput.getDemInput());
         auto outputCorrectedFile = RasterIO<short>(m_heuristicSinkRemovalCommandInput.getSinkDestroyOutput());
         auto outputFlowDirectionFile = RasterIO<short>(m_heuristicSinkRemovalCommandInput.getFlowDirectionOutput());
@@ -41,20 +41,22 @@ void SinkDestroyCommand::execute()
 
         if(rasterInputFile.exist())
         {
+            //Prepara o objeto para processamento
             auto sinkDestroy = make_unique<HeuristicSinkRemoval>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
             sinkDestroy->setDem(make_shared<Raster<short>>(rasterInputFile.read()));
-
             sinkDestroy->removeSinks();
 
+            //Grava o resultado
             outputCorrectedFile.write(*sinkDestroy->getDem());
             outputFlowDirectionFile.write(*sinkDestroy->getFlowDirection());
-        } else {
+        }
+        else
+        {
             throw sinkDestroyProcessException;
         }
-
-
-    } catch(std::exception &e){
-        std::cout << "ocorreu um erro: " << e.what() << endl;
+    }
+    catch(std::exception &e)
+    {
         throw sinkDestroyProcessException;
     }
 }

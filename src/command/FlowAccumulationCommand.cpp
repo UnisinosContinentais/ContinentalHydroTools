@@ -21,7 +21,6 @@ namespace command {
 FlowAccumulationCommand::FlowAccumulationCommand(FlowAccumulationCommandInput flowAccumulationCommand) :
 m_flowAccumulationCommand(flowAccumulationCommand)
 {
-
 }
 
 void FlowAccumulationCommand::execute()
@@ -31,6 +30,7 @@ void FlowAccumulationCommand::execute()
         //Parametros de Entrada
         auto flowDirectionInputFile = RasterIO<short>(m_flowAccumulationCommand.getFlowDirectionInput());
         auto flowccumulationOutputFile = RasterIO<float>(m_flowAccumulationCommand.getFlowAccumulationOutput());
+
         if(flowDirectionInputFile.exist())
         {
             auto flowDirectionData = make_shared<Raster<short>>(flowDirectionInputFile.read());
@@ -43,13 +43,15 @@ void FlowAccumulationCommand::execute()
 
             //Grava o resultado do FlowAccumulation
             flowccumulationOutputFile.write(dataFlowAccumulation);
-        } else {
-            throw flowAccumulationProcessException;
+        }
+        else
+        {
+            throw exception::FlowAccumulationProcessException();
         }
     }
     catch (...)
     {
-        throw flowAccumulationProcessException;
+        throw exception::FlowAccumulationProcessException();
     }
 }
 

@@ -25,22 +25,27 @@ void StreamSegmentationCommand::execute()
 {
     try
     {
+        //Parametros de Entrada
         auto streamDefinitionInputFile = RasterIO<short>(m_streamSegmentationCommandInput.getStreamDefinitionInput());
         auto flowDirectionInputFile = RasterIO<short>(m_streamSegmentationCommandInput.getFlowDirectionInput());
+        auto streamSegmentationOutputFile = RasterIO<short>(m_streamSegmentationCommandInput.getStreamSegmentationOutput());
 
         auto streamDefinitionData = make_shared<Raster<short>>(streamDefinitionInputFile.read());
         auto flowDirectionData = make_shared<Raster<short>>(flowDirectionInputFile.read());
 
+        //Prepara o objeto para processamento
         StreamSegmentation streamSegmentation;
         streamSegmentation.setStreamDefinition(streamDefinitionData);
         streamSegmentation.setFlowDirection(flowDirectionData);
         streamSegmentation.segmentStreams();
 
-        streamDefinitionInputFile.write(*streamSegmentation.getStreamSegmentation().get());
+        //Grava o resultado
+        streamSegmentationOutputFile.write(*streamSegmentation.getStreamSegmentation().get());
 
-    } catch (...)
+    }
+    catch (...)
     {
-        throw streamSegmentationProcessException;
+        throw exception::StreamSegmentationProcessException();
     }
 }
 

@@ -12,22 +12,34 @@
 #include <QString>
 #include "../domain/StreamSegmentationCommandInput.h"
 #include "AbstractCommand.h"
+
 namespace continental {
 namespace hydrotools {
 namespace domain {
     class StreamSegmentationCommandInput;
 }
-namespace command {
+namespace command
+{
+
     class AbstractCommand;
+    /** @brief Classe de implentação do StreamSegmentationCommand
+     *  Esta classe é derivada de AbstractCommand
+     */
     class StreamSegmentationCommand : public AbstractCommand
     {
         public:
+            /// Construtor
+            /// @param estrutura de dados com os parametros de entrada do console que serão utilizados no método prepare
             StreamSegmentationCommand(domain::StreamSegmentationCommandInput streamSegmentationCommandInput);
-            void execute() ;
+
+            /// Função que executa o comando em questão
+            void execute();
+
+            /// Destrutor
+            ~StreamSegmentationCommand() = default;
         private:
             domain::StreamSegmentationCommandInput m_streamSegmentationCommandInput;
     };
-
 }
 }
 }

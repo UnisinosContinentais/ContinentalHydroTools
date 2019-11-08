@@ -15,18 +15,22 @@
 namespace continental {
 namespace hydrotools {
 namespace domain {
-/// <summary>
-/// Classe base de parametros para Command
-/// </summary>
+/** @brief Classe Modelo de Comandos de Entrada
+ *  Esta classe é utilizada como modelo para suas derivadas
+ */
 class AbstractCommandInput
 {
 public:
+    /// Função virtual de implementação do Método de prepraração de argumentos
     virtual void prepare() = 0;
+
 protected:
+    /// Construtor
     AbstractCommandInput();
+
+    /// Atributo
     QStringList m_argv;
 };
-
 
 }
 }

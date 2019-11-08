@@ -28,27 +28,20 @@ CatchmentCommandInput::CatchmentCommandInput(QStringList argv)
 */
 void CatchmentCommandInput::prepare()
 {
-    try
+    if(m_argv.length() != 8)
     {
-        if(m_argv.length() != 8)
-        {
-            throw;
-        }
-
-        //Parse dos parametros de entradas do console
-        auto fileFlowDirectionInput = FileCommand(m_argv[2], m_argv[3]);
-        auto fileStreamSegmentationInput = FileCommand(m_argv[4], m_argv[5]);
-        auto fileCatchmentDelineationOutput = FileCommand(m_argv[6], m_argv[7]);
-
-        //prepara o objeto
-        setFlowDirectionInput(fileFlowDirectionInput);
-        setStreamSegmentationInput(fileStreamSegmentationInput);
-        setCatchmentDelineationOutput(fileCatchmentDelineationOutput);
+        throw exception::CatchmentDelineationIsNotValidInputCommandException();
     }
-    catch (...)
-    {
-        throw catchmentDelineationIsNotValidInputCommandException;
-    }
+
+    //Parse dos parametros de entradas do console
+    auto fileFlowDirectionInput = FileCommand(m_argv[2], m_argv[3]);
+    auto fileStreamSegmentationInput = FileCommand(m_argv[4], m_argv[5]);
+    auto fileCatchmentDelineationOutput = FileCommand(m_argv[6], m_argv[7]);
+
+    //prepara o objeto
+    setFlowDirectionInput(fileFlowDirectionInput);
+    setStreamSegmentationInput(fileStreamSegmentationInput);
+    setCatchmentDelineationOutput(fileCatchmentDelineationOutput);
 }
 
 

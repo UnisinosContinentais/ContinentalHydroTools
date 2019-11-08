@@ -24,33 +24,28 @@ WatershedDelineationCommandInput::WatershedDelineationCommandInput(QStringList a
  * [3] = groupFlowDirectionInput
  * [5] = pathCatchmentDelineationOutput
  * [6] = groupCatchmentDelineationOutput
+ * [7] = row
+ * [8] = col
 */
 void WatershedDelineationCommandInput::prepare()
 {
-    try
+    if(m_argv.length() != 8)
     {
-        if(m_argv.length() != 8)
-        {
-            throw;
-        }
-
-        //Parse dos parametros de entradas do console
-        auto fileFlowDirectionInput = FileCommand(m_argv[2], m_argv[3]);
-        auto fileCatchmentDelineationOutput = FileCommand(m_argv[4], m_argv[5]);
-
-        const size_t col = static_cast<size_t>(m_argv[6].toLongLong());
-        const size_t row = static_cast<size_t>(m_argv[7].toLongLong());
-
-        //prepara o objeto
-        setFlowDirectionInput(fileFlowDirectionInput);
-        setWatershedDelineationOutput(fileCatchmentDelineationOutput);
-        setCol(col);
-        setRow(row);
+        throw exception::WatershedDelineationIsNotValidInputCommandException();
     }
-    catch (...)
-    {
-        throw watershedDelineationIsNotValidInputCommandException;
-    }
+
+    //Parse dos parametros de entradas do console
+    auto fileFlowDirectionInput = FileCommand(m_argv[2], m_argv[3]);
+    auto fileCatchmentDelineationOutput = FileCommand(m_argv[4], m_argv[5]);
+
+    const size_t col = static_cast<size_t>(m_argv[6].toLongLong());
+    const size_t row = static_cast<size_t>(m_argv[7].toLongLong());
+
+    //prepara o objeto
+    setFlowDirectionInput(fileFlowDirectionInput);
+    setWatershedDelineationOutput(fileCatchmentDelineationOutput);
+    setRow(row);
+    setCol(col);
 }
 
 void WatershedDelineationCommandInput::setFlowDirectionInput(const FileCommand flowDirectionInput)
