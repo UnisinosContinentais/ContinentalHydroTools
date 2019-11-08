@@ -14,7 +14,7 @@
 #include <stdexcept>
 #include <memory>
 #include <continental/datamanagement/Raster.h>
-#include "continental/hydrotools/HeuristicSinkRemovalUtil.h"
+#include "continental/hydrotools/service/HeuristicSinkRemovalUtil.h"
 
 //*******************************************************************
 //DIREÇÕES DE FLUXO (com base na codificação IDRISI)

@@ -42,7 +42,7 @@ void SinkDestroyCommand::execute()
         if(rasterInputFile.exist())
         {
             //Prepara o objeto para processamento
-            auto sinkDestroy = make_unique<HeuristicSinkRemoval>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
+            auto sinkDestroy = make_unique<HeuristicSinkRemoval<short>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
             sinkDestroy->setDem(make_shared<Raster<short>>(rasterInputFile.read()));
             sinkDestroy->removeSinks();
 
