@@ -471,3 +471,4 @@ void HeuristicSinkRemoval::flowDirectionAtBounds()
 }
 }
 }
+#include "continental/hydrotools/HeuristicSinkRemoval.h"
