@@ -38,7 +38,7 @@ public:
     AbstractRasterIO(FileCommand file)
     {
         setPathFile(file.getPathFile());
-        setGroupName("HydroTools");
+        setGroupName("FluvialSystem");
         setDatasetName(file.getGroupName());
     }
 

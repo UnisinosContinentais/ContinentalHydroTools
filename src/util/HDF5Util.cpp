@@ -1,5 +1,7 @@
 #include "continental/hydrotools/util/HDF5Util.h"
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QRegularExpression>
 
 namespace continental {
@@ -50,6 +52,13 @@ H5::Group HDF5Util::createOpenGroupRecursive(const H5::H5File &target, const QSt
 
 H5::H5File HDF5Util::getFileOrGenerateIfNotExists(const QString &path)
 {
+
+    QDir dirFile = QFileInfo(path).absoluteDir();
+    QString absolute= dirFile.absolutePath();
+
+    if (!dirFile.exists(absolute))
+        dirFile.mkpath(absolute);
+
     if(QFile::exists(path))
     {
         H5::H5File fileDAO(path.toLocal8Bit().constData(), H5F_ACC_RDWR);
