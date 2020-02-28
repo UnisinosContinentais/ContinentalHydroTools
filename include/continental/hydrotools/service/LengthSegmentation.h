@@ -30,10 +30,10 @@ namespace service
 class LengthSegmentation
 {
 private:
-    std::shared_ptr<continental::datamanagement::Raster<short>> m_flowDirection;
+    std::shared_ptr<continental::datamanagement::Raster<float>> m_flowDirection;
     std::shared_ptr<continental::datamanagement::Raster<float>> m_flowAcc;
     //Private _StrSeg As RasterReal 'FMF em 12/01/2016
-    std::shared_ptr<continental::datamanagement::Raster<short>> m_strSeg;
+    std::shared_ptr<continental::datamanagement::Raster<float>> m_strSeg;
     std::vector<std::unique_ptr<JunctionCell>> m_junctionCells;
     std::vector<float> m_junctionCellsAreas;
     std::vector<bool> m_cellAnalyzed;
@@ -48,13 +48,13 @@ public:
     LengthSegmentation(float minLenght);
 
     //Lê os dados do FlowDirection
-    void setFlowDirection(std::shared_ptr<continental::datamanagement::Raster<short>> flowDirection);
+    void setFlowDirection(std::shared_ptr<continental::datamanagement::Raster<float>> flowDirection);
 
     //Lê os dados do FlowAccumulation
     void setFlowAccumulation(std::shared_ptr<continental::datamanagement::Raster<float>> flowAccumulation);
 
     //Lê os dados do StreamDefinition e guarda no segmentation
-    void setStreamDefinition(std::shared_ptr<continental::datamanagement::Raster<short>> streamDefinition);
+    void setStreamDefinition(std::shared_ptr<continental::datamanagement::Raster<float>> streamDefinition);
 
     /// <summary>
     /// Identifica as Junções e marcas os possíveis exutórios

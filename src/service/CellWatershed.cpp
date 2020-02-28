@@ -11,7 +11,7 @@ namespace hydrotools
 namespace service
 {
 
-CellWatershed::CellWatershed(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xllCorner, double yllCorner, size_t attribute) : Cell(0, 0)
+CellWatershed::CellWatershed(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xllCorner, double yllCorner, short attribute) : Cell(0, 0)
 {
     reset(latitude, longitude, rows, cols, cellSize, xllCorner, yllCorner, attribute);
 }
@@ -41,7 +41,7 @@ void CellWatershed::convertCoordToRowCol(double latitude, double longitude, size
     y = static_cast<size_t>(yTemp);
 }
 
-void CellWatershed::reset(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xllCorner, double yllCorner, size_t attribute)
+void CellWatershed::reset(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xllCorner, double yllCorner, short attribute)
 {
     Cell(0, 0);
     m_attribute = attribute;

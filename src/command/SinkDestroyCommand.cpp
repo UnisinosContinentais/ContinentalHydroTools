@@ -29,8 +29,8 @@ void SinkDestroyCommand::execute()
     try
     {
         //Parametros de Entrada
-        auto rasterInputFile = RasterIO<short>(m_heuristicSinkRemovalCommandInput.getDemInput());
-        auto outputCorrectedFile = RasterIO<short>(m_heuristicSinkRemovalCommandInput.getSinkDestroyOutput());
+        auto rasterInputFile = RasterIO<float>(m_heuristicSinkRemovalCommandInput.getDemInput());
+        auto outputCorrectedFile = RasterIO<float>(m_heuristicSinkRemovalCommandInput.getSinkDestroyOutput());
         auto outputFlowDirectionFile = RasterIO<short>(m_heuristicSinkRemovalCommandInput.getFlowDirectionOutput());
 
         size_t maxOpenList = m_heuristicSinkRemovalCommandInput.getMaxOpenList();
@@ -42,8 +42,8 @@ void SinkDestroyCommand::execute()
         if(rasterInputFile.exist())
         {
             //Prepara o objeto para processamento
-            auto sinkDestroy = make_unique<HeuristicSinkRemoval<short>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-            sinkDestroy->setDem(make_shared<Raster<short>>(rasterInputFile.read()));
+            auto sinkDestroy = make_unique<HeuristicSinkRemoval<float>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
+            sinkDestroy->setDem(make_shared<Raster<float>>(rasterInputFile.read()));
             sinkDestroy->removeSinks();
 
             //Grava o resultado

@@ -31,7 +31,7 @@ public:
     double m_latitude = 0;
     double m_longitude = 0;
 
-    CellWatershed(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xOrigin, double yOrigin, size_t atrib);
+    CellWatershed(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xOrigin, double yOrigin, short atrib);
     /// <summary>
     /// Converte a coordenada geográfica para linha e coluna
     /// </summary>
@@ -47,7 +47,7 @@ public:
         m_attribute = attribute;
     }
 private:
-    void reset(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xOrigin, double yOrigin, size_t atrib);
+    void reset(double latitude, double longitude, size_t rows, size_t cols, double cellSize, double xOrigin, double yOrigin, short atrib);
 };
 
 }

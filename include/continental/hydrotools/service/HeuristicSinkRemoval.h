@@ -182,7 +182,7 @@ public:
     void setDem(std::shared_ptr<datamanagement::Raster<T>> dem)
 	{
 		m_dem = dem;
-		m_flowDirection = std::make_shared<datamanagement::Raster<short>>(m_dem->getRows(), m_dem->getCols(), m_dem->getXOrigin(), m_dem->getYOrigin(), m_dem->getCellSize(), m_dem->getNoDataValue());
+        m_flowDirection = std::make_shared<datamanagement::Raster<short>>(m_dem->getRows(), m_dem->getCols(), m_dem->getXOrigin(), m_dem->getYOrigin(), m_dem->getCellSize(), m_dem->getNoDataValue());
 	}
 
     /// <summary>
