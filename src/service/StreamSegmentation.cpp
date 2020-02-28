@@ -23,7 +23,7 @@ void StreamSegmentation::setFlowDirection(shared_ptr<Raster<short>> flowDirectio
     m_strSeg = make_shared<Raster<short>>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
 }
 
-void StreamSegmentation::setStreamDefinition(std::shared_ptr<datamanagement::Raster<short> > streamDefinition)
+void StreamSegmentation::setStreamDefinition(std::shared_ptr<datamanagement::Raster<short>> streamDefinition)
 {
     m_strDef = streamDefinition;
 }

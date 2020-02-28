@@ -44,9 +44,9 @@ void HeuristicSinkRemovalCommandInput::prepare()
     auto fileDemInitialSurfaceInput = FileCommand(m_argv[2], m_argv[3]);
     auto fileFlowDirectionOutput = FileCommand(m_argv[4], m_argv[5]);
     auto fileSinkDestroyOutput = FileCommand(m_argv[6], m_argv[7]);
-    auto processingAlgorithm = static_cast<HeuristicSinkRemoval<short>::ProcessingMode>(m_argv[11].toInt());
+    auto processingAlgorithm = static_cast<HeuristicSinkRemoval<float>::ProcessingMode>(m_argv[11].toInt());
 
-    if(processingAlgorithm != HeuristicSinkRemoval<short>::ProcessingMode::MHS)
+    if(processingAlgorithm != HeuristicSinkRemoval<float>::ProcessingMode::MHS)
     {
         throw exception::SinkDestroyIsNotValidInputCommandException();
     }
@@ -77,7 +77,7 @@ void HeuristicSinkRemovalCommandInput::setWeightFunctionG(const float weightFunc
     m_weightFunctionG = weightFunctionG;
 }
 
-void HeuristicSinkRemovalCommandInput::setProcessingAlgorithm(const HeuristicSinkRemoval<short>::ProcessingMode processingAlgorithm)
+void HeuristicSinkRemovalCommandInput::setProcessingAlgorithm(const HeuristicSinkRemoval<float>::ProcessingMode processingAlgorithm)
 {
     m_processingAlgorithm = processingAlgorithm;
 }
@@ -112,7 +112,7 @@ float HeuristicSinkRemovalCommandInput::getWeightFunctionG() const
     return  m_weightFunctionG;
 }
 
-HeuristicSinkRemoval<short>::ProcessingMode HeuristicSinkRemovalCommandInput::getProcessingAlgorithm() const
+HeuristicSinkRemoval<float>::ProcessingMode HeuristicSinkRemovalCommandInput::getProcessingAlgorithm() const
 {
     return m_processingAlgorithm;
 }
