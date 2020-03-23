@@ -3,9 +3,8 @@ cmake_minimum_required(VERSION 3.5)
 include(FindPackageHandleStandardArgs)
 
 find_path(SHP_INCLUDE_DIR shapefil.h PATHS "${SHP_HOME}/include")
-message( "${SHP_HOME}/include" )
 find_library(SHP_LIBRARY NAMES shp PATHS "${SHP_HOME}/lib")
-message( "${SHP_HOME}/lib" )
+set(SHP_DLL "${SHP_HOME}/bin/shp.dll")
 
 #-----------------------------------------------------------------------
 # handle the QUIETLY and REQUIRED arguments and set SQLite3_FOUND to TRUE

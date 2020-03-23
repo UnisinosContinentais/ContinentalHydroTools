@@ -122,7 +122,6 @@ int main(int argc, char **argv)
                     break;
                 default:
                     throw std::exception("Argumento do processo inválido. Padrão esperado [0 - 6]");
-                    break;
             }
         }
         else

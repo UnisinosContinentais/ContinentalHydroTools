@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 project(ContinentalHydroTools VERSION 1.0.0 LANGUAGES CXX)
 
+add_definitions(-DMAKE_CONTINENTALDATAMANAGEMENT_LIB)
+add_definitions(-DMAKE_CONTINENTALHYDROTOOLS_LIB)
+
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed
@@ -158,32 +161,7 @@ install(FILES
     DESTINATION ${INSTALL_CONFIGDIR}
 )
 
-IF (WIN32)
-
-
-message("aaaaa-${CMAKE_CURRENT_BINARY_DIR}/console/*.exe")
-    FILE(GLOB ConsoleFiles ${CMAKE_CURRENT_BINARY_DIR}/console/*.exe)
-    if (DEFINED ConsoleFiles)
-        install(
-            FILES 	${ConsoleFiles}
-            DESTINATION     console/
-        )
-    else()
-    endif()
-
-    FILE(GLOB ConsoleDllFiles ${CMAKE_CURRENT_BINARY_DIR}/console/*.dll)
-    if (DEFINED ConsoleDllFiles)
-        install(
-            FILES 	${ConsoleDllFiles}
-            DESTINATION     console/
-        )
-    else()
-    endif()
-ENDIF()
-
-
-
 export(EXPORT ContinentalHydroTools-targets FILE ${CMAKE_CURRENT_BINARY_DIR}/ContinentalHydroToolsTargets.cmake NAMESPACE ContinentalHydroTools::)
 
-#add_subdirectory(test)
+add_subdirectory(test)
 add_subdirectory(console)

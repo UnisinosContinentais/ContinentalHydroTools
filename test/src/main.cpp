@@ -1,24 +1,153 @@
-#include <continental/hydrotools/HeuristicSinkRemoval.h>
+#include <continental/datamanagement/RasterFile.h>
+#include <continental/hydrotools/service/HeuristicSinkRemoval.h>
+#include <continental/hydrotools/service/FlowAccumulation.h>
+#include <continental/hydrotools/service/StreamDefinition.h>
+#include <continental/hydrotools/service/StreamSegmentation.h>
+#include <continental/hydrotools/service/Catchment.h>
 #include <memory>
 #include <QString>
+#include <QCryptographicHash>
 #include <gtest/gtest.h>
+#include <iostream>
 
-using namespace continental::hydrotools;
+using namespace continental::datamanagement;
+using namespace continental::hydrotools::service;
 using namespace std;
 
-TEST(ContinentalHydroToolsTest, SinkAndDestroy)
-{
-    QString inputDemFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\rioSinos.asc";
-    QString outputCorrectedDemFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\rioSinos_sink.asc";
-    QString outputFlowDirectionDemFile = "D:\\Git\\ContinentalHydroTools\\ContinentalHydroTools\\assets\\rioSinos_sink.asc";
+static QString basePath = "C:/Git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos";
+static QString inputDemFile = basePath + "/rioSinos.asc";
+static QString unitTestCorrectedFile = basePath + "/unit_rioSinos_sink.asc";
+static QString unitTestFlowDirectionFile = basePath + "/unit_rioSinos_fdr.asc";
+static QString unitTestFlowAccumulationFile = basePath + "/unit_rioSinos_fac.asc";
+static QString unitTestStreamDefinitionFile = basePath + "/unit_rioSinos_str.asc";
+static QString unitTestStreamSegmentationFile = basePath + "/unit_rioSinos_strseg.asc";
+static QString unitTestWatershedDelineation = basePath + "/unit_rioSinos_wat.asc";
+static QString unitTestCatchmentDelineation = basePath + "/unit_rioSinos_catch.asc";
+static QString inputShapeFilePointOutletsSnap = basePath + "/Exutorio_snap.shp";
 
+static QString correctResultCorrectedFile = basePath + "/rioSinos_sink.asc";
+static QString correctResultFlowDirectionFile = basePath + "/rioSinos_fdr.asc";
+static QString correctResultFlowAccumulationFile = basePath + "/rioSinos_fac.asc";
+static QString correctResultStreamDefinitionFile = basePath + "/rioSinos_str.asc";
+static QString correctResultStreamSegmentationFile = basePath + "/rioSinos_strseg.asc";
+static QString correctResultWatershedDelineation = basePath + "/rioSinos_wat.asc";
+static QString correctResultCatchmentDelineation = basePath + "/rioSinos_catch.asc";
+
+QString getMd5OfFile(QString filePath)
+{
+    QFile file(filePath);
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray content = file.readAll();
+
+    return QString(QCryptographicHash::hash(content, QCryptographicHash::Md5).toHex());
+
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, SinkAndDestroy)
+{
     size_t maxOpenList = 1000000;
     size_t maxClosedList = 500000;
     float weightFunctionG = 2;
-    HeuristicSinkRemoval::ProcessingMode processingAlgorithm = HeuristicSinkRemoval::ProcessingMode::MHS;
-    auto sinkDestroy = make_unique<HeuristicSinkRemoval>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-    sinkDestroy->readMDEdata(inputDemFile);
+    auto processingAlgorithm = HeuristicSinkRemoval<short>::ProcessingMode::MHS;
+    auto sinkDestroy = make_unique<HeuristicSinkRemoval<short>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
+    sinkDestroy->setDem(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
     sinkDestroy->removeSinks();
+
+    RasterFile<short>::writeData(*sinkDestroy->getDem(), unitTestCorrectedFile);
+    RasterFile<short>::writeData(*sinkDestroy->getFlowDirection(), unitTestFlowDirectionFile);
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, SinkAndDestroyCompare)
+{
+    EXPECT_EQ(getMd5OfFile(unitTestCorrectedFile), getMd5OfFile(correctResultCorrectedFile));
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, FlowDirectionCompare)
+{
+    EXPECT_EQ(getMd5OfFile(unitTestFlowDirectionFile), getMd5OfFile(correctResultFlowDirectionFile));
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, FlowAccumulation)
+{
+    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
+
+    FlowAccumulation flowAccumulation;
+    flowAccumulation.setFlowDirection(flowDirectionData);
+    flowAccumulation.runoff();
+    RasterFile<float>::writeData(*flowAccumulation.getFlowAccumulation().get(), unitTestFlowAccumulationFile);
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, FlowAccumulationCompare)
+{
+    EXPECT_EQ(getMd5OfFile(unitTestFlowAccumulationFile), getMd5OfFile(correctResultFlowAccumulationFile));
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, StreamDefinition)
+{
+    auto flowAccumulationData = make_shared<Raster<float>>(RasterFile<float>::loadRasterByFile(unitTestFlowAccumulationFile));
+
+    StreamDefinition streamDefinition;
+    streamDefinition.setFlowAccumulation(flowAccumulationData, 1000, StreamDefinition::ThresholdType::NumberOfCells);
+    streamDefinition.defineStreams();
+    RasterFile<short>::writeData(*streamDefinition.getStreamDefinition().get(), unitTestStreamDefinitionFile);
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, StreamDefinitionCompare)
+{
+    EXPECT_EQ(getMd5OfFile(unitTestStreamDefinitionFile), getMd5OfFile(correctResultStreamDefinitionFile));
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, StreamSegmentation)
+{
+    auto streamDefinitionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestStreamDefinitionFile));
+    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
+
+    StreamSegmentation streamSegmentation;
+    streamSegmentation.setStreamDefinition(streamDefinitionData);
+    streamSegmentation.setFlowDirection(flowDirectionData);
+    streamSegmentation.segmentStreams();
+    RasterFile<short>::writeData(*streamSegmentation.getStreamSegmentation().get(), unitTestStreamSegmentationFile);
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, StreamSegmentationCompare)
+{
+    EXPECT_EQ(getMd5OfFile(unitTestStreamSegmentationFile), getMd5OfFile(correctResultStreamSegmentationFile));
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, WatershedDelineation)
+{
+    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
+
+    Catchment catchment;
+    catchment.setFlowDirection(flowDirectionData);
+    // catchment.setPointOutlets(inputShapeFilePointOutletsSnap);
+    catchment.insertOutletByRowCol(795, 209);
+    catchment.findWatersheds();
+
+    RasterFile<short>::writeData(*catchment.getWaterShed().get(), unitTestWatershedDelineation);
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, WatershedDelineationCompare)
+{
+    EXPECT_EQ(getMd5OfFile(unitTestWatershedDelineation), getMd5OfFile(correctResultWatershedDelineation));
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, CatchmentDelineation)
+{
+    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
+    auto streamSegmentationData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestStreamSegmentationFile));
+
+    Catchment catchment;
+    catchment.setFlowDirection(flowDirectionData);
+    catchment.setStreamSegmentation(streamSegmentationData);
+    catchment.findWatersheds();
+
+    RasterFile<short>::writeData(*catchment.getWaterShed().get(), unitTestCatchmentDelineation);
+}
+
+GTEST_TEST(ContinentalHydroToolsTest, CatchmentDelineationCompare)
+{
+    EXPECT_EQ(getMd5OfFile(unitTestCatchmentDelineation), getMd5OfFile(correctResultCatchmentDelineation));
 }
 
 int main(int argc, char **argv)
