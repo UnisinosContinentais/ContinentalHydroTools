@@ -57,8 +57,7 @@ void StreamDefinition::calculateThreshold(float value, ThresholdType thresoldTyp
     }
     else if (thresoldType == ThresholdType::Area)
     {
-        // Considera que 1º tenha aprox. 111km
-        m_threshold = static_cast<size_t>(static_cast<double>(value) / (std::pow(m_flowAcc->getCellSize() * 111, 2)));
+        m_threshold = static_cast<size_t>(static_cast<double>(value) / (std::pow(m_flowAcc->getCellSize(), 2)));
     }
 
 }

@@ -196,7 +196,21 @@ void Catchment::insertOutletByRowCol(const size_t row, const size_t column)
 
     const auto index = (*m_CellExhilarating).size();
     (*m_CellExhilarating).resize(index + 1);
-    const auto cell = make_shared<CellWatershed>(0, 0, m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getCellSize(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), index + 1);
+    auto rows = m_flowDirection->getRows();
+    auto cols = m_flowDirection->getCols();
+    auto cellSize = m_flowDirection->getCellSize();
+    auto xOrigin = m_flowDirection->getXOrigin();
+    auto yOrigin = m_flowDirection->getYOrigin();
+    const auto cell = make_shared<CellWatershed>(
+                ((rows - 1) - row) * cellSize + yOrigin + (cellSize / 2),
+                column * cellSize + xOrigin + (cellSize / 2),
+                rows,
+                cols,
+                cellSize,
+                xOrigin,
+                yOrigin,
+                index + 1
+            );
     cell->x = column;
     cell->y = row;
     (*m_CellExhilarating)[index] = cell;

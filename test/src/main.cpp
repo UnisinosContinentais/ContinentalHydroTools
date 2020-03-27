@@ -43,7 +43,7 @@ QString getMd5OfFile(QString filePath)
 
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, SinkAndDestroy)
+TEST(ContinentalHydroToolsTest, SinkAndDestroy)
 {
     size_t maxOpenList = 1000000;
     size_t maxClosedList = 500000;
@@ -57,17 +57,17 @@ GTEST_TEST(ContinentalHydroToolsTest, SinkAndDestroy)
     RasterFile<short>::writeData(*sinkDestroy->getFlowDirection(), unitTestFlowDirectionFile);
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, SinkAndDestroyCompare)
+TEST(ContinentalHydroToolsTest, SinkAndDestroyCompare)
 {
     EXPECT_EQ(getMd5OfFile(unitTestCorrectedFile), getMd5OfFile(correctResultCorrectedFile));
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, FlowDirectionCompare)
+TEST(ContinentalHydroToolsTest, FlowDirectionCompare)
 {
     EXPECT_EQ(getMd5OfFile(unitTestFlowDirectionFile), getMd5OfFile(correctResultFlowDirectionFile));
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, FlowAccumulation)
+TEST(ContinentalHydroToolsTest, FlowAccumulation)
 {
     auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
 
@@ -77,12 +77,12 @@ GTEST_TEST(ContinentalHydroToolsTest, FlowAccumulation)
     RasterFile<float>::writeData(*flowAccumulation.getFlowAccumulation().get(), unitTestFlowAccumulationFile);
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, FlowAccumulationCompare)
+TEST(ContinentalHydroToolsTest, FlowAccumulationCompare)
 {
     EXPECT_EQ(getMd5OfFile(unitTestFlowAccumulationFile), getMd5OfFile(correctResultFlowAccumulationFile));
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, StreamDefinition)
+TEST(ContinentalHydroToolsTest, StreamDefinition)
 {
     auto flowAccumulationData = make_shared<Raster<float>>(RasterFile<float>::loadRasterByFile(unitTestFlowAccumulationFile));
 
@@ -92,12 +92,12 @@ GTEST_TEST(ContinentalHydroToolsTest, StreamDefinition)
     RasterFile<short>::writeData(*streamDefinition.getStreamDefinition().get(), unitTestStreamDefinitionFile);
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, StreamDefinitionCompare)
+TEST(ContinentalHydroToolsTest, StreamDefinitionCompare)
 {
     EXPECT_EQ(getMd5OfFile(unitTestStreamDefinitionFile), getMd5OfFile(correctResultStreamDefinitionFile));
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, StreamSegmentation)
+TEST(ContinentalHydroToolsTest, StreamSegmentation)
 {
     auto streamDefinitionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestStreamDefinitionFile));
     auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
@@ -109,12 +109,12 @@ GTEST_TEST(ContinentalHydroToolsTest, StreamSegmentation)
     RasterFile<short>::writeData(*streamSegmentation.getStreamSegmentation().get(), unitTestStreamSegmentationFile);
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, StreamSegmentationCompare)
+TEST(ContinentalHydroToolsTest, StreamSegmentationCompare)
 {
     EXPECT_EQ(getMd5OfFile(unitTestStreamSegmentationFile), getMd5OfFile(correctResultStreamSegmentationFile));
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, WatershedDelineation)
+TEST(ContinentalHydroToolsTest, WatershedDelineation)
 {
     auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
 
@@ -127,12 +127,12 @@ GTEST_TEST(ContinentalHydroToolsTest, WatershedDelineation)
     RasterFile<short>::writeData(*catchment.getWaterShed().get(), unitTestWatershedDelineation);
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, WatershedDelineationCompare)
+TEST(ContinentalHydroToolsTest, WatershedDelineationCompare)
 {
     EXPECT_EQ(getMd5OfFile(unitTestWatershedDelineation), getMd5OfFile(correctResultWatershedDelineation));
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, CatchmentDelineation)
+TEST(ContinentalHydroToolsTest, CatchmentDelineation)
 {
     auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
     auto streamSegmentationData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestStreamSegmentationFile));
@@ -145,7 +145,7 @@ GTEST_TEST(ContinentalHydroToolsTest, CatchmentDelineation)
     RasterFile<short>::writeData(*catchment.getWaterShed().get(), unitTestCatchmentDelineation);
 }
 
-GTEST_TEST(ContinentalHydroToolsTest, CatchmentDelineationCompare)
+TEST(ContinentalHydroToolsTest, CatchmentDelineationCompare)
 {
     EXPECT_EQ(getMd5OfFile(unitTestCatchmentDelineation), getMd5OfFile(correctResultCatchmentDelineation));
 }
