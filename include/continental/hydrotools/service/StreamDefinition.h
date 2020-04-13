@@ -88,6 +88,12 @@ public:
     /// </summary>
     /// <remarks></remarks>
     virtual void defineStreams();
+
+    /// <summary>
+    /// Rotina que define os trechos de rio.
+    /// </summary>
+    /// <remarks></remarks>
+    virtual void validParameter();
 private:
     //Calcula o valor do threshold a ser adotado
     void calculateThreshold(float value, ThresholdType thrType);

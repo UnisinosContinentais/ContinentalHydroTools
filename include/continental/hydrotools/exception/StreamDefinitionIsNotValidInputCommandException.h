@@ -23,7 +23,7 @@ class StreamDefinitionIsNotValidInputCommandException : virtual public std::runt
 {
 public:
     /// Construtor
-    explicit StreamDefinitionIsNotValidInputCommandException();
+    explicit StreamDefinitionIsNotValidInputCommandException(std::string  error);
     /// Desconstrutor
     virtual ~StreamDefinitionIsNotValidInputCommandException() noexcept = default;
 };

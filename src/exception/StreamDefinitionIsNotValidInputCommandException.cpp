@@ -2,7 +2,7 @@
 
 using namespace continental::hydrotools::exception;
 
-StreamDefinitionIsNotValidInputCommandException::StreamDefinitionIsNotValidInputCommandException():
-std::runtime_error("Dados inválidos para realizar o processo do Stream Definition!")
+StreamDefinitionIsNotValidInputCommandException::StreamDefinitionIsNotValidInputCommandException(std::string  error):
+std::runtime_error(error)
 {
 }

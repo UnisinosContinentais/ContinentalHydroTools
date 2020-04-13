@@ -45,7 +45,8 @@ void StreamSegmentationCommand::execute()
     }
     catch (...)
     {
-        throw exception::StreamSegmentationProcessException();
+        QString stringEncode = "O processo do Stream Segmentation não foi processado com sucesso! ";
+        throw exception::StreamSegmentationProcessException(stringEncode.toLatin1().toStdString());
     }
 }
 

@@ -26,8 +26,7 @@ m_streamDefinitionCommandInput(streamDefinitionCommandInput)
 
 void StreamDefinitionCommand::execute()
 {
-    try
-    {
+
         //Parametros de Entrada
         auto flowAccumulationInputFile = RasterIO<float>(m_streamDefinitionCommandInput.getFlowAccumulationInput());
         auto flowStreamDefinitionOutputFile = RasterIO<short>(m_streamDefinitionCommandInput.getStreamDefinitionOutput());
@@ -39,15 +38,19 @@ void StreamDefinitionCommand::execute()
         //Prepara o objeto para processamento
         StreamDefinition streamDefinition;
         streamDefinition.setFlowAccumulation(flowAccumulationData, thresoldValue, thresholdType);
-        streamDefinition.defineStreams();
+        streamDefinition.validParameter();
 
-        //Grava o resultado do StreamDefinition
-        flowStreamDefinitionOutputFile.write(*streamDefinition.getStreamDefinition().get());
+        try
+        {
+            streamDefinition.defineStreams();
+            //Grava o resultado do StreamDefinition
+            flowStreamDefinitionOutputFile.write(*streamDefinition.getStreamDefinition().get());
+        }
+        catch (...)
+        {
+             throw exception::StreamDefinitionProcessException();
+        }
 
-    } catch (...)
-    {
-         throw exception::StreamDefinitionProcessException();
-    }
 }
 
 }

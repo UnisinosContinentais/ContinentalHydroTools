@@ -1,6 +1,8 @@
 ﻿#include "continental/hydrotools/service/StreamDefinition.h"
+#include "continental/hydrotools/exception/StreamDefinitionIsNotValidInputCommandException.h"
 
 using namespace continental::datamanagement;
+using namespace continental::hydrotools::exception;
 using namespace std;
 
 namespace continental
@@ -64,11 +66,6 @@ void StreamDefinition::calculateThreshold(float value, ThresholdType thresoldTyp
 
 void StreamDefinition::defineStreams()
 {
-
-    if (m_threshold < 1)
-    {
-        throw std::invalid_argument("Minimum number of cells to form a stream is insufficient.");
-    }
     if (m_streamGroups == nullptr) //Se o arquivo de grupos não for carregado, atribui um grupo único
     {
         setUniqueTreshold();
@@ -98,6 +95,16 @@ void StreamDefinition::defineStreams()
         }
     }
 
+}
+
+void StreamDefinition::validParameter()
+{
+    if (m_threshold < 1)
+    {
+        QString stringEncode = "O número mínimo de células para formar um fluxo é insuficiente.";
+        auto text = stringEncode.toLatin1().toStdString();
+        throw continental::hydrotools::exception::StreamDefinitionIsNotValidInputCommandException(stringEncode.toStdString().c_str());
+    }
 }
 
 void StreamDefinition::setUniqueTreshold()

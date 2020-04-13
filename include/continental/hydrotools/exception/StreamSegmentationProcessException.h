@@ -23,7 +23,7 @@ class StreamSegmentationProcessException : virtual public std::runtime_error
 {
 public:
     /// Construtor
-    explicit StreamSegmentationProcessException();
+    explicit StreamSegmentationProcessException(string error);
     /// Desconstrutor
     virtual ~StreamSegmentationProcessException() noexcept = default;
 };

@@ -31,7 +31,7 @@ void StreamDefinitionCommandInput::prepare()
 {
     if(m_argv.length() != 8)
     {
-        throw exception::StreamDefinitionIsNotValidInputCommandException();
+        throw exception::StreamDefinitionIsNotValidInputCommandException("Número de argumentos inválido.");
     }
 
     //Parse dos parametros de entradas do console

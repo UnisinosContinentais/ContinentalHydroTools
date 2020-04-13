@@ -30,9 +30,12 @@
 #include <continental/hydrotools/command/AbstractCommand.h>
 #include <continental/hydrotools/exception/CatchmentDelineationIsNotValidInputCommandException.h>
 #include <continental/hydrotools/exception/CatchmentDelineationIsNotValidInputCommandException.h>
+#include <continental/hydrotools/exception/StreamDefinitionIsNotValidInputCommandException.h>
+#include <continental/hydrotools/exception/StreamDefinitionProcessException.h>
 #include <memory>
 #include <QString>
 #include <QCoreApplication>
+#include <QDebug>
 
 using namespace continental::hydrotools::service;
 using namespace continental::hydrotools::command;
@@ -90,6 +93,8 @@ void watershedDelineation(QStringList args)
 
 int main(int argc, char **argv)
 {
+    setlocale(LC_ALL, "portuguese");
+
     QCoreApplication app(argc, argv);
     QStringList args = app.arguments();
     try
@@ -131,10 +136,14 @@ int main(int argc, char **argv)
      }
      catch (exception& e)
      {
-       std::cout << "Erro ao executar comando no ContinentalHydroTools, erro: " << e.what() << endl;
-       return 1;
+        QString stringEncode = e.what();
+        stringEncode = "Erro ao executar comando no ContinentalHydroTools, erro: " + stringEncode;
+
+        std::cout << "Erro ao executar comando no ContinentalHydroTools, erro: " << stringEncode.toLatin1().toStdString() << endl;
+
+        return 1;
      }
-    return 0;
+     return 0;
 }
 
 #endif
