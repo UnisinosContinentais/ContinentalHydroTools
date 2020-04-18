@@ -68,7 +68,7 @@ void StreamSegmentation::segmentStreams()
                         {
                             if (m_strSeg->getData(yEnd, xEnd) == 0)
                             {
-                                m_strSeg->setData(yEnd, xEnd, segmentNumber);
+                                m_strSeg->setData(static_cast<size_t>(yEnd), static_cast<size_t>(xEnd), segmentNumber);
 								++segmentNumber;
                             }
                             updateSegments(yStart, xStart, yEnd, xEnd, m_strSeg->getData(yEnd, xEnd));
@@ -79,7 +79,7 @@ void StreamSegmentation::segmentStreams()
                         {
                             if (m_strSeg->getData(yEnd, xEnd) == 0)
                             {
-                                m_strSeg->setData(yEnd, xEnd, segmentNumber);
+                                m_strSeg->setData(static_cast<size_t>(yEnd), static_cast<size_t>(xEnd), segmentNumber);
 								++segmentNumber;
                             }
                             updateSegments(yStart, xStart, yEnd, xEnd, m_strSeg->getData(yEnd, xEnd));

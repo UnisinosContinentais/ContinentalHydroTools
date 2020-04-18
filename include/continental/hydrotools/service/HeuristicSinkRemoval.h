@@ -547,7 +547,7 @@ private:
         auto finalElevation = m_dem->getData(m_closedList[closedListCount - 1].y, m_closedList[closedListCount - 1].x);
 
         //Evita que o programa utilize o value do NoDATA como elevação final, o que pode comprometer o resultado
-        if (qFuzzyCompare(static_cast<float>(finalElevation), static_cast<float>(m_dem->getNoDataValue())))
+        if (static_cast<int>(finalElevation) == static_cast<int>(m_dem->getNoDataValue()))
         {
             finalElevation = initElevation;
         }
@@ -596,7 +596,7 @@ private:
             m_flowDirection->setData(yParent, xParent, HeuristicSinkRemovalUtil::relativeIncipientFlowDirection(static_cast<int>(xParent), static_cast<int>(m_closedList[enumerator].x), static_cast<int>(yParent), static_cast<int>(m_closedList[enumerator].y)));
 
             // Só atribuo a cota se ela for menor do que a existente
-            auto value = static_cast<T>(finalElevation + std::nearbyint(incremental * i));
+            auto value = static_cast<T>(finalElevation + (std::is_floating_point<T>::value ? incremental * i : std::nearbyint(incremental * i)));
             if (m_dem->getData(yParent, xParent) > value)
             {
                 // Atribuo a nova cota
@@ -658,7 +658,7 @@ private:
 					auto x = static_cast<size_t>(static_cast<int>(xc) + xi);
 
 					//Não calcula a elevação for NODATA
-					if (qFuzzyCompare(static_cast<float>(m_dem->getData(y, x)), static_cast<float>(m_dem->getNoDataValue())))
+                    if (static_cast<int>(m_dem->getData(y, x)) == static_cast<int>(m_dem->getNoDataValue()))
 					{
 						continue;
 					}
@@ -758,7 +758,7 @@ private:
     inline bool isOutlet(T ei, T es, size_t posY, size_t posX)
     {
         // Se chegar no NODATA, retorna true
-        if (qFuzzyCompare(static_cast<float>(ei), static_cast<float>(m_dem->getNoDataValue())))
+        if (static_cast<int>(ei) == static_cast<int>(m_dem->getNoDataValue()))
         {
             return true;
         }
@@ -1032,7 +1032,7 @@ private:
     {
         auto value = m_dem->getData(y, x);
         // Retorna o value do NODATA caso encontrá-lo
-        if (qFuzzyCompare(static_cast<float>(value), static_cast<float>(m_dem->getNoDataValue())))
+        if (static_cast<int>(value) == static_cast<int>(m_dem->getNoDataValue()))
         {
             return static_cast<short>(m_dem->getNoDataValue());
         }
