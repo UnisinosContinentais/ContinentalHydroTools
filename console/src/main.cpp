@@ -10,6 +10,7 @@
 #include <iostream>
 #include <continental/datamanagement/RasterFile.h>
 #include <continental/hydrotools/Version.h>
+#include <continental/hydrotools/constant/MensageConstant.h>
 #include <continental/hydrotools/service/HeuristicSinkRemoval.h>
 #include <continental/hydrotools/service/FlowAccumulation.h>
 #include <continental/hydrotools/service/StreamDefinition.h>
@@ -41,6 +42,7 @@ using namespace continental::hydrotools::service;
 using namespace continental::hydrotools::command;
 using namespace continental::hydrotools::domain;
 using namespace continental::hydrotools::exception;
+using namespace continental::hydrotools::constant;
 using namespace continental::datamanagement;
 using namespace std;
 
@@ -126,20 +128,18 @@ int main(int argc, char **argv)
                     watershedDelineation(args);
                     break;
                 default:
-                    throw std::exception("Argumento do processo inválido. Padrão esperado [0 - 6]");
+                    throw std::exception(MensageConstant::InvalidArgumentsPattern.data());
             }
         }
         else
         {
-           throw std::exception("Argumento do processo inválido");
+           throw std::exception(MensageConstant::InvalidArguments.data());
         }
      }
      catch (exception& e)
      {
         QString stringEncode = e.what();
-        stringEncode = "Erro ao executar comando no ContinentalHydroTools, erro: " + stringEncode;
-
-        std::cout << "Erro ao executar comando no ContinentalHydroTools, erro: " << stringEncode.toLatin1().toStdString() << endl;
+        std::cout << stringEncode.toStdString() << endl;
 
         return 1;
      }

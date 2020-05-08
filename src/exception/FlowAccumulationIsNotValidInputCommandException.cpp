@@ -1,9 +1,12 @@
 #include "continental/hydrotools/exception/FlowAccumulationIsNotValidInputCommandException.h"
+#include "continental/hydrotools/constant/MensageConstant.h"
 
-using namespace  continental::hydrotools::exception;
+using namespace continental::hydrotools::exception;
+using namespace continental::hydrotools::constant;
+
 
 FlowAccumulationIsNotValidInputCommandException::FlowAccumulationIsNotValidInputCommandException():
-std::runtime_error("Dados inválidos para realizar o processo do Catchment Delineation!")
+std::runtime_error(MensageConstant::InvalidArgumentsFlowAccumulation)
 {
 
 }

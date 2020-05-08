@@ -52,12 +52,12 @@ void SinkDestroyCommand::execute()
         }
         else
         {
-            throw sinkDestroyProcessException;
+            throw SinkDestroyProcessException();
         }
     }
     catch(std::exception &e)
     {
-        throw sinkDestroyProcessException;
+        throw SinkDestroyProcessException();
     }
 }
 

@@ -1,8 +1,11 @@
 #include "continental/hydrotools/exception/SinkDestroyIsNotValidInputCommandException.h"
+#include "continental/hydrotools/constant/MensageConstant.h"
 
 using namespace continental::hydrotools::exception;
+using namespace continental::hydrotools::constant;
+
 
 SinkDestroyIsNotValidInputCommandException::SinkDestroyIsNotValidInputCommandException():
-std::runtime_error("Dados inválidos para realizar o processo do Sink Destroy!")
+std::runtime_error(MensageConstant::InvalidArgumentsSinkDestroy)
 {
 }

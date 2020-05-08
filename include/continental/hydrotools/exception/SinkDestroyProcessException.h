@@ -12,20 +12,23 @@
 #include <QString>
 #include <iostream>
 #include <exception>
+#include "continental/hydrotools/constant/MensageConstant.h"
 
+using namespace continental::hydrotools::constant;
 using namespace std;
 
 namespace continental {
 namespace hydrotools {
 namespace exception {
 
-class SinkDestroyProcessException: public exception
+class SinkDestroyProcessException : virtual public std::runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "O processo do Sink Destroy não foi processado com sucesso!";
-  }
-} sinkDestroyProcessException;
+public:
+    /// Construtor
+    explicit SinkDestroyProcessException();
+    /// Desconstrutor
+    virtual ~SinkDestroyProcessException() noexcept = default;
+};
 
 }
 }

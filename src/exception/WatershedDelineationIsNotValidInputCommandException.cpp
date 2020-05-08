@@ -1,9 +1,11 @@
 #include "continental/hydrotools/exception/WatershedDelineationIsNotValidInputCommandException.h"
+#include "continental/hydrotools/constant/MensageConstant.h"
 
 using namespace continental::hydrotools::exception;
+using namespace continental::hydrotools::constant;
 
 WatershedDelineationIsNotValidInputCommandException::WatershedDelineationIsNotValidInputCommandException():
-std::runtime_error("Dados inválidos para realizar o processo do Watershed Delineation!")
+std::runtime_error(MensageConstant::InvalidArgumentsWatershedDelineation)
 {
 
 }

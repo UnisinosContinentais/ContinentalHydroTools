@@ -1,11 +1,13 @@
 #include "continental/hydrotools/domain/StreamDefinitionCommandInput.h"
 #include "continental/hydrotools/service/StreamDefinition.h"
 #include "continental/hydrotools/exception/StreamDefinitionIsNotValidInputCommandException.h"
+#include "continental/hydrotools/constant/MensageConstant.h"
 #include <QStringList>
 
 using namespace std;
 using namespace continental::hydrotools::domain;
 using namespace continental::hydrotools::exception;
+using namespace continental::hydrotools::constant;
 using namespace continental::datamanagement;
 using namespace std;
 
@@ -31,7 +33,7 @@ void StreamDefinitionCommandInput::prepare()
 {
     if(m_argv.length() != 8)
     {
-        throw exception::StreamDefinitionIsNotValidInputCommandException("Número de argumentos inválido.");
+        throw exception::StreamDefinitionIsNotValidInputCommandException(MensageConstant::InvalidArguments.data());
     }
 
     //Parse dos parametros de entradas do console

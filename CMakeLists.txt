@@ -39,6 +39,7 @@ include_directories(${HDF5_INCLUDE_DIRS})
 add_library(ContinentalHydroTools
     src/Version.cpp
     src/Readme.cpp
+    src/constant/MensageConstant.cpp
     src/util/HDF5Util.cpp
     src/util/HydroToolsUtil.cpp
     src/service/Catchment.cpp
