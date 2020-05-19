@@ -21,6 +21,8 @@ namespace MensageConstant {
     static const std::string InvalidArguments = "InvalidArguments";
     static const std::string InvalidArgumentsPattern = "InvalidArgumentsPattern";
     static const std::string TheMinimumNumberOfCellsToFormFlowIsInsufficient = "TheMinimumNumberOfCellsToFormFlowIsInsufficient";
+    static const std::string PercentualOfMaximumCellsISInvalidParameter = "PercentualOfMaximumCellsISInvalidParameter";
+
 
     //SinkDestroy
     static const std::string InvalidArgumentsSinkDestroy = "InvalidArgumentsSinkDestroy";

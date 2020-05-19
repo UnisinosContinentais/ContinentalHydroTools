@@ -38,7 +38,7 @@ void StreamDefinitionCommand::execute()
         //Prepara o objeto para processamento
         StreamDefinition streamDefinition;
         streamDefinition.setFlowAccumulation(flowAccumulationData, thresoldValue, thresholdType);
-        streamDefinition.validParameter();
+        //streamDefinition.validParameter();
 
         try
         {

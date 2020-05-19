@@ -53,16 +53,28 @@ void StreamDefinition::calculateThreshold(float value, ThresholdType thresoldTyp
     if (thresoldType == ThresholdType::PercentualOfMaximumCells)
     {
         //Multiplico o máximo nº de células acumuladas por um percentual
-        m_threshold = static_cast<size_t>(m_flowAcc->calculateMaxValue() * value);
+        if(value < 0.1 || value > 100)
+        {
+            throw continental::hydrotools::exception::StreamDefinitionIsNotValidInputCommandException(MensageConstant::PercentualOfMaximumCellsISInvalidParameter);
+        }
+        auto aux = (value == 100) ? 0.01 : (100 - value);
+
+        m_threshold = (static_cast<size_t>(m_flowAcc->calculateMaxValue() * aux)) / static_cast<size_t>(m_flowAcc->calculateMaxValue());
     }
     else if (thresoldType == ThresholdType::NumberOfCells)
     {
         // Retorna o próprio valor
         m_threshold = static_cast<size_t>(value);
+
+        if (m_threshold <= 0)
+        {
+            throw continental::hydrotools::exception::StreamDefinitionIsNotValidInputCommandException(MensageConstant::TheMinimumNumberOfCellsToFormFlowIsInsufficient);
+        }
     }
     else if (thresoldType == ThresholdType::Area)
     {
-        m_threshold = static_cast<size_t>(static_cast<double>(value) / (std::pow(m_flowAcc->getCellSize(), 2)));
+        auto aux = static_cast<double>(value) * pow(10, 6);
+        m_threshold = static_cast<size_t>(aux / (std::pow(m_flowAcc->getCellSize(), 2)));
     }
 
 }

@@ -41,7 +41,7 @@ void StreamDefinitionCommandInput::prepare()
     auto fileStreamDefinitionOutput = FileCommand(m_argv[4], m_argv[5]);
 
     StreamDefinition::ThresholdType thresholdType = static_cast<StreamDefinition::ThresholdType>(m_argv[6].toInt());
-    size_t thresoldValue = static_cast<size_t>(m_argv[7].toInt());
+    size_t thresoldValue = static_cast<size_t>(m_argv[7].toDouble());
 
     //prepara o objeto
     this->setFlowAccumulationInput(fileFlowAccumulationInput);
