@@ -1,11 +1,11 @@
 # Configura diretório de instalação (CMAKE_INSTALL_PREFIX).
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
 	set(CMAKE_INSTALL_PREFIX [ROOT_DIR]/externalsUnisinos/win64-msvc2015/ContinentalHydroTools/install/debug)
-    set(SHP_HOME [ROOT_DIR]/externalsUnisinos/win64-msvc2015/shapelib/install/debug)
+    set(SHP_HOME [ROOT_DIR]/externalsUnisinos/win64-msvc2015/ContinentalDevOps/libraries/shapelib/install/debug)
     set(CMAKE_PREFIX_PATH "[ROOT_DIR]/externalsUnisinos/win64-msvc2015/ContinentalDataManagement/install/debug/lib/cmake/ContinentalDataManagement" ${CMAKE_PREFIX_PATH})
 else()
 	set(CMAKE_INSTALL_PREFIX [ROOT_DIR]/externalsUnisinos/win64-msvc2015/ContinentalHydroTools/install/release)
-    set(SHP_HOME [ROOT_DIR]/externalsUnisinos/win64-msvc2015/shapelib/install/release)
+    set(SHP_HOME [ROOT_DIR]/externalsUnisinos/win64-msvc2015/ContinentalDevOps/libraries/shapelib/install/release)
     set(CMAKE_PREFIX_PATH "[ROOT_DIR]/externalsUnisinos/win64-msvc2015/ContinentalDataManagement/install/release/lib/cmake/ContinentalDataManagement" ${CMAKE_PREFIX_PATH})
 endif()
 
