@@ -16,8 +16,6 @@
 //DETERMINAÇÃO DO COMPRIMENTO ACUMULADO POR SEGMENTO
 //*******************************************************************
 
-using namespace continental::datamanagement;
-
 namespace continental
 {
 namespace hydrotools

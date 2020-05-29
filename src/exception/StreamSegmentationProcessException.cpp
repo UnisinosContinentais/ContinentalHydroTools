@@ -2,7 +2,7 @@
 
 using namespace continental::hydrotools::exception;
 
-StreamSegmentationProcessException::StreamSegmentationProcessException(string error):
+StreamSegmentationProcessException::StreamSegmentationProcessException(std::string error):
 std::runtime_error(error)
 {
 }

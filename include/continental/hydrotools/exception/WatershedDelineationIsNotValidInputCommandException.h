@@ -13,8 +13,6 @@
 #include <iostream>
 #include <exception>
 
-using namespace std;
-
 namespace continental {
 namespace hydrotools {
 namespace exception {

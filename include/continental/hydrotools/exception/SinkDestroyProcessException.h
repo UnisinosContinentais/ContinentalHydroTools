@@ -14,9 +14,6 @@
 #include <exception>
 #include "continental/hydrotools/constant/MensageConstant.h"
 
-using namespace continental::hydrotools::constant;
-using namespace std;
-
 namespace continental {
 namespace hydrotools {
 namespace exception {

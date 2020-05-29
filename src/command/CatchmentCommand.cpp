@@ -32,8 +32,8 @@ void CatchmentCommand::execute()
         auto streamSegmentationInputFile = RasterIO<short>(m_catchmentCommandInput.getStreamSegmentationInput());
         auto catchmentDelineationOutputFile = RasterIO<short>(m_catchmentCommandInput.getCatchmentDelineationOutput());
 
-        auto flowDirectionData = std::make_shared<Raster<short>>(flowDirectionInputFile.read());
-        auto streamSegmentationData  = std::make_shared<Raster<short>>(streamSegmentationInputFile.read());
+        auto flowDirectionData = std::make_shared<datamanagement::Raster<short>>(flowDirectionInputFile.read());
+        auto streamSegmentationData  = std::make_shared<datamanagement::Raster<short>>(streamSegmentationInputFile.read());
 
         //Prepara o objeto para processamento
         Catchment catchment;

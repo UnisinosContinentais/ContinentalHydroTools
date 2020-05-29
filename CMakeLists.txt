@@ -69,6 +69,7 @@ add_library(ContinentalHydroTools
     src/domain/HeuristicSinkRemovalCommandInput.cpp
     src/domain/CatchmentCommandInput.cpp
     src/domain/FlowAccumulationCommandInput.cpp
+    src/domain/StreamDefinitionThresholdType.cpp
     src/command/AbstractCommand.cpp
     src/command/CatchmentCommand.cpp
     src/command/WatershedDelineationCommand.cpp

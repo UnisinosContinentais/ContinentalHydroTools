@@ -5,9 +5,6 @@
 #include "continental/datamanagement/Raster.h"
 #include "../domain/FileCommand.h"
 
-using namespace continental::hydrotools::domain;
-using namespace continental::datamanagement;
-
 namespace continental {
 namespace hydrotools {
 namespace infrastructure {
@@ -17,9 +14,9 @@ class RasterIO : public AbstractRasterIO<RasterType>
 {
 public:
     /// Construtor   
-    RasterIO(FileCommand pathFile) : AbstractRasterIO<RasterType>(pathFile){};
+    RasterIO(domain::FileCommand pathFile) : AbstractRasterIO<RasterType>(pathFile){};
 
-    void RasterIO::write(Raster<RasterType> &raster)
+    void RasterIO::write(datamanagement::Raster<RasterType> &raster)
     {
         AbstractRasterIO<RasterType>::writeRasterIO(raster, getDatasetName(), 1);
     }
@@ -29,7 +26,7 @@ public:
       return AbstractRasterIO<RasterType>::existRasterIO(getPathFile(), getDatasetName());
     }
 
-    Raster<RasterType> RasterIO::read()
+    datamanagement::Raster<RasterType> RasterIO::read()
     {
         return AbstractRasterIO<RasterType>::readRasterIO(getPathFile(), getDatasetName()).second;
     }

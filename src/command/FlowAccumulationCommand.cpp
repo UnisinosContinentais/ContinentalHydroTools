@@ -33,7 +33,7 @@ void FlowAccumulationCommand::execute()
 
         if(flowDirectionInputFile.exist())
         {
-            auto flowDirectionData = make_shared<Raster<short>>(flowDirectionInputFile.read());
+            auto flowDirectionData = make_shared<datamanagement::Raster<short>>(flowDirectionInputFile.read());
 
             //Prepara o objeto para processamento
             FlowAccumulation flowAccumulation;

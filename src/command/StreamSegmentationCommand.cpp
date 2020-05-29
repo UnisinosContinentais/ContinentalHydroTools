@@ -30,8 +30,8 @@ void StreamSegmentationCommand::execute()
         auto flowDirectionInputFile = RasterIO<short>(m_streamSegmentationCommandInput.getFlowDirectionInput());
         auto streamSegmentationOutputFile = RasterIO<short>(m_streamSegmentationCommandInput.getStreamSegmentationOutput());
 
-        auto streamDefinitionData = make_shared<Raster<short>>(streamDefinitionInputFile.read());
-        auto flowDirectionData = make_shared<Raster<short>>(flowDirectionInputFile.read());
+        auto streamDefinitionData = make_shared<datamanagement::Raster<short>>(streamDefinitionInputFile.read());
+        auto flowDirectionData = make_shared<datamanagement::Raster<short>>(flowDirectionInputFile.read());
 
         //Prepara o objeto para processamento
         StreamSegmentation streamSegmentation;

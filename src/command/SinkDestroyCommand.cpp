@@ -43,7 +43,7 @@ void SinkDestroyCommand::execute()
         {
             //Prepara o objeto para processamento
             auto sinkDestroy = make_unique<HeuristicSinkRemoval<float>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-            sinkDestroy->setDem(make_shared<Raster<float>>(rasterInputFile.read()));
+            sinkDestroy->setDem(make_shared<datamanagement::Raster<float>>(rasterInputFile.read()));
             sinkDestroy->removeSinks();
 
             //Grava o resultado

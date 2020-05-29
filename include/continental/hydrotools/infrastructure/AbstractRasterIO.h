@@ -20,11 +20,7 @@
 #include "../util/HDF5Util.h"
 #include "continental/datamanagement/Raster.h"
 #include "../domain/FileCommand.h"
-
-using namespace continental::hydrotools::util;
-using namespace continental::hydrotools::domain;
-using namespace continental::datamanagement;
-using namespace std;
+#include <QDebug>
 
 namespace continental {
 namespace hydrotools {
@@ -35,7 +31,7 @@ class AbstractRasterIO
 {
 public:
     /// Construtor
-    AbstractRasterIO(FileCommand file)
+    AbstractRasterIO(domain::FileCommand file)
     {
         setPathFile(file.getPathFile());
         setGroupName("FluvialSystem");
@@ -90,11 +86,11 @@ public:
         catch (H5::DataSetIException ex ) {}
         catch (std::exception &e)
         {
-            cout << e.what() << endl;
+            qDebug() << e.what() << endl;
         }
         catch (...)
         {
-            cout << "erro!" << endl;
+            qDebug() << "erro!" << endl;
         }
         return result;
     }
@@ -104,11 +100,11 @@ public:
        /// @param raster Raster a ser salvo no dataset.
        /// @param name Nome do raster.
        /// @param group Grupo no qual deva ser salvo o raster.
-       void writeRasterIO(Raster<RasterType> &raster, const QString name,
-                  unsigned short version, const map<QString, QVariant> &extraAttributes = map<QString, QVariant>()) const
+       void writeRasterIO(datamanagement::Raster<RasterType> &raster, const QString name,
+                  unsigned short version, const std::map<QString, QVariant> &extraAttributes = std::map<QString, QVariant>()) const
        {
-           auto fileDao = HDF5Util::getFileOrGenerateIfNotExists(getPathFile());
-           auto group = HDF5Util::createOpenGroup(fileDao, getGroupName());
+           auto fileDao = util::HDF5Util::getFileOrGenerateIfNotExists(getPathFile());
+           auto group = util::HDF5Util::createOpenGroup(fileDao, getGroupName());
 
            // Create the data space for the dataset.
            const int RANK = 2;
@@ -121,7 +117,7 @@ public:
            dims[1] = raster.getCols();
            H5::DataSpace dataspace(RANK, dims);
            // Create the dataset.
-           H5::DataSet dataset = HDF5Util::createOrUpdateDataset(group, name, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::STD_I32BE, dataspace);
+           H5::DataSet dataset = util::HDF5Util::createOrUpdateDataset(group, name, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::STD_I32BE, dataspace);
            hsize_t dims2[1] = { 1 };
            // Create the data space for the attribute.
            H5::DataSpace attrDataspace = H5::DataSpace (1, dims2 );
@@ -141,7 +137,7 @@ public:
                attributes[pair.first] = pair.second;
            }
 
-           HDF5Util::writeAttributes(dataset, attrDataspace, attributes);
+           util::HDF5Util::writeAttributes(dataset, attrDataspace, attributes);
 
            // Data initialization.
            auto data = new RasterType[raster.getTotalCells()];
@@ -164,9 +160,9 @@ public:
        /// @param hdf5FileName Caminho do arquivo a ser lido.
        /// @param nameGroupRaster Nome do grupo no dataset.
        /// @return retorna um Raster apartir do HDF5.
-       std::pair<std::map<QString, QVariant>, Raster<RasterType>> readRasterIO(const QString &hdf5FileName, const QString &nameGroupRaster) const
+       std::pair<std::map<QString, QVariant>, datamanagement::Raster<RasterType>> readRasterIO(const QString &hdf5FileName, const QString &nameGroupRaster) const
        {
-           std::pair<std::map<QString, QVariant>, Raster<RasterType>> result;
+           std::pair<std::map<QString, QVariant>, datamanagement::Raster<RasterType>> result;
            try{
                // Open an existing file and dataset.
                if(QFile::exists(hdf5FileName.toLocal8Bit().constData()))
@@ -176,7 +172,7 @@ public:
 
                    H5::DataSet dataset = group.openDataSet(nameGroupRaster.toStdString());
 
-                   result.first = HDF5Util::readAttributes(dataset);
+                   result.first = util::HDF5Util::readAttributes(dataset);
 
                    size_t rows = static_cast<size_t>(result.first["rows"].toInt());
                    result.first.erase("rows");
@@ -194,7 +190,7 @@ public:
                    auto data = new RasterType[rows * cols];
 
                    dataset.read(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::NATIVE_SHORT);
-                   Raster<RasterType> raster(rows, cols, xOrigin, yOrigin, cellSize, noData);
+                   datamanagement::Raster<RasterType> raster(rows, cols, xOrigin, yOrigin, cellSize, noData);
                    for (size_t i = 0; i < raster.getTotalCells(); ++i)
                    {
                       raster.setData(i, data[i]);

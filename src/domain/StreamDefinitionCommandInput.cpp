@@ -40,7 +40,7 @@ void StreamDefinitionCommandInput::prepare()
     auto fileFlowAccumulationInput = FileCommand(m_argv[2], m_argv[3]);
     auto fileStreamDefinitionOutput = FileCommand(m_argv[4], m_argv[5]);
 
-    StreamDefinition::ThresholdType thresholdType = static_cast<StreamDefinition::ThresholdType>(m_argv[6].toInt());
+    service::StreamDefinition::ThresholdType thresholdType = static_cast<service::StreamDefinition::ThresholdType>(m_argv[6].toInt());
     size_t thresoldValue = static_cast<size_t>(m_argv[7].toDouble());
 
     //prepara o objeto
@@ -65,7 +65,7 @@ void StreamDefinitionCommandInput::setStreamDefinitionOutput(const FileCommand s
     m_streamDefinitionOutput = streamDefinitionOutput;
 }
 
-void StreamDefinitionCommandInput::setThresholdType(const StreamDefinition::ThresholdType thresholdType)
+void StreamDefinitionCommandInput::setThresholdType(const service::StreamDefinition::ThresholdType thresholdType)
 {
     m_thresholdType = thresholdType;
 }
@@ -75,7 +75,7 @@ float StreamDefinitionCommandInput::getThresoldValue() const
     return m_thresoldValue;
 }
 
-StreamDefinition::ThresholdType StreamDefinitionCommandInput::getThresholdType() const
+service::StreamDefinition::ThresholdType StreamDefinitionCommandInput::getThresholdType() const
 {
     return m_thresholdType;
 }

@@ -13,8 +13,6 @@
 #include <iostream>
 #include <exception>
 
-using namespace std;
-
 namespace continental {
 namespace hydrotools {
 namespace exception {
@@ -23,7 +21,7 @@ class StreamSegmentationProcessException : virtual public std::runtime_error
 {
 public:
     /// Construtor
-    explicit StreamSegmentationProcessException(string error);
+    explicit StreamSegmentationProcessException(std::string error);
     /// Desconstrutor
     virtual ~StreamSegmentationProcessException() noexcept = default;
 };

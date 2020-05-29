@@ -15,8 +15,6 @@
 #include "FileCommand.h"
 #include "continental/hydrotools/service/StreamDefinition.h"
 
-using namespace continental::hydrotools::service;
-
 namespace continental {
 namespace hydrotools {
 namespace domain {
@@ -33,13 +31,13 @@ public:
     void prepare();
 
     void setThresoldValue (const float thresoldValue);
-    void setThresholdType(const StreamDefinition::ThresholdType thresholdType);
+    void setThresholdType(const service::StreamDefinition::ThresholdType thresholdType);
 
     /// Função Getter do atributo ThresoldValue.
     float getThresoldValue() const;
 
     /// Função Getter do atributo ThresholdType
-    StreamDefinition::ThresholdType getThresholdType() const;
+    service::StreamDefinition::ThresholdType getThresholdType() const;
 	
     void setFlowAccumulationInput (const FileCommand flowAccumulationData);
     void setStreamDefinitionOutput (const FileCommand streamDefinitionOutput);
@@ -58,7 +56,7 @@ private:
     float m_thresoldValue;
 
     /// Atributo
-    StreamDefinition::ThresholdType m_thresholdType;
+    service::StreamDefinition::ThresholdType m_thresholdType;
     
     /// Atributo
     FileCommand m_flowAccumulationInput;
