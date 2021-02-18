@@ -50,7 +50,7 @@ void StreamDefinitionCommandInput::prepare()
     this->setStreamDefinitionOutput(fileStreamDefinitionOutput);
 }
 
-void StreamDefinitionCommandInput::setThresoldValue(const float thresoldValue)
+void StreamDefinitionCommandInput::setThresoldValue(const double thresoldValue)
 {
     m_thresoldValue = thresoldValue;
 }
@@ -70,7 +70,7 @@ void StreamDefinitionCommandInput::setThresholdType(const service::StreamDefinit
     m_thresholdType = thresholdType;
 }
 
-float StreamDefinitionCommandInput::getThresoldValue() const
+double StreamDefinitionCommandInput::getThresoldValue() const
 {
     return m_thresoldValue;
 }

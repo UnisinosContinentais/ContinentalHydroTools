@@ -62,7 +62,7 @@ private:
     size_t m_maxOpenList = 0;
     size_t m_maxClosedList = 0;
     // Peso da função de custo
-    float m_weightFunctionCost = 0;
+    double m_weightFunctionCost = 0;
 
     //Matriz de direções para atribuir a direção de fluxo em área plana: esquerda, baixo, direita, cima, diagonais
     // Matriz de direções em X
@@ -101,7 +101,7 @@ public:
     /// <param name="weightFunctionCost">Descrição: Peso para a função de custo G(i)</param>
     /// <param name="processingAlgorithm">Descrição: Modo de processamento para a remoção de depressões.</param>
     /// <remarks></remarks>
-    HeuristicSinkRemoval(size_t maxOpenList, size_t maxClosedList, float weightFunctionCost, ProcessingMode processingAlgorithm)
+    HeuristicSinkRemoval(size_t maxOpenList, size_t maxClosedList, double weightFunctionCost, ProcessingMode processingAlgorithm)
 	{
 		m_maxClosedList = maxClosedList;
 		m_maxOpenList = maxOpenList;

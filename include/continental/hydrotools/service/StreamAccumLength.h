@@ -29,19 +29,19 @@ class StreamAccumLength
 {
 
 private:
-    std::shared_ptr<datamanagement::Raster<float>> m_strDef;
-    std::shared_ptr<datamanagement::Raster<float>> m_flowDirection;
-    std::shared_ptr<datamanagement::Raster<float>> m_accumLength;
-    std::shared_ptr<datamanagement::Raster<float>> m_strSeg;
+    std::shared_ptr<datamanagement::Raster<short>> m_strDef;
+    std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
+    std::shared_ptr<datamanagement::Raster<short>> m_accumLength;
+    std::shared_ptr<datamanagement::Raster<short>> m_strSeg;
 
 public:
     StreamAccumLength();
 
     //Lê os dados do FlowDirection
-    void setFlowDirection(std::shared_ptr<datamanagement::Raster<float>> flowDirection);
+    void setFlowDirection(std::shared_ptr<datamanagement::Raster<short>> flowDirection);
 
     //Lê os dados do FlowDirection
-    void setStreamDefinition(std::shared_ptr<datamanagement::Raster<float>> streamDefinition);
+    void setStreamDefinition(std::shared_ptr<datamanagement::Raster<short>> streamDefinition);
 
     /// <summary>
     /// Separa os trechos de rio em todas as confluências

@@ -13,7 +13,7 @@ namespace service
 {
 
 
-shared_ptr<Raster<float>> FlowAccumulation::getFlowAccumulation() const
+shared_ptr<Raster<int>> FlowAccumulation::getFlowAccumulation() const
 {
     return m_flowAccumulation;
 }
@@ -26,7 +26,7 @@ shared_ptr<Raster<short>> FlowAccumulation::getFlowDirection() const
 void FlowAccumulation::setFlowDirection(shared_ptr<Raster<short>> flowDirection)
 {
     m_flowDirection = flowDirection;
-    m_flowAccumulation = make_shared<Raster<float>>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
+    m_flowAccumulation = make_shared<Raster<int>>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
 }
 
 FlowAccumulation::FlowAccumulation()
@@ -65,7 +65,7 @@ void FlowAccumulation::runoff()
                     }
 
                     // Armazena o número de células acumuladas
-                    float totalCells = m_flowAccumulation->getData(static_cast<size_t>(posY), static_cast<size_t>(posX));
+                    int totalCells = m_flowAccumulation->getData(static_cast<size_t>(posY), static_cast<size_t>(posX));
                     //Indica que a célula foi analizada
                     m_checkedNodeList[posCheckedNodeList] = true;
                     // Move na direção do flow direction

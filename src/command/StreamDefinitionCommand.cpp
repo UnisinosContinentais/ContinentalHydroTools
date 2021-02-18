@@ -28,11 +28,11 @@ void StreamDefinitionCommand::execute()
 {
 
         //Parametros de Entrada
-        auto flowAccumulationInputFile = RasterIO<float>(m_streamDefinitionCommandInput.getFlowAccumulationInput());
+        auto flowAccumulationInputFile = RasterIO<int>(m_streamDefinitionCommandInput.getFlowAccumulationInput());
         auto flowStreamDefinitionOutputFile = RasterIO<short>(m_streamDefinitionCommandInput.getStreamDefinitionOutput());
 
-        auto flowAccumulationData = make_shared<datamanagement::Raster<float>>(flowAccumulationInputFile.read());
-        float thresoldValue = m_streamDefinitionCommandInput.getThresoldValue();
+        auto flowAccumulationData = make_shared<datamanagement::Raster<int>>(flowAccumulationInputFile.read());
+        double thresoldValue = m_streamDefinitionCommandInput.getThresoldValue();
         StreamDefinition::ThresholdType thresholdType =  m_streamDefinitionCommandInput.getThresholdType();
 
         //Prepara o objeto para processamento

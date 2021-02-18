@@ -30,9 +30,9 @@ class StreamDefinition
 
 private:
     //Matriz de Fluxo acumulado
-    std::shared_ptr<datamanagement::Raster<float>> m_flowAcc;
+    std::shared_ptr<datamanagement::Raster<int>> m_flowAcc;
     //Matriz com os Grupos de treshold
-    std::shared_ptr<datamanagement::Raster<float>> m_streamGroups;
+    std::shared_ptr<datamanagement::Raster<double>> m_streamGroups;
     //Número mínimo de células acumuladas para formar uma rede de drenagem
     size_t m_threshold = 0;
 
@@ -62,19 +62,19 @@ public:
     /// </summary>
     std::shared_ptr<datamanagement::Raster<short>> getStreamDefinition() const;
 
-    void setStreamGroups(std::shared_ptr<datamanagement::Raster<float>> streamGroups) const;
+    void setStreamGroups(std::shared_ptr<datamanagement::Raster<double>> streamGroups) const;
 
     /// <summary>
     /// Retorna o o Stream Groups
     /// </summary>
-    std::shared_ptr<datamanagement::Raster<float>> getStreamGroups() const;
+    std::shared_ptr<datamanagement::Raster<double>> getStreamGroups() const;
 
-    void setFlowAccumulation(std::shared_ptr<datamanagement::Raster<float>> flowAccumulation, float thresoldValue, ThresholdType thresoldType);
+    void setFlowAccumulation(std::shared_ptr<datamanagement::Raster<int>> flowAccumulation, double thresoldValue, ThresholdType thresoldType);
 
     /// <summary>
     /// Retorna a matriz de Flow Acumulation
     /// </summary>
-    std::shared_ptr<datamanagement::Raster<float>> getFlowAccumulation() const;
+    std::shared_ptr<datamanagement::Raster<int>> getFlowAccumulation() const;
 
     /// <summary>
     /// Cria um novo arquivo de StreamDefinition
@@ -96,7 +96,7 @@ public:
     virtual void validParameter();
 private:
     //Calcula o valor do threshold a ser adotado
-    void calculateThreshold(float value, ThresholdType thrType);
+    void calculateThreshold(double value, ThresholdType thrType);
 
     //Atribui um único grupo com treshold defiido
     void setUniqueTreshold();

@@ -38,10 +38,10 @@ public:
     size_t getMaxClosedList() const;
 
     /// Função Getter do atributo WeightFunctionG.
-    float getWeightFunctionG() const;
+    double getWeightFunctionG() const;
 
     /// Função Getter do atributo tipo de algoritmo de processamento
-    service::HeuristicSinkRemoval<float>::ProcessingMode getProcessingAlgorithm() const;
+    service::HeuristicSinkRemoval<double>::ProcessingMode getProcessingAlgorithm() const;
 
     /// Função Getter do arquivo de entrada da Superfície inicial.
     FileCommand getDemInput() const;
@@ -66,11 +66,11 @@ protected:
 
     /// Função para atualizar o valor do atributo weightFunctionG
     /// @param weightFunctionG com valor do tipo size_t
-    void setWeightFunctionG (const float weightFunctionG);
+    void setWeightFunctionG (const double weightFunctionG);
 
     /// Função para atualizar o valor do atributo weightFunctionG
     /// @param weightFunctionG com valor do tipo size_t
-    void setProcessingAlgorithm (const service::HeuristicSinkRemoval<float>::ProcessingMode processingAlgorithm);
+    void setProcessingAlgorithm (const service::HeuristicSinkRemoval<double>::ProcessingMode processingAlgorithm);
 
     /// Função para atualizar o valor do arquivo de entrada da Superfície inicial.
     /// @param FileCommand com valor do arquivo e nome do dataset do hdf5
@@ -92,10 +92,10 @@ private:
     size_t m_maxClosedList;
 
     /// Atributo
-    float m_weightFunctionG;
+    double m_weightFunctionG;
 
     /// Atributo
-    service::HeuristicSinkRemoval<float>::ProcessingMode m_processingAlgorithm;
+    service::HeuristicSinkRemoval<double>::ProcessingMode m_processingAlgorithm;
 
     /// Atributo
     FileCommand m_demInput;

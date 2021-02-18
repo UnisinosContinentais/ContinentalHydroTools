@@ -25,19 +25,19 @@ shared_ptr<Raster<short>> StreamDefinition::getStreamDefinition() const
     return m_streamDef;
 }
 
-shared_ptr<Raster<float>> StreamDefinition::getStreamGroups() const
+shared_ptr<Raster<double>> StreamDefinition::getStreamGroups() const
 {
     return m_streamGroups;
 }
 
-void StreamDefinition::setFlowAccumulation(shared_ptr<Raster<float>> flowAccumulation, float thresoldValue, ThresholdType thresoldType)
+void StreamDefinition::setFlowAccumulation(shared_ptr<Raster<int>> flowAccumulation, double thresoldValue, ThresholdType thresoldType)
 {
     m_flowAcc = flowAccumulation;
     calculateThreshold(thresoldValue, thresoldType);
     m_streamDef = make_shared<Raster<short>>(m_flowAcc->getRows(), m_flowAcc->getCols(), m_flowAcc->getXOrigin(), m_flowAcc->getYOrigin(), m_flowAcc->getCellSize(), m_flowAcc->getNoDataValue());
 }
 
-shared_ptr<Raster<float>> StreamDefinition::getFlowAccumulation() const
+shared_ptr<Raster<int>> StreamDefinition::getFlowAccumulation() const
 {
     return m_flowAcc;
 }
@@ -47,7 +47,7 @@ StreamDefinition::StreamDefinition()
 
 }
 
-void StreamDefinition::calculateThreshold(float value, ThresholdType thresoldType)
+void StreamDefinition::calculateThreshold(double value, ThresholdType thresoldType)
 {
 
     if (thresoldType == ThresholdType::PercentualOfMaximumCells)
@@ -92,7 +92,7 @@ void StreamDefinition::defineStreams()
         {
             //Se encontrar NODATA escreve NOData
             auto data = m_flowAcc->getData(row, col);
-            if (qFuzzyCompare(data, m_flowAcc->getNoDataValue()))
+            if (data == m_flowAcc->getNoDataValue())
             {
                 m_streamDef->setData(row, col, static_cast<short>(m_flowAcc->getNoDataValue()));
             }
@@ -123,7 +123,7 @@ void StreamDefinition::validParameter()
 void StreamDefinition::setUniqueTreshold()
 {
     //Cria um novo Raster de Grupos, sendo que este será para um grupo de threshold único
-    m_streamGroups = make_shared<Raster<float>>(m_flowAcc->getRows(), m_flowAcc->getCols(), m_flowAcc->getXOrigin(), m_flowAcc->getYOrigin(), m_flowAcc->getCellSize(), m_flowAcc->getNoDataValue());
+    m_streamGroups = make_shared<Raster<double>>(m_flowAcc->getRows(), m_flowAcc->getCols(), m_flowAcc->getXOrigin(), m_flowAcc->getYOrigin(), m_flowAcc->getCellSize(), m_flowAcc->getNoDataValue());
 
     for (size_t row = 0; row < m_streamDef->getRows(); ++row)
     {

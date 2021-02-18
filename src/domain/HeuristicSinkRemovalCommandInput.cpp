@@ -39,14 +39,14 @@ void HeuristicSinkRemovalCommandInput::prepare()
     //Parse dos parametros de entradas do console
     size_t maxOpenList = static_cast<size_t>(m_argv[8].toInt());
     size_t maxClosedList = static_cast<size_t>(m_argv[9].toInt());
-    float weightFunctionG = (m_argv[10].toFloat());
+    double weightFunctionG = (m_argv[10].toDouble());
 
     auto fileDemInitialSurfaceInput = FileCommand(m_argv[2], m_argv[3]);
     auto fileFlowDirectionOutput = FileCommand(m_argv[4], m_argv[5]);
     auto fileSinkDestroyOutput = FileCommand(m_argv[6], m_argv[7]);
-    auto processingAlgorithm = static_cast<service::HeuristicSinkRemoval<float>::ProcessingMode>(m_argv[11].toInt());
+    auto processingAlgorithm = static_cast<service::HeuristicSinkRemoval<double>::ProcessingMode>(m_argv[11].toInt());
 
-    if(processingAlgorithm != service::HeuristicSinkRemoval<float>::ProcessingMode::MHS)
+    if(processingAlgorithm != service::HeuristicSinkRemoval<double>::ProcessingMode::MHS)
     {
         throw exception::SinkDestroyIsNotValidInputCommandException();
     }
@@ -72,12 +72,12 @@ void HeuristicSinkRemovalCommandInput::setMaxClosedList(const size_t maxClosedLi
     m_maxClosedList = maxClosedList;
 }
 
-void HeuristicSinkRemovalCommandInput::setWeightFunctionG(const float weightFunctionG)
+void HeuristicSinkRemovalCommandInput::setWeightFunctionG(const double weightFunctionG)
 {
     m_weightFunctionG = weightFunctionG;
 }
 
-void HeuristicSinkRemovalCommandInput::setProcessingAlgorithm(const service::HeuristicSinkRemoval<float>::ProcessingMode processingAlgorithm)
+void HeuristicSinkRemovalCommandInput::setProcessingAlgorithm(const service::HeuristicSinkRemoval<double>::ProcessingMode processingAlgorithm)
 {
     m_processingAlgorithm = processingAlgorithm;
 }
@@ -107,12 +107,12 @@ size_t HeuristicSinkRemovalCommandInput::getMaxClosedList() const
     return  m_maxClosedList;
 }
 
-float HeuristicSinkRemovalCommandInput::getWeightFunctionG() const
+double HeuristicSinkRemovalCommandInput::getWeightFunctionG() const
 {
     return  m_weightFunctionG;
 }
 
-service::HeuristicSinkRemoval<float>::ProcessingMode HeuristicSinkRemovalCommandInput::getProcessingAlgorithm() const
+service::HeuristicSinkRemoval<double>::ProcessingMode HeuristicSinkRemovalCommandInput::getProcessingAlgorithm() const
 {
     return m_processingAlgorithm;
 }

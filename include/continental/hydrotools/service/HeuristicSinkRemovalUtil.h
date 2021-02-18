@@ -66,7 +66,7 @@ class HeuristicSinkRemovalUtil
     }
 
         //Move a linha e a coluna de acordo com o número armazenado
-    inline static void moveToFlowDirection(float value, int &row, int &column)
+    inline static void moveToFlowDirection(double value, int &row, int &column)
     {
         //32	64	    128
         //16	0	    1      'Configuração das direções de fluxo para o IDRISI Kilimanjaro

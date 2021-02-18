@@ -32,12 +32,12 @@ private:
     std::shared_ptr<datamanagement::Raster<short>> m_flowDirection;
     std::vector<bool> m_checkedNodeList;
 protected:
-    std::shared_ptr<datamanagement::Raster<float>> m_flowAccumulation;
+    std::shared_ptr<datamanagement::Raster<int>> m_flowAccumulation;
 public:
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo
     /// </summary>
-    std::shared_ptr<datamanagement::Raster<float>> getFlowAccumulation() const;
+    std::shared_ptr<datamanagement::Raster<int>> getFlowAccumulation() const;
 
     /// <summary>
     /// Retorna o MDE original ou modificado pelo processo

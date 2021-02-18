@@ -30,11 +30,11 @@ public:
     /// Função que executa a preparação/trsnformação dos comandos de entrada em parâmetros
     void prepare();
 
-    void setThresoldValue (const float thresoldValue);
+    void setThresoldValue (const double thresoldValue);
     void setThresholdType(const service::StreamDefinition::ThresholdType thresholdType);
 
     /// Função Getter do atributo ThresoldValue.
-    float getThresoldValue() const;
+    double getThresoldValue() const;
 
     /// Função Getter do atributo ThresholdType
     service::StreamDefinition::ThresholdType getThresholdType() const;
@@ -53,7 +53,7 @@ public:
 
 private:
     /// Atributo
-    float m_thresoldValue;
+    double m_thresoldValue;
 
     /// Atributo
     service::StreamDefinition::ThresholdType m_thresholdType;

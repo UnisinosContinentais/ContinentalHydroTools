@@ -29,7 +29,7 @@ void FlowAccumulationCommand::execute()
     {
         //Parametros de Entrada
         auto flowDirectionInputFile = RasterIO<short>(m_flowAccumulationCommand.getFlowDirectionInput());
-        auto flowccumulationOutputFile = RasterIO<float>(m_flowAccumulationCommand.getFlowAccumulationOutput());
+        auto flowccumulationOutputFile = RasterIO<int>(m_flowAccumulationCommand.getFlowAccumulationOutput());
 
         if(flowDirectionInputFile.exist())
         {

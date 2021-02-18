@@ -15,18 +15,18 @@ namespace service
 
 StreamAccumLength::StreamAccumLength()
 {
-    m_flowDirection = make_shared<Raster<float>>();
+    m_flowDirection = make_shared<Raster<short>>();
 }
 
-void StreamAccumLength::setFlowDirection(shared_ptr<Raster<float>> flowDirection)
+void StreamAccumLength::setFlowDirection(shared_ptr<Raster<short>> flowDirection)
 {
     m_flowDirection = flowDirection;
 }
 
-void StreamAccumLength::setStreamDefinition(shared_ptr<Raster<float>> streamDefinition)
+void StreamAccumLength::setStreamDefinition(shared_ptr<Raster<short>> streamDefinition)
 {
     m_strDef = streamDefinition;
-    m_accumLength = make_shared<Raster<float>>(m_strDef->getRows(), m_strDef->getCols(), m_strDef->getXOrigin(), m_strDef->getYOrigin(), m_strDef->getCellSize(), m_strDef->getNoDataValue());
+    m_accumLength = make_shared<Raster<short>>(m_strDef->getRows(), m_strDef->getCols(), m_strDef->getXOrigin(), m_strDef->getYOrigin(), m_strDef->getCellSize(), m_strDef->getNoDataValue());
 }
 
 void StreamAccumLength::computeStreamAccumLength()
@@ -58,7 +58,7 @@ void StreamAccumLength::computeStreamAccumLength()
             else if (m_strDef->getData(i, j) > 0)
             {
                 //Caso a célula estiver sobre um trecho que não tenha sido calculado o comprimento
-                if (qFuzzyCompare(m_accumLength->getData(i, j), 0))
+                if (m_accumLength->getData(i, j) == 0)
                 {
                     //Se for cabeceira de drenagem
                     if (headwaterFound(i, j, false) == true)
@@ -125,7 +125,7 @@ void StreamAccumLength::segmentStreamsByLength(float MaxLength)
 {
     // A matriz do stream definition é liberada para otimizar a memória
     m_strDef = nullptr;
-    m_strSeg = make_shared<Raster<float>>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
+    m_strSeg = make_shared<Raster<short>>(m_flowDirection->getRows(), m_flowDirection->getCols(), m_flowDirection->getXOrigin(), m_flowDirection->getYOrigin(), m_flowDirection->getCellSize(), m_flowDirection->getNoDataValue());
 
     float TotalLength = 0;
     int SegmentNumber = 1;

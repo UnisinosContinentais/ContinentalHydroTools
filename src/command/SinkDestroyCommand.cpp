@@ -29,21 +29,21 @@ void SinkDestroyCommand::execute()
     try
     {
         //Parametros de Entrada
-        auto rasterInputFile = RasterIO<float>(m_heuristicSinkRemovalCommandInput.getDemInput());
-        auto outputCorrectedFile = RasterIO<float>(m_heuristicSinkRemovalCommandInput.getSinkDestroyOutput());
+        auto rasterInputFile = RasterIO<double>(m_heuristicSinkRemovalCommandInput.getDemInput());
+        auto outputCorrectedFile = RasterIO<double>(m_heuristicSinkRemovalCommandInput.getSinkDestroyOutput());
         auto outputFlowDirectionFile = RasterIO<short>(m_heuristicSinkRemovalCommandInput.getFlowDirectionOutput());
 
         size_t maxOpenList = m_heuristicSinkRemovalCommandInput.getMaxOpenList();
         size_t maxClosedList = m_heuristicSinkRemovalCommandInput.getMaxClosedList();
-        float weightFunctionG = m_heuristicSinkRemovalCommandInput.getWeightFunctionG();
+        double weightFunctionG = m_heuristicSinkRemovalCommandInput.getWeightFunctionG();
 
         auto processingAlgorithm = m_heuristicSinkRemovalCommandInput.getProcessingAlgorithm();
 
         if(rasterInputFile.exist())
         {
             //Prepara o objeto para processamento
-            auto sinkDestroy = make_unique<HeuristicSinkRemoval<float>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-            sinkDestroy->setDem(make_shared<datamanagement::Raster<float>>(rasterInputFile.read()));
+            auto sinkDestroy = make_unique<HeuristicSinkRemoval<double>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
+            sinkDestroy->setDem(make_shared<datamanagement::Raster<double>>(rasterInputFile.read()));
             sinkDestroy->removeSinks();
 
             //Grava o resultado

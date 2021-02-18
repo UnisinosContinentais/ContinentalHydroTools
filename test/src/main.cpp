@@ -14,7 +14,7 @@ using namespace continental::datamanagement;
 using namespace continental::hydrotools::service;
 using namespace std;
 
-static QString basePath = "C:/Git/ContinentalHydroTools/ContinentalHydroToolsAssets/rioSinos";
+static QString basePath = "C:/Git/ContinentalHydroToolsAssets/rioSinos";
 static QString inputDemFile = basePath + "/rioSinos.asc";
 static QString unitTestCorrectedFile = basePath + "/unit_rioSinos_sink.asc";
 static QString unitTestFlowDirectionFile = basePath + "/unit_rioSinos_fdr.asc";
@@ -47,7 +47,7 @@ TEST(ContinentalHydroToolsTest, SinkAndDestroy)
 {
     size_t maxOpenList = 1000000;
     size_t maxClosedList = 500000;
-    float weightFunctionG = 2;
+    double weightFunctionG = 2;
     auto processingAlgorithm = HeuristicSinkRemoval<short>::ProcessingMode::MHS;
     auto sinkDestroy = make_unique<HeuristicSinkRemoval<short>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
     sinkDestroy->setDem(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
@@ -74,7 +74,7 @@ TEST(ContinentalHydroToolsTest, FlowAccumulation)
     FlowAccumulation flowAccumulation;
     flowAccumulation.setFlowDirection(flowDirectionData);
     flowAccumulation.runoff();
-    RasterFile<float>::writeData(*flowAccumulation.getFlowAccumulation().get(), unitTestFlowAccumulationFile);
+    RasterFile<int>::writeData(*flowAccumulation.getFlowAccumulation().get(), unitTestFlowAccumulationFile);
 }
 
 TEST(ContinentalHydroToolsTest, FlowAccumulationCompare)
@@ -84,7 +84,7 @@ TEST(ContinentalHydroToolsTest, FlowAccumulationCompare)
 
 TEST(ContinentalHydroToolsTest, StreamDefinition)
 {
-    auto flowAccumulationData = make_shared<Raster<float>>(RasterFile<float>::loadRasterByFile(unitTestFlowAccumulationFile));
+    auto flowAccumulationData = make_shared<Raster<int>>(RasterFile<int>::loadRasterByFile(unitTestFlowAccumulationFile));
 
     StreamDefinition streamDefinition;
     streamDefinition.setFlowAccumulation(flowAccumulationData, 1000, StreamDefinition::ThresholdType::NumberOfCells);
