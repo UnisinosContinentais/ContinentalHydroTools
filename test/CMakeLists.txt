@@ -26,9 +26,12 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
                  ${CMAKE_BINARY_DIR}/googletest-build
                  EXCLUDE_FROM_ALL)
 
- IF (WIN32)
-     file(COPY ${SHP_DLL} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
- ENDIF()
+if (WIN32)
+    file(COPY ${SHP_DLL} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
+file(GLOB AssetsUnitTest ${CMAKE_SOURCE_DIR}/assets/unittest/*.asc)
+file(COPY ${AssetsUnitTest} DESTINATION ${CMAKE_BINARY_DIR}/test)
 
 # Now simply link against gtest or gtest_main as needed. Eg
 add_executable(ContinentalHydroToolsTest src/main.cpp)

@@ -4,34 +4,30 @@
 #include <continental/hydrotools/service/StreamDefinition.h>
 #include <continental/hydrotools/service/StreamSegmentation.h>
 #include <continental/hydrotools/service/Catchment.h>
-#include <memory>
 #include <QString>
 #include <QCryptographicHash>
 #include <gtest/gtest.h>
-#include <iostream>
 
 using namespace continental::datamanagement;
 using namespace continental::hydrotools::service;
-using namespace std;
 
-static QString basePath = "C:/Git/ContinentalHydroToolsAssets/rioSinos";
-static QString inputDemFile = basePath + "/rioSinos.asc";
-static QString unitTestCorrectedFile = basePath + "/unit_rioSinos_sink.asc";
-static QString unitTestFlowDirectionFile = basePath + "/unit_rioSinos_fdr.asc";
-static QString unitTestFlowAccumulationFile = basePath + "/unit_rioSinos_fac.asc";
-static QString unitTestStreamDefinitionFile = basePath + "/unit_rioSinos_str.asc";
-static QString unitTestStreamSegmentationFile = basePath + "/unit_rioSinos_strseg.asc";
-static QString unitTestWatershedDelineation = basePath + "/unit_rioSinos_wat.asc";
-static QString unitTestCatchmentDelineation = basePath + "/unit_rioSinos_catch.asc";
-static QString inputShapeFilePointOutletsSnap = basePath + "/Exutorio_snap.shp";
+const static QString inputDemFile = "rioSinos.asc";
 
-static QString correctResultCorrectedFile = basePath + "/rioSinos_sink.asc";
-static QString correctResultFlowDirectionFile = basePath + "/rioSinos_fdr.asc";
-static QString correctResultFlowAccumulationFile = basePath + "/rioSinos_fac.asc";
-static QString correctResultStreamDefinitionFile = basePath + "/rioSinos_str.asc";
-static QString correctResultStreamSegmentationFile = basePath + "/rioSinos_strseg.asc";
-static QString correctResultWatershedDelineation = basePath + "/rioSinos_wat.asc";
-static QString correctResultCatchmentDelineation = basePath + "/rioSinos_catch.asc";
+const static QString unitTestCorrectedFile = "unit_rioSinos_sink.asc";
+const static QString unitTestFlowDirectionFile = "unit_rioSinos_fdr.asc";
+const static QString unitTestFlowAccumulationFile = "unit_rioSinos_fac.asc";
+const static QString unitTestStreamDefinitionFile = "unit_rioSinos_str.asc";
+const static QString unitTestStreamSegmentationFile = "unit_rioSinos_strseg.asc";
+const static QString unitTestWatershedDelineation = "unit_rioSinos_wat.asc";
+const static QString unitTestCatchmentDelineation = "unit_rioSinos_catch.asc";
+
+const static QString correctResultCorrectedFile = "rioSinos_sink.asc";
+const static QString correctResultFlowDirectionFile = "rioSinos_fdr.asc";
+const static QString correctResultFlowAccumulationFile = "rioSinos_fac.asc";
+const static QString correctResultStreamDefinitionFile = "rioSinos_str.asc";
+const static QString correctResultStreamSegmentationFile = "rioSinos_strseg.asc";
+const static QString correctResultWatershedDelineation = "rioSinos_wat.asc";
+const static QString correctResultCatchmentDelineation = "rioSinos_catch.asc";
 
 QString getMd5OfFile(QString filePath)
 {
@@ -49,8 +45,8 @@ TEST(ContinentalHydroToolsTest, SinkAndDestroy)
     size_t maxClosedList = 500000;
     double weightFunctionG = 2;
     auto processingAlgorithm = HeuristicSinkRemoval<short>::ProcessingMode::MHS;
-    auto sinkDestroy = make_unique<HeuristicSinkRemoval<short>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-    sinkDestroy->setDem(make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
+    auto sinkDestroy = std::make_unique<HeuristicSinkRemoval<short>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
+    sinkDestroy->setDem(std::make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
     sinkDestroy->removeSinks();
 
     RasterFile<short>::writeData(*sinkDestroy->getDem(), unitTestCorrectedFile);
@@ -69,12 +65,12 @@ TEST(ContinentalHydroToolsTest, FlowDirectionCompare)
 
 TEST(ContinentalHydroToolsTest, FlowAccumulation)
 {
-    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
+    auto flowDirectionData = std::make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
 
     FlowAccumulation flowAccumulation;
     flowAccumulation.setFlowDirection(flowDirectionData);
     flowAccumulation.runoff();
-    RasterFile<int>::writeData(*flowAccumulation.getFlowAccumulation().get(), unitTestFlowAccumulationFile);
+    RasterFile<int>::writeData(*flowAccumulation.getFlowAccumulation(), unitTestFlowAccumulationFile);
 }
 
 TEST(ContinentalHydroToolsTest, FlowAccumulationCompare)
@@ -84,12 +80,12 @@ TEST(ContinentalHydroToolsTest, FlowAccumulationCompare)
 
 TEST(ContinentalHydroToolsTest, StreamDefinition)
 {
-    auto flowAccumulationData = make_shared<Raster<int>>(RasterFile<int>::loadRasterByFile(unitTestFlowAccumulationFile));
+    auto flowAccumulationData = std::make_shared<Raster<int>>(RasterFile<int>::loadRasterByFile(unitTestFlowAccumulationFile));
 
     StreamDefinition streamDefinition;
     streamDefinition.setFlowAccumulation(flowAccumulationData, 1000, StreamDefinition::ThresholdType::NumberOfCells);
     streamDefinition.defineStreams();
-    RasterFile<short>::writeData(*streamDefinition.getStreamDefinition().get(), unitTestStreamDefinitionFile);
+    RasterFile<short>::writeData(*streamDefinition.getStreamDefinition(), unitTestStreamDefinitionFile);
 }
 
 TEST(ContinentalHydroToolsTest, StreamDefinitionCompare)
@@ -99,14 +95,14 @@ TEST(ContinentalHydroToolsTest, StreamDefinitionCompare)
 
 TEST(ContinentalHydroToolsTest, StreamSegmentation)
 {
-    auto streamDefinitionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestStreamDefinitionFile));
-    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
+    auto streamDefinitionData = std::make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestStreamDefinitionFile));
+    auto flowDirectionData = std::make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
 
     StreamSegmentation streamSegmentation;
     streamSegmentation.setStreamDefinition(streamDefinitionData);
     streamSegmentation.setFlowDirection(flowDirectionData);
     streamSegmentation.segmentStreams();
-    RasterFile<short>::writeData(*streamSegmentation.getStreamSegmentation().get(), unitTestStreamSegmentationFile);
+    RasterFile<short>::writeData(*streamSegmentation.getStreamSegmentation(), unitTestStreamSegmentationFile);
 }
 
 TEST(ContinentalHydroToolsTest, StreamSegmentationCompare)
@@ -116,15 +112,14 @@ TEST(ContinentalHydroToolsTest, StreamSegmentationCompare)
 
 TEST(ContinentalHydroToolsTest, WatershedDelineation)
 {
-    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
+    auto flowDirectionData = std::make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
 
     Catchment catchment;
     catchment.setFlowDirection(flowDirectionData);
-    // catchment.setPointOutlets(inputShapeFilePointOutletsSnap);
     catchment.insertOutletByRowCol(795, 209);
     catchment.findWatersheds();
 
-    RasterFile<short>::writeData(*catchment.getWaterShed().get(), unitTestWatershedDelineation);
+    RasterFile<short>::writeData(*catchment.getWaterShed(), unitTestWatershedDelineation);
 }
 
 TEST(ContinentalHydroToolsTest, WatershedDelineationCompare)
@@ -134,15 +129,15 @@ TEST(ContinentalHydroToolsTest, WatershedDelineationCompare)
 
 TEST(ContinentalHydroToolsTest, CatchmentDelineation)
 {
-    auto flowDirectionData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
-    auto streamSegmentationData = make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestStreamSegmentationFile));
+    auto flowDirectionData = std::make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestFlowDirectionFile));
+    auto streamSegmentationData = std::make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(unitTestStreamSegmentationFile));
 
     Catchment catchment;
     catchment.setFlowDirection(flowDirectionData);
     catchment.setStreamSegmentation(streamSegmentationData);
     catchment.findWatersheds();
 
-    RasterFile<short>::writeData(*catchment.getWaterShed().get(), unitTestCatchmentDelineation);
+    RasterFile<short>::writeData(*catchment.getWaterShed(), unitTestCatchmentDelineation);
 }
 
 TEST(ContinentalHydroToolsTest, CatchmentDelineationCompare)
