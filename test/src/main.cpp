@@ -80,10 +80,10 @@ TEST(ContinentalHydroToolsTest, FlowAccumulationCompare)
 
 TEST(ContinentalHydroToolsTest, StreamDefinition)
 {
-    auto flowAccumulationData = std::make_shared<Raster<int>>(RasterFile<int>::loadRasterByFile(unitTestFlowAccumulationFile));
+    auto flowAccumulationData = std::make_shared<Raster<int>>(RasterFile<int>::loadRasterByFile(correctResultFlowAccumulationFile));
 
     StreamDefinition streamDefinition;
-    streamDefinition.setFlowAccumulation(flowAccumulationData, 1000, StreamDefinition::ThresholdType::NumberOfCells);
+    streamDefinition.setFlowAccumulation(flowAccumulationData, 3000, StreamDefinition::ThresholdType::NumberOfCells);
     streamDefinition.defineStreams();
     RasterFile<short>::writeData(*streamDefinition.getStreamDefinition(), unitTestStreamDefinitionFile);
 }
@@ -148,5 +148,6 @@ TEST(ContinentalHydroToolsTest, CatchmentDelineationCompare)
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);
+  // ::testing::GTEST_FLAG(filter) = "*StreamDefinition*";
   return RUN_ALL_TESTS();
 }
