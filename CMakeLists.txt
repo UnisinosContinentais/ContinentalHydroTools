@@ -81,6 +81,7 @@ add_library(ContinentalHydroTools
     src/infrastructure/RasterIO.cpp
     src/exception/CatchmentDelineationIsNotValidInputCommandException.cpp
     src/exception/CatchmentDelineationProcessException.cpp
+    src/exception/FileNotFoundException.cpp
     src/exception/FlowAccumulationIsNotValidInputCommandException.cpp
     src/exception/FlowAccumulationProcessException.cpp
     src/exception/SinkDestroyProcessException.cpp

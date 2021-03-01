@@ -44,12 +44,12 @@ TEST(ContinentalHydroToolsTest, SinkAndDestroy)
     size_t maxOpenList = 1000000;
     size_t maxClosedList = 500000;
     double weightFunctionG = 2;
-    auto processingAlgorithm = HeuristicSinkRemoval<short>::ProcessingMode::MHS;
-    auto sinkDestroy = std::make_unique<HeuristicSinkRemoval<short>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-    sinkDestroy->setDem(std::make_shared<Raster<short>>(RasterFile<short>::loadRasterByFile(inputDemFile)));
+    auto processingAlgorithm = HeuristicSinkRemoval<double>::ProcessingMode::MHS;
+    auto sinkDestroy = std::make_unique<HeuristicSinkRemoval<double>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
+    sinkDestroy->setDem(std::make_shared<Raster<double>>(RasterFile<double>::loadRasterByFile(inputDemFile)));
     sinkDestroy->removeSinks();
 
-    RasterFile<short>::writeData(*sinkDestroy->getDem(), unitTestCorrectedFile);
+    RasterFile<double>::writeData(*sinkDestroy->getDem(), unitTestCorrectedFile);
     RasterFile<short>::writeData(*sinkDestroy->getFlowDirection(), unitTestFlowDirectionFile);
 }
 

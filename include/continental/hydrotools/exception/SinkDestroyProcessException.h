@@ -8,11 +8,7 @@
 #ifndef CONTINENTAL_HYDROTOOLS_EXCEPTION_SINKDESTROY_PROCESS_H
 #define CONTINENTAL_HYDROTOOLS_EXCEPTION_SINKDESTROY_PROCESS_H
 
-#include <cstddef>
-#include <QString>
-#include <iostream>
-#include <exception>
-#include "continental/hydrotools/constant/MensageConstant.h"
+#include <stdexcept>
 
 namespace continental {
 namespace hydrotools {

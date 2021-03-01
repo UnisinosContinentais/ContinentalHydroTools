@@ -22,6 +22,7 @@ namespace MensageConstant {
     static const std::string InvalidArgumentsPattern = "InvalidArgumentsPattern";
     static const std::string TheMinimumNumberOfCellsToFormFlowIsInsufficient = "TheMinimumNumberOfCellsToFormFlowIsInsufficient";
     static const std::string PercentualOfMaximumCellsISInvalidParameter = "PercentualOfMaximumCellsISInvalidParameter";
+    static const std::string FileNotFound = "FileNotFound";
 
 
     //SinkDestroy

@@ -117,12 +117,12 @@ public:
            dims[1] = raster.getCols();
            H5::DataSpace dataspace(RANK, dims);
            // Create the dataset.
-           H5::DataSet dataset = util::HDF5Util::createOrUpdateDataset(group, name, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::STD_I32BE, dataspace);
+           H5::DataSet dataset = util::HDF5Util::createOrUpdateDataset(group, name, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_DOUBLE : H5::PredType::NATIVE_INT, dataspace);
            hsize_t dims2[1] = { 1 };
            // Create the data space for the attribute.
            H5::DataSpace attrDataspace = H5::DataSpace (1, dims2 );
 
-           map<QString, QVariant> attributes;
+           std::map<QString, QVariant> attributes;
 
            attributes["cols"] = QVariant(static_cast<int>(raster.getCols()));
            attributes["rows"] = QVariant(static_cast<int>(raster.getRows()));
@@ -147,7 +147,7 @@ public:
            }
            // Write the data to the dataset using default memory space, file
            // space, and transfer properties.
-           dataset.write(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::NATIVE_SHORT);
+           dataset.write(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_DOUBLE : H5::PredType::NATIVE_INT);
            dataset.close();
 
            delete[] data;
@@ -189,7 +189,7 @@ public:
 
                    auto data = new RasterType[rows * cols];
 
-                   dataset.read(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::NATIVE_SHORT);
+                   dataset.read(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_DOUBLE : H5::PredType::NATIVE_INT);
                    datamanagement::Raster<RasterType> raster(rows, cols, xOrigin, yOrigin, cellSize, noData);
                    for (size_t i = 0; i < raster.getTotalCells(); ++i)
                    {

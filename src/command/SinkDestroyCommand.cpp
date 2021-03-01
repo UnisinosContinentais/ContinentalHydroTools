@@ -7,8 +7,8 @@
 #include "continental/hydrotools/infrastructure/RasterIO.h"
 #include "continental/hydrotools/util/HydroToolsUtil.h"
 #include "continental/hydrotools/exception/SinkDestroyProcessException.h"
+#include "continental/hydrotools/exception/FileNotFoundException.h"
 
-using namespace std;
 using namespace continental::hydrotools::domain;
 using namespace continental::hydrotools::command;
 using namespace continental::hydrotools::service;
@@ -42,8 +42,8 @@ void SinkDestroyCommand::execute()
         if(rasterInputFile.exist())
         {
             //Prepara o objeto para processamento
-            auto sinkDestroy = make_unique<HeuristicSinkRemoval<double>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
-            sinkDestroy->setDem(make_shared<datamanagement::Raster<double>>(rasterInputFile.read()));
+            auto sinkDestroy = std::make_unique<HeuristicSinkRemoval<double>>(maxOpenList, maxClosedList, weightFunctionG, processingAlgorithm);
+            sinkDestroy->setDem(std::make_shared<datamanagement::Raster<double>>(rasterInputFile.read()));
             sinkDestroy->removeSinks();
 
             //Grava o resultado
@@ -52,10 +52,10 @@ void SinkDestroyCommand::execute()
         }
         else
         {
-            throw SinkDestroyProcessException();
+            throw FileNotFoundException();
         }
     }
-    catch(std::exception &e)
+    catch (std::exception)
     {
         throw SinkDestroyProcessException();
     }
