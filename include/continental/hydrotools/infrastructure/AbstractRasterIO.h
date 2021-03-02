@@ -117,7 +117,7 @@ public:
            dims[1] = raster.getCols();
            H5::DataSpace dataspace(RANK, dims);
            // Create the dataset.
-           H5::DataSet dataset = util::HDF5Util::createOrUpdateDataset(group, name, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::STD_I32BE, dataspace);
+           H5::DataSet dataset = util::HDF5Util::createOrUpdateDataset(group, name, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_DOUBLE : H5::PredType::NATIVE_INT, dataspace);
            hsize_t dims2[1] = { 1 };
            // Create the data space for the attribute.
            H5::DataSpace attrDataspace = H5::DataSpace (1, dims2 );
@@ -140,17 +140,34 @@ public:
            util::HDF5Util::writeAttributes(dataset, attrDataspace, attributes);
 
            // Data initialization.
-           auto data = new RasterType[raster.getTotalCells()];
-           for (size_t i = 0; i < raster.getTotalCells(); ++i)
+           if (std::is_floating_point<RasterType>::value)
            {
-               data[i] = raster.getData(i);
-           }
-           // Write the data to the dataset using default memory space, file
-           // space, and transfer properties.
-           dataset.write(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_DOUBLE : H5::PredType::NATIVE_INT);
-           dataset.close();
+               auto data = new double[raster.getTotalCells()];
+               for (size_t i = 0; i < raster.getTotalCells(); ++i)
+               {
+                   data[i] = static_cast<double>(raster.getData(i));
+               }
+               // Write the data to the dataset using default memory space, file
+               // space, and transfer properties.
+               dataset.write(data, H5::PredType::NATIVE_DOUBLE);
+               dataset.close();
 
-           delete[] data;
+               delete[] data;
+           }
+           else
+           {
+               auto data = new int[raster.getTotalCells()];
+               for (size_t i = 0; i < raster.getTotalCells(); ++i)
+               {
+                   data[i] = static_cast<int>(raster.getData(i));
+               }
+               // Write the data to the dataset using default memory space, file
+               // space, and transfer properties.
+               dataset.write(data, H5::PredType::NATIVE_INT);
+               dataset.close();
+
+               delete[] data;
+           }
 
            group.close();
            fileDao.close();
@@ -187,18 +204,32 @@ public:
                    int noData = static_cast<int>(result.first["noDataValue"].toInt());
                    result.first.erase("noDataValue");
 
-                   auto data = new RasterType[rows * cols];
-
-                   dataset.read(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_DOUBLE : H5::PredType::NATIVE_INT);
-                   datamanagement::Raster<RasterType> raster(rows, cols, xOrigin, yOrigin, cellSize, noData);
-                   for (size_t i = 0; i < raster.getTotalCells(); ++i)
+                   if (std::is_floating_point<RasterType>::value)
                    {
-                      raster.setData(i, data[i]);
+                       auto data = new double[rows * cols];
+
+                       dataset.read(data, H5::PredType::NATIVE_DOUBLE);
+                       result.second = datamanagement::Raster<RasterType>(rows, cols, xOrigin, yOrigin, cellSize, noData);
+                       for (size_t i = 0; i < result.second.getTotalCells(); ++i)
+                       {
+                          result.second.setData(i, static_cast<RasterType>(data[i]));
+                       }
+
+                       delete[] data;
                    }
+                   else
+                   {
+                       auto data = new int[rows * cols];
 
-                   result.second = std::move(raster);
+                       dataset.read(data, H5::PredType::NATIVE_INT);
+                       result.second = datamanagement::Raster<RasterType>(rows, cols, xOrigin, yOrigin, cellSize, noData);
+                       for (size_t i = 0; i < result.second.getTotalCells(); ++i)
+                       {
+                          result.second.setData(i, static_cast<RasterType>(data[i]));
+                       }
 
-                   delete[] data;
+                       delete[] data;
+                   }
 
                    group.close();
                    hdf5File.close();

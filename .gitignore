@@ -1,3 +1,6 @@
 CMakeLists.txt.user
 CMakeLists.config
 .idea/*
+.vs
+out
+CMakeSettings.json
