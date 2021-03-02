@@ -147,7 +147,7 @@ public:
            }
            // Write the data to the dataset using default memory space, file
            // space, and transfer properties.
-           dataset.write(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::NATIVE_SHORT);
+           dataset.write(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_DOUBLE : H5::PredType::NATIVE_INT);
            dataset.close();
 
            delete[] data;
@@ -189,7 +189,7 @@ public:
 
                    auto data = new RasterType[rows * cols];
 
-                   dataset.read(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_FLOAT : H5::PredType::NATIVE_SHORT);
+                   dataset.read(data, std::is_floating_point<RasterType>::value ? H5::PredType::NATIVE_DOUBLE : H5::PredType::NATIVE_INT);
                    datamanagement::Raster<RasterType> raster(rows, cols, xOrigin, yOrigin, cellSize, noData);
                    for (size_t i = 0; i < raster.getTotalCells(); ++i)
                    {
