@@ -32,12 +32,12 @@ void StreamDefinitionCommand::execute()
         auto flowStreamDefinitionOutputFile = RasterIO<short>(m_streamDefinitionCommandInput.getStreamDefinitionOutput());
 
         auto flowAccumulationData = make_shared<datamanagement::Raster<int>>(flowAccumulationInputFile.read());
-        double thresoldValue = m_streamDefinitionCommandInput.getThresoldValue();
+        double thresholdValue = m_streamDefinitionCommandInput.getThresholdValue();
         StreamDefinition::ThresholdType thresholdType =  m_streamDefinitionCommandInput.getThresholdType();
 
         //Prepara o objeto para processamento
         StreamDefinition streamDefinition;
-        streamDefinition.setFlowAccumulation(flowAccumulationData, thresoldValue, thresholdType);
+        streamDefinition.setFlowAccumulation(flowAccumulationData, thresholdValue, thresholdType);
         //streamDefinition.validParameter();
 
         try

@@ -27,7 +27,7 @@ StreamDefinitionCommandInput::StreamDefinitionCommandInput(QStringList argv)
 /// [3] = groupFlowAccumulationInput
 /// [4] = pathStreamDefinitionOutput
 /// [5] = grouStreamDefinitionOutput
-/// [6] = thresoldValue
+/// [6] = thresholdValue
 ///
 void StreamDefinitionCommandInput::prepare()
 {
@@ -41,18 +41,18 @@ void StreamDefinitionCommandInput::prepare()
     auto fileStreamDefinitionOutput = FileCommand(m_argv[4], m_argv[5]);
 
     service::StreamDefinition::ThresholdType thresholdType = static_cast<service::StreamDefinition::ThresholdType>(m_argv[6].toInt());
-    size_t thresoldValue = static_cast<size_t>(m_argv[7].toDouble());
+    size_t thresholdValue = static_cast<size_t>(m_argv[7].toDouble());
 
     //prepara o objeto
     this->setFlowAccumulationInput(fileFlowAccumulationInput);
-    this->setThresoldValue(thresoldValue);
+    this->setThresholdValue(thresholdValue);
     this->setThresholdType(thresholdType);
     this->setStreamDefinitionOutput(fileStreamDefinitionOutput);
 }
 
-void StreamDefinitionCommandInput::setThresoldValue(const double thresoldValue)
+void StreamDefinitionCommandInput::setThresholdValue(const double thresholdValue)
 {
-    m_thresoldValue = thresoldValue;
+    m_thresholdValue = thresholdValue;
 }
 
 void StreamDefinitionCommandInput::setFlowAccumulationInput(const FileCommand flowAccumulationData)
@@ -70,9 +70,9 @@ void StreamDefinitionCommandInput::setThresholdType(const service::StreamDefinit
     m_thresholdType = thresholdType;
 }
 
-double StreamDefinitionCommandInput::getThresoldValue() const
+double StreamDefinitionCommandInput::getThresholdValue() const
 {
-    return m_thresoldValue;
+    return m_thresholdValue;
 }
 
 service::StreamDefinition::ThresholdType StreamDefinitionCommandInput::getThresholdType() const

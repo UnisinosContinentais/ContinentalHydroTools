@@ -30,10 +30,10 @@ shared_ptr<Raster<double>> StreamDefinition::getStreamGroups() const
     return m_streamGroups;
 }
 
-void StreamDefinition::setFlowAccumulation(shared_ptr<Raster<int>> flowAccumulation, double thresoldValue, ThresholdType thresoldType)
+void StreamDefinition::setFlowAccumulation(shared_ptr<Raster<int>> flowAccumulation, double thresholdValue, ThresholdType thresholdType)
 {
     m_flowAcc = flowAccumulation;
-    calculateThreshold(thresoldValue, thresoldType);
+    calculateThreshold(thresholdValue, thresholdType);
     m_streamDef = make_shared<Raster<short>>(m_flowAcc->getRows(), m_flowAcc->getCols(), m_flowAcc->getXOrigin(), m_flowAcc->getYOrigin(), m_flowAcc->getCellSize(), m_flowAcc->getNoDataValue());
 }
 
@@ -47,10 +47,10 @@ StreamDefinition::StreamDefinition()
 
 }
 
-void StreamDefinition::calculateThreshold(double value, ThresholdType thresoldType)
+void StreamDefinition::calculateThreshold(double value, ThresholdType thresholdType)
 {
 
-    if (thresoldType == ThresholdType::PercentualOfMaximumCells)
+    if (thresholdType == ThresholdType::PercentualOfMaximumCells)
     {
         //Multiplico o máximo nº de células acumuladas por um percentual
         if(value < 0.1 || value > 100)
@@ -61,7 +61,7 @@ void StreamDefinition::calculateThreshold(double value, ThresholdType thresoldTy
 
         m_threshold = (static_cast<size_t>(m_flowAcc->calculateMaxValue() * aux)) / static_cast<size_t>(m_flowAcc->calculateMaxValue());
     }
-    else if (thresoldType == ThresholdType::NumberOfCells)
+    else if (thresholdType == ThresholdType::NumberOfCells)
     {
         // Retorna o próprio valor
         m_threshold = static_cast<size_t>(value);
@@ -71,7 +71,7 @@ void StreamDefinition::calculateThreshold(double value, ThresholdType thresoldTy
             throw continental::hydrotools::exception::StreamDefinitionIsNotValidInputCommandException(MensageConstant::TheMinimumNumberOfCellsToFormFlowIsInsufficient);
         }
     }
-    else if (thresoldType == ThresholdType::Area)
+    else if (thresholdType == ThresholdType::Area)
     {
         auto aux = static_cast<double>(value) * pow(10, 6);
         m_threshold = static_cast<size_t>(aux / (std::pow(m_flowAcc->getCellSize(), 2)));

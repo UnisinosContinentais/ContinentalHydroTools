@@ -30,17 +30,17 @@ public:
     /// Função que executa a preparação/trsnformação dos comandos de entrada em parâmetros
     void prepare();
 
-    void setThresoldValue (const double thresoldValue);
+    void setThresholdValue(const double thresholdValue);
     void setThresholdType(const service::StreamDefinition::ThresholdType thresholdType);
 
-    /// Função Getter do atributo ThresoldValue.
-    double getThresoldValue() const;
+    /// Função Getter do atributo ThresholdValue.
+    double getThresholdValue() const;
 
     /// Função Getter do atributo ThresholdType
     service::StreamDefinition::ThresholdType getThresholdType() const;
 	
-    void setFlowAccumulationInput (const FileCommand flowAccumulationData);
-    void setStreamDefinitionOutput (const FileCommand streamDefinitionOutput);
+    void setFlowAccumulationInput(const FileCommand flowAccumulationData);
+    void setStreamDefinitionOutput(const FileCommand streamDefinitionOutput);
 	
     /// Função Getter do arquivo de entrada do Flow Accumulation.
     FileCommand getFlowAccumulationInput() const;
@@ -53,7 +53,7 @@ public:
 
 private:
     /// Atributo
-    double m_thresoldValue;
+    double m_thresholdValue;
 
     /// Atributo
     service::StreamDefinition::ThresholdType m_thresholdType;

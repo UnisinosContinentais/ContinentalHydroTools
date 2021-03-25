@@ -69,7 +69,7 @@ public:
     /// </summary>
     std::shared_ptr<datamanagement::Raster<double>> getStreamGroups() const;
 
-    void setFlowAccumulation(std::shared_ptr<datamanagement::Raster<int>> flowAccumulation, double thresoldValue, ThresholdType thresoldType);
+    void setFlowAccumulation(std::shared_ptr<datamanagement::Raster<int>> flowAccumulation, double thresholdValue, ThresholdType thresholdType);
 
     /// <summary>
     /// Retorna a matriz de Flow Acumulation
